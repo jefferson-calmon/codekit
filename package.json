@@ -1,0 +1,24 @@
+{
+    "name": "pandora-tools",
+    "version": "1.0.0",
+    "description": "Pandora is a collection of tools, utilities and services for typescript developers.",
+    "main": "dist/index.js",
+    "repository": "https://github.com/jefferson-calmon/pandora.git",
+    "author": "Jefferson Calmon <jeffjeff0197@gmail.com>",
+    "license": "MIT",
+    "private": false,
+    "scripts": {},
+    "devDependencies": {
+        "@types/react": "^17.0.39",
+        "@typescript-eslint/eslint-plugin": "^5.12.0",
+        "eslint": "7.32.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-prettier": "^8.4.0",
+        "eslint-import-resolver-typescript": "^2.5.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "prettier": "^2.5.1",
+        "rollup-plugin-typescript2": "^0.31.2",
+        "typescript": "^4.5.5"
+    },
+    "dependencies": {}
+}
