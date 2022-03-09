@@ -1,3 +1,6 @@
+import * as hooks from './hooks';
+export * from './hooks';
+
 import * as validations from './validations';
 export * from './validations';
 
@@ -11,6 +14,7 @@ import * as config from './config';
 export * from './config';
 
 const pandora = {
+    ...hooks,
     ...validations,
     ...forms,
     ...utils,
