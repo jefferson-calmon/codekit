@@ -15,6 +15,12 @@ declare global {
         extractNumbers: () => string;
         mask: (pattern: string) => string;
     }
+
+    interface Array<T> {
+        compact: () => T[];
+        last: () => T;
+        uniq: () => T[];
+    }
 }
 
 export const config = (): void => {
@@ -47,7 +53,7 @@ export const config = (): void => {
     };
 };
 
-export const PandoraConfig = (): React.ReactNode => {
+export const PandoraConfig = (): JSX.Element => {
     Number.prototype.toMoney = function (
         config: MoneyConfig = {
             locale: 'pt-BR',
@@ -76,5 +82,19 @@ export const PandoraConfig = (): React.ReactNode => {
         return pattern.replace(/#/g, () => value[index++] || '');
     };
 
-    return undefined;
-}
+    Array.prototype.compact = function () {
+        return this.filter(Boolean);
+    }
+
+    Array.prototype.last = function () {
+        return this[this.length - 1];
+    }
+
+    Array.prototype.uniq = function () {
+        return [...new Set(this)];
+    }
+
+    return <></>;
+};
+
+const teste = ['pt-BR', 'pt-BR'].uniq()
