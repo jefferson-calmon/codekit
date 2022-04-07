@@ -84,17 +84,17 @@ export const PandoraConfig = (): JSX.Element => {
 
     Array.prototype.compact = function () {
         return this.filter(Boolean);
-    }
+    };
 
     Array.prototype.last = function () {
         return this[this.length - 1];
-    }
+    };
 
     Array.prototype.uniq = function () {
         return [...new Set(this)];
-    }
+    };
 
     return <></>;
 };
 
-const teste = ['pt-BR', 'pt-BR'].uniq()
+const teste = ['pt-BR', 'pt-BR'].uniq();

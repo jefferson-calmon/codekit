@@ -1,3 +1,2 @@
-export { getFormEntriesByForm } from './getFormEntriesByForm'
-export { getFormEntriesByEvent } from './getFormEntriesByEvent'
-export { getFormEntriesByQuery } from './getFormEntriesByQuery'
+export { getFormEntriesByForm } from './getFormEntriesByForm';
+export { getFormEntriesByEvent } from './getFormEntriesByEvent';
