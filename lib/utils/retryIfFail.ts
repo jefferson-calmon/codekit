@@ -1,7 +1,7 @@
 interface retryIfTimeoutOptions {
 	maxRetries: number;
 	delayBetweenRetries: number;
-    onFail?: () => void;
+    onRetry?: (error: any, retries: number) => void;
 }
 
 export function retryIfFail<T>(
@@ -21,13 +21,9 @@ export function retryIfFail<T>(
 					if (retries < maxRetries) {
 						retries++;
 
-						console.log(
-							`[-] Request failed. Trying again... #${retries}`
-						);
+                        options.onRetry && options.onRetry(err, retries);
 
 						setTimeout(retry, timeout);
-
-                        options.onFail && options.onFail();
 					} else {
 						reject(err);
 					}
