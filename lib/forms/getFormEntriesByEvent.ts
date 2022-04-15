@@ -1,4 +1,4 @@
-import { FormEntries } from '../types/Forms';
+import { FormEntries } from '../models/Forms';
 import { notFoundError } from './notFoundError';
 
 export function getFormEntriesByEvent<T = FormEntries>(

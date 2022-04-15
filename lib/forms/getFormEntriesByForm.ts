@@ -1,5 +1,5 @@
 import { notFoundError } from './notFoundError';
-import { FormEntries } from '../types/Forms';
+import { FormEntries } from '../models/Forms';
 
 export function getFormEntriesByForm<T = FormEntries>(
     form: HTMLFormElement,
