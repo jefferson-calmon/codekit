@@ -96,5 +96,3 @@ export const PandoraConfig = (): JSX.Element => {
 
     return <></>;
 };
-
-const teste = ['pt-BR', 'pt-BR'].uniq();
