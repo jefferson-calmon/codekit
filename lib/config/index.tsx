@@ -18,8 +18,13 @@ declare global {
     }
 
     interface Array<T> {
+        /** Returns a copy of the array with all falsy values removed */
         compact: () => T[];
+
+        /** Returns the last value from array */
         last: () => T;
+
+        /** Returns a copy of the array with only unique values */
         uniq: () => T[];
     }
 }
@@ -55,6 +60,7 @@ export const config = (): void => {
 };
 
 export const PandoraConfig = (): JSX.Element => {
+    // Number
     Number.prototype.toMoney = function (
         config: MoneyConfig = {
             locale: 'pt-BR',
@@ -68,6 +74,7 @@ export const PandoraConfig = (): JSX.Element => {
         });
     };
 
+    // String
     String.prototype.toNumber = function () {
         return Number(this);
     };
@@ -87,6 +94,7 @@ export const PandoraConfig = (): JSX.Element => {
         return pattern.replace(/#/g, () => value[index++] || '');
     };
 
+    // Array
     Array.prototype.compact = function () {
         return this.filter(Boolean);
     };
