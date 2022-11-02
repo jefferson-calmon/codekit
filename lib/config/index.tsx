@@ -12,6 +12,7 @@ declare global {
 
     interface String {
         toNumber: () => number;
+        toCapitalize: () => string;
         extractNumbers: () => string;
         mask: (pattern: string) => string;
     }
@@ -69,6 +70,10 @@ export const PandoraConfig = (): JSX.Element => {
 
     String.prototype.toNumber = function () {
         return Number(this);
+    };
+
+    String.prototype.toCapitalize = function () {
+        return this.charAt(0).toUpperCase() + this.slice(1);
     };
 
     String.prototype.extractNumbers = function () {
