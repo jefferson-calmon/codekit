@@ -29,8 +29,6 @@ declare global {
     }
 }
 
-const d = ['1223', 0, undefined, null].compact()
-
 export const config = (): void => {
     Number.prototype.toMoney = function (
         config: MoneyConfig = {
