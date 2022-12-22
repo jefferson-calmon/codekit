@@ -1,6 +1,6 @@
 {
     "name": "pandora-tools",
-    "version": "1.2.3",
+    "version": "1.2.5",
     "description": "Pandora is a collection of tools, utilities and services for typescript developers.",
     "types": "dist/index.d.ts",
     "main": "dist/index.js",
@@ -32,5 +32,8 @@
     "peerDependencies": {
         "react": "^17.0.2",
         "react-dom": "^17.0.2"
+    },
+    "dependencies": {
+        "react-dom": "17.0.2"
     }
 }
