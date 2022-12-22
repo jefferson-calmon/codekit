@@ -19,7 +19,7 @@ declare global {
 
     interface Array<T> {
         /** Returns a copy of the array with all falsy values removed */
-        compact: () => T[];
+        compact: () => Exclude<T, null | undefined | false>[];
 
         /** Returns the last value from array */
         last: () => T;
@@ -28,6 +28,8 @@ declare global {
         uniq: () => T[];
     }
 }
+
+const d = ['1223', 0, undefined, null].compact()
 
 export const config = (): void => {
     Number.prototype.toMoney = function (
