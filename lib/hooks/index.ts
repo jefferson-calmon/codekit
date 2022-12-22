@@ -5,3 +5,4 @@ export { useFetch } from './useFetch';
 export { useOnScreen } from './useOnScreen';
 export { useHistory } from './useHistory';
 export { useActive } from './useActive';
+export { useDebounce } from './useDebounce';

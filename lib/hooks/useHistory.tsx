@@ -82,7 +82,7 @@ export function useHistory<T = any>(initialPresent: T) {
     }, [canRedo, dispatch]);
 
     const set = useCallback(
-        newPresent => dispatch({ type: 'SET', newPresent }),
+        (newPresent: any) => dispatch({ type: 'SET', newPresent }),
         [dispatch],
     );
 

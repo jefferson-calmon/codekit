@@ -10,9 +10,9 @@ interface HookReturn<T extends string> {
     ) => void;
 }
 
-export function useActive<T extends string>({
-    ...props
-}: HookProps<T> | void): HookReturn<T> {
+export function useActive<T extends string>(
+    props: HookProps<T> | void,
+): HookReturn<T> {
     const [isActive, setIsActive] = useState<Record<T, boolean>>({
         ...props,
     } as Record<T, boolean>);
@@ -29,10 +29,7 @@ export function useActive<T extends string>({
         }
 
         if (typeof item === 'object') {
-            setIsActive(prev => ({
-                ...prev,
-                ...item,
-            }));
+            setIsActive(prev => ({ ...prev, ...item }));
         }
     }
 
