@@ -13,12 +13,16 @@ export * from './utils';
 import * as config from './config';
 export * from './config';
 
+import * as types from './types';
+export * from './types';
+
 const pandora = {
     ...hooks,
     ...validations,
     ...forms,
     ...utils,
-    ...config
+    ...config,
+    ...types,
 };
 
 export default pandora;
