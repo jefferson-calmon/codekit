@@ -9,3 +9,4 @@ export * from './useDebounce';
 export * from './useEventListener';
 export * from './useMedia';
 export * from './useKeyPress';
+export * from './usePrevious';
