@@ -1,9 +1,19 @@
 import { useCallback, useReducer } from 'react';
 
 interface Action {
-    type: 'UNDO' | 'REDO' | 'SET' | 'CLEAR';
+    type: 'UNDO' | 'REDO' | 'SET' | 'RESET';
     newPresent?: any;
     initialPresent?: any;
+}
+
+interface HookReturn<T = any> {
+    state: T;
+    set: (newPresent: T) => void;
+    undo: () => void;
+    redo: () => void;
+    reset: () => void;
+    canUndo: boolean;
+    canRedo: boolean;
 }
 
 // Initial state that we pass into useReducer
@@ -47,7 +57,7 @@ const reducer = (state: any, action: Action) => {
                 present: newPresent,
                 future: [],
             };
-        case 'CLEAR':
+        case 'RESET':
             const { initialPresent } = action;
             return {
                 ...initialState,
@@ -57,7 +67,7 @@ const reducer = (state: any, action: Action) => {
 };
 
 // Hook
-export function useHistory<T = any>(initialPresent: T) {
+export function useHistory<T = any>(initialPresent: T): HookReturn<T> {
     // Hooks
     const [state, dispatch] = useReducer(reducer, {
         ...initialState,
@@ -86,10 +96,10 @@ export function useHistory<T = any>(initialPresent: T) {
         [dispatch],
     );
 
-    const clear = useCallback(
-        () => dispatch({ type: 'CLEAR', initialPresent }),
+    const reset = useCallback(
+        () => dispatch({ type: 'RESET', initialPresent }),
         [dispatch],
     );
 
-    return { state: state.present, set, undo, redo, clear, canUndo, canRedo };
+    return { state: state.present, set, undo, redo, reset, canUndo, canRedo };
 }

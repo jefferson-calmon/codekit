@@ -1,6 +1,6 @@
 {
     "name": "pandora-tools",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "description": "Pandora is a collection of tools, utilities and services for typescript developers.",
     "types": "dist/index.d.ts",
     "main": "dist/index.js",
