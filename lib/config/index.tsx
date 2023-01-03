@@ -1,9 +1,4 @@
-type MoneyCurrency = 'BRL' | 'USD' | 'EUR';
-
-interface MoneyConfig {
-    locale: 'pt-BR' | 'en-US';
-    currency: MoneyCurrency;
-}
+import { MoneyConfig } from '../types';
 
 declare global {
     interface Number {

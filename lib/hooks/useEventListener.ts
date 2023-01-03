@@ -4,9 +4,6 @@ type Event = keyof WindowEventMap;
 type Ref<T> = (Window & typeof globalThis) | Document | T;
 type Handler<K extends Event> = (this: Window, ev: WindowEventMap[K]) => any;
 
-export type EventName = Event;
-export type Events = WindowEventMap
-
 export function useEventListener<K extends Event, T extends Element>(
     eventName: K,
     handler: Handler<K>,
