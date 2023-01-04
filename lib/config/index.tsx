@@ -21,40 +21,13 @@ declare global {
 
         /** Returns a copy of the array with only unique values */
         uniq: () => T[];
+
+        /** Returns the array ordered by key passed in the props */
+        order: (key: keyof T, order?: 'asc' | 'desc') => T[];
     }
 }
 
 export const config = (): void => {
-    Number.prototype.toMoney = function (
-        config: MoneyConfig = {
-            locale: 'pt-BR',
-            currency: 'BRL',
-        },
-    ) {
-        return this.toLocaleString(config.locale, {
-            style: 'currency',
-            currency: config.currency,
-            maximumFractionDigits: 2,
-        });
-    };
-
-    String.prototype.toNumber = function () {
-        return Number(this);
-    };
-
-    String.prototype.extractNumbers = function () {
-        return this.toString().replace(/\D/g, '');
-    };
-
-    String.prototype.mask = function (pattern: string) {
-        let index = 0;
-        const value = this.toString().replace(/\D/g, '');
-
-        return pattern.replace(/#/g, () => value[index++] || '');
-    };
-};
-
-export const PandoraConfig = (): JSX.Element => {
     // Number
     Number.prototype.toMoney = function (
         config: MoneyConfig = {
@@ -101,6 +74,18 @@ export const PandoraConfig = (): JSX.Element => {
     Array.prototype.uniq = function () {
         return [...new Set(this)];
     };
+
+    Array.prototype.order = function (key, order) {
+        return this.sort((a, b) => {
+            if (a[key] < b[key]) return order === 'asc' ? -1 : 1;
+            if (a[key] > b[key]) return order === 'asc' ? 1 : -1;
+            return 0;
+        });
+    };
+};
+
+export const PandoraConfig = (): JSX.Element => {
+    config();
 
     return <></>;
 };
