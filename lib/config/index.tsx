@@ -24,6 +24,9 @@ declare global {
 
         /** Returns the array ordered by key passed in the props */
         order: (key: keyof T, order?: 'asc' | 'desc') => T[];
+
+        /** Returns a copy of array shuffled */
+        shuffle: () => T[];
     }
 }
 
@@ -81,6 +84,18 @@ export const config = (): void => {
             if (a[key] > b[key]) return order === 'asc' ? 1 : -1;
             return 0;
         });
+    };
+
+    Array.prototype.shuffle = function () {
+        const array = this;
+
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+
+        return array;
     };
 };
 
