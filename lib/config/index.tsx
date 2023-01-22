@@ -1,8 +1,16 @@
 import slugify from 'slugify';
 
 import { MoneyConfig } from '../types';
+import { locales, defaultOptions } from '../constants/slugify';
 
-export type SlugifyOptions = Parameters<typeof slugify>[1];
+export interface SlugifyOptions {
+    replacement?: string;
+    remove?: RegExp;
+    lowerCase?: boolean;
+    strict?: boolean;
+    locale?: keyof typeof locales;
+    trim?: boolean;
+}
 
 declare global {
     interface Number {
@@ -70,10 +78,19 @@ export const config = (): void => {
         return pattern.replace(/#/g, () => value[index++] || '');
     };
 
-    String.prototype.slugify = function (options: SlugifyOptions) {
+    String.prototype.slugify = function (options?: SlugifyOptions) {
         const value = this.toString();
 
-        return slugify(value, options);
+        const slugifyOptions: Parameters<typeof slugify>[1] = {
+            locale: options?.locale || defaultOptions.locale,
+            lower: options?.lowerCase || defaultOptions.lowerCase,
+            remove: options?.remove || defaultOptions.remove,
+            replacement: options?.replacement || defaultOptions.replacement,
+            strict: options?.strict || defaultOptions.strict,
+            trim: options?.trim || defaultOptions.trim,
+        };
+
+        return slugify(value, slugifyOptions);
     };
 
     // Array
