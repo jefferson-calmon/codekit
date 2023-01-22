@@ -1,41 +1,42 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
 interface WindowSize {
-	width: number | undefined;
-	height: number | undefined;
+    width: number;
+    height: number;
 }
 
 interface useWindowSizeData extends WindowSize {
-	isMobile: boolean;
-	isTablet: boolean;
-	isDesktop: boolean;
+    isMobile: boolean;
+    isTablet: boolean;
+    isDesktop: boolean;
 }
 
 export function useWindowSize(): useWindowSizeData {
-	const [windowSize, setWindowSize] = useState<WindowSize>({
-		width: undefined,
-		height: undefined,
-	});
+    const [windowSize, setWindowSize] = useState<WindowSize>({
+        width: 0,
+        height: 0,
+    });
 
-	useEffect(() => {
-		function handleResize() {
-			setWindowSize({
-				width: window.innerWidth,
-				height: window.innerHeight,
-			});
-		}
+    useIsomorphicLayoutEffect(() => {
+        function handleResize() {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            });
+        }
 
-		window.addEventListener('resize', handleResize);
+        handleResize();
 
-		handleResize();
+        window.addEventListener('resize', handleResize);
 
-		return () => window.removeEventListener('resize', handleResize);
-	}, []);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
-	return {
-		...windowSize,
-		isMobile: !windowSize.width ? false : windowSize.width < 768,
-		isTablet: !windowSize.width ? false : windowSize.width < 992,
-		isDesktop: !windowSize.width ? false : windowSize.width > 992,
-	};
+    return {
+        ...windowSize,
+        isMobile: !windowSize.width ? false : windowSize.width < 768,
+        isTablet: !windowSize.width ? false : windowSize.width <= 1024,
+        isDesktop: !windowSize.width ? false : windowSize.width > 1024,
+    };
 }
