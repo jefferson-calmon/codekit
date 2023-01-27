@@ -12,3 +12,4 @@ export { useKeyPress } from './useKeyPress';
 export { usePrevious } from './usePrevious';
 export { useBoolean } from './useBoolean';
 export { useCopyToClipboard } from './useCopyToClipboard';
+export { useError } from './useError';
