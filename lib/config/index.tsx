@@ -2,6 +2,7 @@ import slugify from 'slugify';
 
 import { MoneyConfig } from '../types';
 import { locales, defaultOptions } from '../constants/slugify';
+import { randomString } from '../utils';
 
 export interface SlugifyOptions {
     replacement?: string;
@@ -23,6 +24,7 @@ declare global {
         extractNumbers: () => string;
         mask: (pattern: string) => string;
         slugify: (options?: SlugifyOptions) => string;
+        random: typeof randomString;
     }
 
     interface Array<T> {
@@ -93,6 +95,8 @@ export const config = (): void => {
         return slugify(value, slugifyOptions);
     };
 
+    String.prototype.random = randomString;
+
     // Array
     Array.prototype.compact = function () {
         return this.filter(Boolean);
@@ -132,3 +136,5 @@ export const PandoraConfig = (): JSX.Element => {
 
     return <></>;
 };
+
+''.random();
