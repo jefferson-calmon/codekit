@@ -136,5 +136,3 @@ export const PandoraConfig = (): JSX.Element => {
 
     return <></>;
 };
-
-''.random();
