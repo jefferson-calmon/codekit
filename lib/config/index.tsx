@@ -2,7 +2,8 @@ import slugify from 'slugify';
 
 import { MoneyConfig } from '../types';
 import { locales, defaultOptions } from '../constants/slugify';
-import { randomString } from '../utils';
+import { randomString } from '../utils/randomString';
+import { measureText, PropsWithoutText } from '../utils/measureText';
 
 export interface SlugifyOptions {
     replacement?: string;
@@ -25,6 +26,7 @@ declare global {
         mask: (pattern: string) => string;
         slugify: (options?: SlugifyOptions) => string;
         random: typeof randomString;
+        measure: (...props: PropsWithoutText) => number;
     }
 
     interface Array<T> {
@@ -96,6 +98,10 @@ export const config = (): void => {
     };
 
     String.prototype.random = randomString;
+
+    String.prototype.measure = function (...props: PropsWithoutText) {
+        return measureText(this.toString(), ...props);
+    };
 
     // Array
     Array.prototype.compact = function () {

@@ -8,3 +8,4 @@ export { retryIfFail } from './retryIfFail';
 export { makeArray } from './makeArray';
 export { debounce } from './debounce';
 export { randomString, RandomStringOptions } from './randomString';
+export { measureText } from './measureText';
