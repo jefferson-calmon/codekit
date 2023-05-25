@@ -39,11 +39,17 @@ declare global {
         /** Returns a copy of the array with only unique values */
         uniq: () => T[];
 
+        /** Returns a copy of the array with only unique values by key */
+        uniqByKey: (key: keyof T) => T[];
+
         /** Returns the array ordered by key passed in the props */
         order: (key: keyof T, order?: 'asc' | 'desc') => T[];
 
         /** Returns a copy of array shuffled */
         shuffle: () => T[];
+
+        /** Returns a random item from array */
+        random: () => T;
     }
 }
 
@@ -116,6 +122,16 @@ export const config = (): void => {
         return [...new Set(this)];
     };
 
+    Array.prototype.uniqByKey = function <T>(key: keyof T) {
+        const map = new Map<any, T>();
+
+        this.forEach(item => {
+
+            map.set(item[key], item);
+        });
+        return [...map.values()];
+    };
+
     Array.prototype.order = function (key, order) {
         return this.sort((a, b) => {
             if (a[key] < b[key]) return order === 'asc' ? -1 : 1;
@@ -134,6 +150,10 @@ export const config = (): void => {
         }
 
         return array;
+    };
+
+    Array.prototype.random = function () {
+        return this[Math.floor(Math.random() * this.length)];
     };
 };
 
