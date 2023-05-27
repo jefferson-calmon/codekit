@@ -10,4 +10,5 @@ export { debounce } from './debounce';
 export { randomString, RandomStringOptions } from './randomString';
 export { measureText } from './measureText';
 export { crypto } from './crypto';
+export { mergeObjects } from './mergeObjects';
 export * from './calculateSimilarityScore';
