@@ -27,6 +27,7 @@ declare global {
         slugify: (options?: SlugifyOptions) => string;
         random: typeof randomString;
         measure: (...props: PropsWithoutText) => number;
+        searchFor: (search: string) => boolean;
     }
 
     interface Array<T> {
@@ -109,6 +110,13 @@ export const config = (): void => {
         return measureText(this.toString(), ...props);
     };
 
+    String.prototype.searchFor = function (search: string) {
+        const string = this.toString().toLowerCase();
+        const value = search.toString().toLowerCase();
+
+        return string.search(value) >= 0;
+    };
+
     // Array
     Array.prototype.compact = function () {
         return this.filter(Boolean);
@@ -126,7 +134,6 @@ export const config = (): void => {
         const map = new Map<any, T>();
 
         this.forEach(item => {
-
             map.set(item[key], item);
         });
         return [...map.values()];
