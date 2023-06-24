@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
+import { delay } from '../utils';
 
 interface WindowSize {
     width: number;
@@ -21,12 +22,13 @@ export function useWindowSize(): useWindowSizeData {
     useIsomorphicLayoutEffect(() => {
         function handleResize() {
             setWindowSize({
-                width: window.innerWidth,
-                height: window.innerHeight,
+                width: window.screen.availWidth,
+                height: window.screen.availHeight,
             });
         }
 
         handleResize();
+        delay(0.5).then(handleResize);
 
         window.addEventListener('resize', handleResize);
 
