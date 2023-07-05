@@ -22,7 +22,14 @@ export { validateRg } from './validateRg';
 import { validateByRegex } from './validateByRegex';
 export { validateByRegex } from './validateByRegex';
 
+import { validateUrl } from './validateUrl';
+export { validateUrl } from './validateUrl';
+
+import { validateTypeOf } from './validateTypeOf';
+export { validateTypeOf } from './validateTypeOf';
+
 export const validator = {
+    isUrl: validateUrl,
     isEmail: validateEmail,
     isRg: validateRg,
     isCpf: validateCpf,
@@ -30,5 +37,14 @@ export const validator = {
     isCpfOrCnpj: validateCpfOrCnpj,
     isPhoneNumber: validatePhoneNumber,
     isLatLng: validateLatLng,
-    regex: validateByRegex
+    regex: validateByRegex,
+
+    isUndefined: (value: any) => validateTypeOf(value, 'undefined'),
+    isBoolean: (value: any) => validateTypeOf(value, 'boolean'),
+    isNumber: (value: any) => validateTypeOf(value, 'number'),
+    isString: (value: any) => validateTypeOf(value, 'string'),
+    isObject: (value: any) => validateTypeOf(value, 'object'),
+    isFunction: (value: any) => validateTypeOf(value, 'function'),
+    isSymbol: (value: any) => validateTypeOf(value, 'symbol'),
+    isBigInt: (value: any) => validateTypeOf(value, 'bigint'),
 };
