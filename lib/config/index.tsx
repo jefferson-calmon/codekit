@@ -164,7 +164,7 @@ export const config = (): void => {
     };
 };
 
-export const PandoraConfig = (): JSX.Element => {
+export const CodeKitConfig = (): JSX.Element => {
     config();
 
     return <></>;

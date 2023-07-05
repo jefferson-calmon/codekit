@@ -22,7 +22,7 @@ export * from './models';
 import * as constants from './constants';
 export * from './constants';
 
-const pandora = {
+const codekit = {
     ...hooks,
     ...validators,
     ...forms,
@@ -33,4 +33,4 @@ const pandora = {
     ...constants,
 };
 
-export default pandora;
+export default codekit;
