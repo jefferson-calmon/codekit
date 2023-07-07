@@ -1,19 +1,10 @@
-import slugify from 'slugify';
-
 import { MoneyConfig } from '../types';
-import { locales, defaultOptions } from '../constants/slugify';
+import { defaultOptions } from '../constants/slugify';
 import { randomString } from '../utils/randomString';
 import { measureText, PropsWithoutText } from '../utils/measureText';
 import { mergeObjects } from '../utils';
-
-export interface SlugifyOptions {
-    replacement?: string;
-    remove?: RegExp;
-    lowerCase?: boolean;
-    strict?: boolean;
-    locale?: keyof typeof locales;
-    trim?: boolean;
-}
+import { slugify } from '../utils/slugify';
+import { SlugifyOptions } from '../types/slugify';
 
 declare global {
     interface Number {
@@ -97,13 +88,13 @@ export const config = (): void => {
     String.prototype.slugify = function (options?: SlugifyOptions) {
         const value = this.toString();
 
-        const slugifyOptions: Parameters<typeof slugify>[1] = {
-            locale: options?.locale || defaultOptions.locale,
-            lower: options?.lowerCase || defaultOptions.lowerCase,
-            remove: options?.remove || defaultOptions.remove,
-            replacement: options?.replacement || defaultOptions.replacement,
-            strict: options?.strict || defaultOptions.strict,
-            trim: options?.trim || defaultOptions.trim,
+        const slugifyOptions: SlugifyOptions = {
+            locale: options?.locale ?? defaultOptions.locale,
+            lowerCase: options?.lowerCase ?? defaultOptions.lowerCase,
+            remove: options?.remove ?? defaultOptions.remove,
+            replacement: options?.replacement ?? defaultOptions.replacement,
+            strict: options?.strict ?? defaultOptions.strict,
+            trim: options?.trim ?? defaultOptions.trim,
         };
 
         return slugify(value, slugifyOptions);

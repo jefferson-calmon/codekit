@@ -12,3 +12,4 @@ export { measureText } from './measureText';
 export { crypto } from './crypto';
 export { mergeObjects } from './mergeObjects';
 export * from './calculateSimilarityScore';
+export * from './slugify';
