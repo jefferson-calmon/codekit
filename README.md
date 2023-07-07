@@ -1,58 +1,91 @@
-<h1 align="center">
-    CodeKit
-</h1>
-<!-- <h4 align="center">NLW Heat </h4> -->
-<p align="center">
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/jefferson-calmon/codekit?color=nullcolor">
+# CodeKit
 
-  <a href="https://www.linkedin.com/in/jeffersoncalmon/">
-    <img alt="Made by jefferson-calmon" src="https://img.shields.io/badge/made%20by-Jefferson Calmon-%23nullcolor">
-  </a>
+<a href="https://www.npmjs.com/package/codekit" target="_blank">
+<img src="https://img.shields.io/npm/v/codekit.svg">
+</a>
 
-  <a href="https://github.com/jefferson-calmon/codekit/commits/master">
-    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/jefferson-calmon/codekit?color=nullcolor">
-  </a>
+<a href="https://www.npmjs.com/package/codekit" target="_blank">
+<img src="https://img.shields.io/bundlephobia/min/codekit">
+</a>
 
-  <img alt="License" src="https://img.shields.io/badge/license-MIT-brightgreen?color=nullcolor">
+<a href="https://www.npmjs.com/package/codekit" target="_blank">
+<img src="https://img.shields.io/npm/dm/codekit.svg">
+</a>
 
-   <a href="https://github.com/jefferson-calmon/codekit/stargazers">
-    <img alt="Stargazers" src="https://img.shields.io/github/stars/jefferson-calmon/codekit?style=social&color=nullcolor">
-  </a>
-</p>
+<a href="https://github.com/jefferson-calmon/codekit/blob/master/LICENSE" target="_blank">
+<img src="https://img.shields.io/github/license/jefferson-calmon/codekit.svg">
+</a>
 
-<p align="center">
-  <a href="#-project">Project</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-how-to-use">How to use</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-how-to-contribute">How to contribute</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#memo-license">License</a>
-</p>
+<a href="https://github.com/jefferson-calmon/codekit/stargazers" target="_blank">
+<img src="https://img.shields.io/github/stars/jefferson-calmon/codekit.svg?style=social">
+</a>
 
-<br /><br />
+<br>
 
-<a id="-project"></a>
+CodeKit é uma coleção de ferramentas, utilitários e serviços para desenvolvedores front-end que podem ser extremamente úteis durante o processo de codificação. Este pacote foi projetado para ser utilizado especificamente em aplicações NextJS com TypeScript, mas também pode ser utilizado em projetos como React com JavaScript.
 
-## :coffee: O que é o CodeKit?
+## Instalação
 
-CodeKit é uma coleção de ferramentas, utilitários e serviços para desenvolvedores front-end, que pode ser uma mão na roda na hora de codar. O pacote foi feito para rodar especificamente em aplicações NextJS com TypeScript, porém pode ser usado em projetos como React com JavaScript.
+Para instalar o CodeKit, você precisa ter o [Node.js](https://nodejs.org) instalado em seu sistema. Em seguida, execute o seguinte comando:
 
-<img src="./.github/images/codding.webp" width="100%" />
+```bash
+npm install codekit
+```
 
-<br />
+ou se estiver utilizando o [Yarn](https://yarnpkg.com):
 
-## ⚙️ Documentação
+```bash
+yarn add codekit
+```
 
-> Veja a documentação em https://codekit.vercel.app/
+## Uso
 
-<br />
+Para utilizar o CodeKit em seu projeto, siga as etapas abaixo:
 
-## 🤔 Como posso contribuir?
+1. Importe o CodeKit em seu arquivo:
 
-> Veja em https://codekit.vercel.app/contribute
+```typescript
+import CodeKit from 'codekit';
+```
 
-<br />
+2. Utilize as funcionalidades oferecidas pelo CodeKit de acordo com suas necessidades.
 
-## :memo: License
+```typescript
+// Exemplo de utilização do CodeKit
+CodeKit.exemploFuncionalidade();
+```
 
-This project is under the MIT license. See the [LICENSE](https://github.com/DanielObara/NLW-1.0/blob/master/LICENSE) for details.
+ou se preferir você pode importar a funcionalidade direto:
 
-Feito com ♥ por [Jefferson Calmon](https://jeffersoncalmon.dev)
+```typescript
+import { exemploFuncionalidade } from 'codekit';
+
+exemploFuncionalidade();
+```
+
+## Funcionalidades
+
+O CodeKit oferece diversas funcionalidades para auxiliar no desenvolvimento front-end.
+
+Consulte a documentação completa para obter informações detalhadas sobre todas as funcionalidades disponíveis.
+
+## Documentação
+
+Para obter informações detalhadas sobre como utilizar todas as funcionalidades disponíveis no CodeKit, consulte a nossa [documentação oficial](https://codekit-docs.vercel.app). Lá você encontrará exemplos de uso, explicações detalhadas e guias passo a passo.
+
+Visite a [documentação oficial](https://codekit-docs.vercel.app) agora mesmo!
+
+## Contribuição
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir um problema (issue) ou enviar um pull request no repositório oficial do CodeKit no GitHub.
+
+Antes de contribuir, certifique-se de ler as diretrizes de contribuição. Clique [aqui](https://codekit-docs.vercel.app/contribute) e saiba mais.
+
+## Licença
+
+Este pacote está licenciado sob a [Licença MIT](https://github.com/jefferson-calmon/codekit/blob/main/LICENSE). Consulte o arquivo `LICENSE` para obter mais informações.
+
+## Links úteis
+
+- [Documentação oficial](https://codekit-docs.vercel.app)
+- [Repositório no GitHub](https://github.com/jefferson-calmon/codekit)
