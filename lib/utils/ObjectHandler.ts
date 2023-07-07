@@ -56,18 +56,9 @@ function set<T extends object, K extends string, V extends any>(
 }
 
 function del<T extends object, K extends keyof T & string>(object: T, key: K) {
-    const keyParts = key.split('.');
-
     let returnValue = object;
 
-    for (let i = 0; i < keyParts.length; i++) {
-        const part = keyParts[i];
-        if (returnValue) {
-            returnValue = (returnValue as any)[part];
-        } else {
-            break;
-        }
-    }
+    delete returnValue[key];
 
     return returnValue as Omit<T, K>;
 }
