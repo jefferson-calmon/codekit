@@ -1,13 +1,7 @@
-type Obj = Record<string | never, any>;
-
-export function mergeObjects<T extends Obj = Obj, U extends Obj = Obj>(
+export function mergeObjects<T extends object, U extends object>(
     target: T,
-    source: Partial<U>,
-): T & Partial<U> {
-    if (typeof target !== 'object' || typeof source !== 'object') {
-        throw new Error('Os parâmetros devem ser objetos.');
-    }
-
+    source: U,
+) {
     const merged = { ...target } as any;
 
     for (const key in source) {
@@ -30,5 +24,5 @@ export function mergeObjects<T extends Obj = Obj, U extends Obj = Obj>(
         }
     }
 
-    return merged as T & Partial<U>;
+    return merged as T & U;
 }

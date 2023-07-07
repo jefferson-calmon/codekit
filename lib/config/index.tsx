@@ -2,7 +2,6 @@ import { MoneyConfig } from '../types';
 import { defaultOptions } from '../constants/slugify';
 import { randomString } from '../utils/randomString';
 import { measureText, PropsWithoutText } from '../utils/measureText';
-import { mergeObjects } from '../utils';
 import { slugify } from '../utils/slugify';
 import { SlugifyOptions } from '../types/slugify';
 
@@ -43,10 +42,6 @@ declare global {
 
         /** Returns a random item from array */
         random: () => T;
-    }
-
-    interface Object {
-        merge<T extends object, U extends object>(this: T, source: U): T & U;
     }
 }
 
@@ -157,13 +152,6 @@ export const config = (): void => {
 
     Array.prototype.random = function () {
         return this[Math.floor(Math.random() * this.length)];
-    };
-
-    // Object
-    Object.prototype.merge = function <T extends object, U extends object>(
-        source: Partial<U>,
-    ): T & Partial<U> {
-        return mergeObjects<T, U>(this as T, source);
     };
 };
 
