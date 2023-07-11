@@ -1610,11 +1610,6 @@ coa@^2.0.2:
     chalk "^2.4.1"
     q "^1.1.2"
 
-codekit@^1.5.9:
-  version "1.5.9"
-  resolved "https://registry.yarnpkg.com/codekit/-/codekit-1.5.9.tgz#677c820954d10edd004ea24cbba536fcc7b05ff3"
-  integrity sha512-t7EL3hlE1yFsmZiT2nKqkkQF+TXLMCH77o+3CRy7B4kaATiBRU5gOVJdvGW7HA7ifaMV2YaffEQn+McTh/0Qng==
-
 color-convert@^1.9.0, color-convert@^1.9.3:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.3.tgz#bb71850690e1f136567de629d2d5471deda4c1e8"
