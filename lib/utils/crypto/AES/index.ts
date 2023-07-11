@@ -1,11 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import crypto from 'crypto';
-
-const algorithm = 'aes-256-gcm';
-const ivLength = 16;
-const tagLength = 16;
-const defaultSaltLength = 64;
-const defaultPbkdf2Iterations = 1000;
+import CryptoJS from 'crypto-js';
 
 type O = Record<string, any>;
 type ProcessObjectProps<T> = [
@@ -14,71 +8,29 @@ type ProcessObjectProps<T> = [
     secret: string,
     criteria?: boolean | keyof T | (keyof T)[],
 ];
+type Config = Parameters<typeof CryptoJS.AES.encrypt>['2'];
 
-function encrypt(value: string, secret: string): string {
+function encrypt(value: string, secret: string, config?: Config): string {
     if (!value) throw new Error('value must not be null or undefined');
 
     if (!secret || typeof secret !== 'string') {
-        throw new Error('cryptoAES: secret must be a non-0-length string');
+        throw new Error('crypto.AES: secret must be a non-0-length string');
     }
 
-    const iv = crypto.randomBytes(ivLength);
-    const salt = crypto.randomBytes(defaultSaltLength);
-
-    const key = crypto.pbkdf2Sync(
-        secret,
-        salt,
-        defaultPbkdf2Iterations,
-        32,
-        'sha512',
-    );
-
-    const cipher = crypto.createCipheriv(algorithm, key, iv);
-    const encrypted = Buffer.concat([
-        cipher.update(String(value), 'utf8'),
-        cipher.final(),
-    ]);
-
-    const tag = cipher.getAuthTag();
-
-    return Buffer.concat([salt, iv, tag, encrypted]).toString('hex');
+    return CryptoJS.AES.encrypt(value, secret, config).toString();
 }
 
-function decrypt(encryptedValue: string, secret: string): string {
-    if (encryptedValue == null) {
+function decrypt(cipher: string, secret: string, config?: Config): string {
+    if (cipher == null) {
         throw new Error('value must not be null or undefined');
     }
     if (!secret || typeof secret !== 'string') {
         throw new Error('Cryptr: secret must be a non-0-length string');
     }
 
-    const stringValue = Buffer.from(encryptedValue, 'hex');
-
-    const salt = stringValue.slice(0, defaultSaltLength);
-    const iv = stringValue.slice(
-        defaultSaltLength,
-        defaultSaltLength + ivLength,
+    return CryptoJS.AES.decrypt(cipher, secret, config).toString(
+        CryptoJS.enc.Utf8,
     );
-    const tag = stringValue.slice(
-        defaultSaltLength + ivLength,
-        defaultSaltLength + ivLength + tagLength,
-    );
-    const encrypted = stringValue.slice(
-        defaultSaltLength + ivLength + tagLength,
-    );
-
-    const key = crypto.pbkdf2Sync(
-        secret,
-        salt,
-        defaultPbkdf2Iterations,
-        32,
-        'sha512',
-    );
-
-    const decipher = crypto.createDecipheriv(algorithm, key, iv);
-    decipher.setAuthTag(tag);
-
-    return decipher.update(encrypted) + decipher.final('utf8');
 }
 
 function cryptObject<T extends O = O>(...props: ProcessObjectProps<T>): T {
