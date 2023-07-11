@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import crypto from 'crypto';
 
 const algorithm = 'aes-256-gcm';
 const ivLength = 16;
 const tagLength = 16;
 const defaultSaltLength = 64;
-const defaultPbkdf2Iterations = 100000;
+const defaultPbkdf2Iterations = 1000;
 
 type O = Record<string, any>;
 type ProcessObjectProps<T> = [
     action: 'encrypt' | 'decrypt',
-    object: T,
+    obj: T,
     secret: string,
     criteria?: boolean | keyof T | (keyof T)[],
 ];
