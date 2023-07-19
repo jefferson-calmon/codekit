@@ -5,33 +5,30 @@ type Ref<T> = (Window & typeof globalThis) | Document | T;
 type Handler<K extends Event> = (this: Window, ev: WindowEventMap[K]) => any;
 
 export function useEventListener<K extends Event, T extends Element>(
-    eventName: K,
-    handler: Handler<K>,
-    element: Ref<T> = window,
+	eventName: K,
+	handler: Handler<K>,
+	target?: Ref<T>
 ) {
-    // Refs
-    const savedHandler = useRef<any>();
+	// Refs
+	const savedHandler = useRef<any>();
 
-    // Effects
-    useEffect(() => {
-        savedHandler.current = handler;
-    }, [handler]);
+	// Effects
+	useEffect(() => {
+		savedHandler.current = handler;
+	}, [handler]);
 
-    useEffect(
-        () => {
-            const isSupported = element && element.addEventListener;
-            if (!isSupported) return;
+	useEffect(() => {
+		const root = target ?? window;
 
-            const eventListener = (event: any) => savedHandler.current(event);
+		const isSupported = root && root.addEventListener;
+		if (!isSupported) return;
 
-            if (!element || typeof element === 'undefined') return;
+		const eventListener = (event: any) => savedHandler.current(event);
 
-            element.addEventListener(eventName, eventListener);
+		root.addEventListener(eventName, eventListener);
 
-            return () => {
-                element.removeEventListener(eventName, eventListener);
-            };
-        },
-        [eventName, element], // Re-run if eventName or element changes
-    );
+		return () => {
+			root.removeEventListener(eventName, eventListener);
+		};
+	}, [eventName, target]);
 }
