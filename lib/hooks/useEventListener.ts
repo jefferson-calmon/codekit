@@ -24,6 +24,8 @@ export function useEventListener<K extends Event, T extends Element>(
 
             const eventListener = (event: any) => savedHandler.current(event);
 
+            if (!element || typeof element === 'undefined') return;
+
             element.addEventListener(eventName, eventListener);
 
             return () => {

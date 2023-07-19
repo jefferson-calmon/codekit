@@ -8,7 +8,10 @@ type ProcessObjectProps<T> = [
     secret: string,
     criteria?: boolean | keyof T | (keyof T)[],
 ];
-type Config = Parameters<typeof CryptoJS.AES.encrypt>['2'];
+type Config = {
+    iv?: CryptoJS.lib.WordArray | undefined;
+    [key: string]: any;
+};
 
 function encrypt(value: string, secret: string, config?: Config): string {
     if (!value) throw new Error('value must not be null or undefined');
