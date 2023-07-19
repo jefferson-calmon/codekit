@@ -1,5 +1,5 @@
-import { useState } from 'react';
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useMemo, useState } from 'react';
 import { firebaseErrors } from '../constants/firebaseErrors';
 
 interface Error {
@@ -7,10 +7,20 @@ interface Error {
     message: string;
 }
 
-export function useError() {
+function createErrorFromString(error: string): Error {
+    return {
+        id: error.slugify(),
+        message: error,
+    };
+}
+
+export function useError(customErrors?: Partial<typeof firebaseErrors>) {
     // States
     const [errors, setErrors] = useState<Error[]>([]);
-    const [lastError, setLastError] = useState<Error>();
+    const [lastError, setLastError] = useState<Error | undefined>();
+
+    // Memo vars
+    const exists = useMemo(() => errors.length > 0, [errors]);
 
     // Functions
     function clear() {
@@ -18,41 +28,18 @@ export function useError() {
         setLastError(undefined);
     }
 
-    function set(error: Error | string) {
-        if (typeof error === 'string') {
-            setErrors(prev => {
-                const errors = prev.slice();
-
-                const newError: Error = {
-                    id: error.slugify(),
-                    message: error,
-                };
-
-                errors.push(newError);
-
-                return errors;
-            });
-
-            return;
-        }
-
+    function add(error: Error | string) {
         setErrors(prev => {
-            const errors = prev.slice();
+            const errors = Array.from(prev);
+            const isString = typeof error === 'string';
 
-            const index = errors.findIndex(err => err.id === error.id);
+            const errorObject = isString ? createErrorFromString(error) : error;
+            const index = errors.findIndex(err => err.id === errorObject.id);
 
-            if (index >= 0) errors[index] = error;
-            if (index === -1) errors.push(error);
+            if (index >= 0) errors[index] = errorObject;
+            else errors.push(errorObject);
 
-            return errors;
-        });
-        setLastError(error);
-    }
-
-    function remove(id: string) {
-        setErrors(prev => {
-            const errors = prev.filter(error => error.id !== id);
-
+            setLastError(errorObject);
             return errors;
         });
     }
@@ -61,32 +48,52 @@ export function useError() {
         return errors.find(error => error.id === id);
     }
 
-    function catcher(error: unknown) {
-        const err = error as Record<string, string>;
-        const code = err.code;
+    function remove(id: string) {
+        setErrors(prev => prev.filter(error => error.id !== id));
+    }
 
-        console.log(error);
+    function update(id: string, message: string) {
+        setErrors(prev => {
+            const errors = Array.from(prev);
+            const index = errors.findIndex(error => error.id === id);
 
-        if (!code) {
-            return set({
-                id: 'process',
-                message: 'Houve um erro durante o processo',
-            });
-        }
-
-        set({
-            id: code,
-            message: firebaseErrors[code],
+            if (index >= 0) errors[index].message = message;
+            return errors;
         });
     }
 
+    function catcher(error: unknown) {
+        const err = error as Record<string, string>;
+        const code = err.code;
+        const message = err.message;
+
+        const errorsList = Object.assign(firebaseErrors, customErrors);
+
+        console.log('[+] Error in `useError.catcher`', error);
+
+        if (!code) {
+            add({
+                id: 'process',
+                message: `Houve um erro durante o processo. Error: ${message}.`,
+            });
+        } else {
+            add({
+                id: code,
+                message: (errorsList as any)[code],
+            });
+        }
+    }
+
     return {
+        exists,
         errors,
         lastError,
+
         catcher,
         clear,
-        set,
-        remove,
+        add,
         get,
+        remove,
+        update,
     };
 }
