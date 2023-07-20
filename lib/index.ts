@@ -10,6 +10,9 @@ export * from './forms';
 import * as utils from './utils';
 export * from './utils';
 
+import * as helpers from './helpers';
+export * from './helpers';
+
 import * as config from './config';
 export * from './config';
 
@@ -27,6 +30,7 @@ const codekit = {
     ...validators,
     ...forms,
     ...utils,
+    ...helpers,
     ...config,
     ...types,
     ...models,
