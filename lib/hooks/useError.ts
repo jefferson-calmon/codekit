@@ -14,6 +14,8 @@ function createErrorFromString(error: string): Error {
     };
 }
 
+type Obj = Record<string, string>;
+
 export function useError(customErrors?: Partial<typeof firebaseErrors>) {
     // States
     const [errors, setErrors] = useState<Error[]>([]);
@@ -62,19 +64,20 @@ export function useError(customErrors?: Partial<typeof firebaseErrors>) {
         });
     }
 
-    function catcher(error: unknown) {
-        const err = error as Record<string, string>;
+    function catcher(error: any) {
+        const err = (error.errors ? error.errors[0] : error) as Obj;
         const code = err.code;
         const message = err.message;
 
         const errorsList = Object.assign(firebaseErrors, customErrors);
+        const isControlledError = !!errorsList[code];
 
-        console.log('[+] Error in `useError.catcher`', error);
+        console.error('[+] Error in useError.catcher', error);
 
-        if (!code) {
+        if (!isControlledError) {
             add({
                 id: 'process',
-                message: `Houve um erro durante o processo. Error: ${message}.`,
+                message: `Error: ${message}.`,
             });
         } else {
             add({
