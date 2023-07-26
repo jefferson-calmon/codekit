@@ -1,16 +1,14 @@
 import { KeyOf, DeepTypeOf, GenerateType } from '../types';
 import { mergeObjects } from './mergeObjects';
 
-export function ObjectHandler<T extends object>(obj: T) {
-    return {
-        get: <K extends KeyOf<T> & string>(key: K) => get(obj, key),
-        set: <K extends string, V extends any>(key: K, value: V) =>
-            set(obj, key, value),
-        delete: <K extends keyof T & string>(key: K) => del(obj, key),
-        equalTo: (object2: object) => equalTo(obj, object2),
-        merge: <U extends object>(source: U) => merge(obj, source),
-    };
-}
+export const ObjectHandler = {
+    get,
+    set,
+    delete: <T extends object, K extends keyof T & string>(obj: T, key: K) =>
+        del(obj, key),
+    equalTo,
+    merge,
+};
 
 function get<T extends object, K extends KeyOf<T> & string>(obj: T, key: K) {
     const keyParts = key.split('.');
@@ -52,7 +50,7 @@ function set<T extends object, K extends string, V extends any>(
         (objectRef as any)[finalKey] = value;
     }
 
-    return object as T & GenerateType<typeof key, typeof value>;
+    return objectRef as T & GenerateType<typeof key, typeof value>;
 }
 
 function del<T extends object, K extends keyof T & string>(object: T, key: K) {
