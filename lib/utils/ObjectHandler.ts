@@ -24,33 +24,33 @@ function get<T extends object, K extends KeyOf<T> & string>(obj: T, key: K) {
     return returnValue as DeepTypeOf<T, K>;
 }
 
-function set<T extends object, K extends string, V extends any>(
-    object: T,
+function set<T extends object, K extends KeyOf<T> & string, V>(
+    obj: T,
     key: K,
     value: V,
 ) {
     const keyParts = key.split('.');
 
-    let objectRef = { ...object };
+    if (keyParts.length > 1) {
+        const currentKey = keyParts.shift() as string;
 
-    keyParts.forEach((part: string | number, index: number) => {
-        if (keyParts.length - 1 === index) {
-            return;
+        if (
+            !(obj as any)[currentKey] ||
+            typeof (obj as any)[currentKey] !== 'object'
+        ) {
+            (obj as any)[currentKey] = {};
         }
 
-        if (!(objectRef as any)[part]) {
-            (objectRef as any)[part] = {};
-        }
-
-        objectRef = (objectRef as any)[part];
-    });
-
-    const finalKey: string = keyParts[keyParts.length - 1];
-    if (finalKey !== '__proto__' && finalKey !== 'constructor') {
-        (objectRef as any)[finalKey] = value;
+        set(
+            (obj as any)[currentKey] as object,
+            keyParts.join('.') as KeyOf<object>,
+            value,
+        );
+    } else {
+        (obj as any)[keyParts[0]] = value;
     }
 
-    return objectRef as T & GenerateType<typeof key, typeof value>;
+    return obj as T & GenerateType<K, V>;
 }
 
 function del<T extends object, K extends keyof T & string>(object: T, key: K) {

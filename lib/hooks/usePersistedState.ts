@@ -1,39 +1,39 @@
 import { useEffect, useMemo, useState } from 'react';
 
-type Response<T> = [T, React.Dispatch<React.SetStateAction<T>>];
-
-interface usePersistedStateProps<T> {
-	key: string;
-	initialState: T;
-	storage?: 'local' | 'session';
-}
-
-export function usePersistedState<T>({
-	key,
-	initialState,
-	storage: storageType = 'local',
-}: usePersistedStateProps<T>): Response<T> {
-	const storage = useMemo(() => {
+export function usePersistedState<T>(
+    key: string,
+    initialState: T,
+    revalidator: any,
+    type?: 'local' | 'session',
+) {
+    // Memo vars
+    const storage = useMemo(() => {
         if (typeof window === 'undefined') return null;
 
-		return storageType === 'local' ? localStorage : sessionStorage;
-	}, [storageType]);
+        return type === 'local' ? localStorage : sessionStorage;
+    }, [type]);
 
-	// States
-	const [state, setState] = useState<T>(() => {
-        if (!storage) return initialState;
+    // States
+    const [state, setState] = useState<T>(initialState);
 
-		const storageValue = storage.getItem(key);
+    // Effects
+    useEffect(() => {
+        if (!storage || typeof window === 'undefined') return;
 
-		return storageValue ? JSON.parse(storageValue) : initialState;
-	});
+        const storageValue = storage.getItem(key);
 
-	// Effects
-	useEffect(() => {
-		storage && storage.setItem(key, JSON.stringify(state));
-	}, [key, state, storage]);
+        const state = storageValue ? JSON.parse(storageValue) : initialState;
 
-	return [state, setState];
+        setState(state);
+    }, [revalidator]);
+
+    // Functions
+    function updateState(newState: T) {
+        storage?.setItem(key, JSON.stringify(newState));
+        setState(newState);
+    }
+
+    return [state, updateState] as const;
 }
 
 export default usePersistedState;
