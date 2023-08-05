@@ -1,7 +1,7 @@
 import { KeyOf, DeepTypeOf, GenerateType } from '../../types';
 import { mergeObjects } from '../mergeObjects';
 
-export class Object {
+export class ObjectJS {
     static get<T extends object, K extends KeyOf<T> & string>(obj: T, key: K) {
         const keyParts = key.split('.');
 
@@ -33,7 +33,7 @@ export class Object {
                 (obj as any)[currentKey] = {};
             }
 
-            Object.set(
+            ObjectJS.set(
                 (obj as any)[currentKey] as object,
                 keyParts.join('.') as KeyOf<object>,
                 value,
@@ -56,6 +56,35 @@ export class Object {
         return returnValue as Omit<T, K>;
     }
 
+    static merge<T extends object, U extends object>(target: T, source: U) {
+        return mergeObjects<T, U>(target, source);
+    }
+
+    static flatten<T extends object>(obj: T, delimiter = '.', parentKey = '') {
+        let result: any = {};
+
+        for (const [key, value] of Object.entries(obj)) {
+            const newKey = parentKey ? `${parentKey}${delimiter}${key}` : key;
+
+            if (
+                typeof value === 'object' &&
+                !Array.isArray(value) &&
+                Object.keys(value).length > 0
+            ) {
+                const nestedFlatten = ObjectJS.flatten<{}>(
+                    value,
+                    delimiter,
+                    newKey,
+                );
+                result = { ...result, ...nestedFlatten };
+            } else {
+                (result as any)[newKey] = value;
+            }
+        }
+
+        return result as Record<KeyOf<T>, any>;
+    }
+
     static equalTo(object1: object, object2: object) {
         if (typeof object1 !== 'object' || typeof object2 !== 'object') {
             return object1 === object2;
@@ -67,9 +96,5 @@ export class Object {
         const isEqual = a === b;
 
         return isEqual;
-    }
-
-    static merge<T extends object, U extends object>(target: T, source: U) {
-        return mergeObjects<T, U>(target, source);
     }
 }
