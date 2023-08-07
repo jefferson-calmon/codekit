@@ -1,9 +1,17 @@
-import { MoneyConfig } from '../types';
-import { defaultOptions } from '../constants/slugify';
+import { DeepTypeOf, GenerateType, KeyOf, MoneyConfig } from '../types';
 import { randomString } from '../utils/randomString';
-import { measureText, PropsWithoutText } from '../utils/measureText';
-import { slugify } from '../utils/slugify';
+import { PropsWithoutText } from '../utils/measureText';
 import { SlugifyOptions } from '../types/slugify';
+
+import {
+    ArrayPrototypeUtils,
+    ArrayConstructorUtils,
+    StringPrototypeUtils,
+    NumberPrototypeUtils,
+    mergeObjects,
+    ObjectUtils,
+    arrayify,
+} from '../utils';
 
 declare global {
     interface Number {
@@ -43,115 +51,183 @@ declare global {
         /** Returns a random item from array */
         random: () => T;
     }
+
+    interface ArrayConstructor {
+        new: typeof ArrayConstructorUtils.new;
+    }
+
+    interface ObjectConstructor {
+        get: typeof ObjectUtils.get;
+        set: typeof ObjectUtils.set;
+        delete: typeof ObjectUtils.delete;
+        merge: typeof ObjectUtils.merge;
+        flatten: typeof ObjectUtils.flatten;
+        equalTo: typeof ObjectUtils.equalTo;
+    }
 }
 
 export const config = (): void => {
     // Number
-    Number.prototype.toMoney = function (
-        config: MoneyConfig = {
-            locale: 'pt-BR',
-            currency: 'BRL',
-        },
-    ) {
-        return this.toLocaleString(config.locale, {
-            style: 'currency',
-            currency: config.currency,
-            maximumFractionDigits: 2,
-        });
+    Number.prototype.toMoney = function (...props) {
+        return NumberPrototypeUtils.toMoney(this, ...props);
     };
 
     // String
     String.prototype.toNumber = function () {
-        return Number(this);
+        return StringPrototypeUtils.toNumber(this);
     };
-
     String.prototype.toCapitalize = function () {
-        return this.charAt(0).toUpperCase() + this.slice(1);
+        return StringPrototypeUtils.toCapitalize(this);
     };
-
     String.prototype.extractNumbers = function () {
-        return this.toString().replace(/\D/g, '');
+        return StringPrototypeUtils.extractNumbers(this);
     };
-
-    String.prototype.mask = function (pattern: string) {
-        let index = 0;
-        const value = this.toString().replace(/\D/g, '');
-
-        return pattern.replace(/#/g, () => value[index++] || '');
+    String.prototype.mask = function (...props) {
+        return StringPrototypeUtils.mask(this, ...props);
     };
-
-    String.prototype.slugify = function (options?: SlugifyOptions) {
-        const value = this.toString();
-
-        const slugifyOptions: SlugifyOptions = {
-            locale: options?.locale ?? defaultOptions.locale,
-            lowerCase: options?.lowerCase ?? defaultOptions.lowerCase,
-            remove: options?.remove ?? defaultOptions.remove,
-            replacement: options?.replacement ?? defaultOptions.replacement,
-            strict: options?.strict ?? defaultOptions.strict,
-            trim: options?.trim ?? defaultOptions.trim,
-        };
-
-        return slugify(value, slugifyOptions);
+    String.prototype.slugify = function (...props) {
+        return StringPrototypeUtils.slugify(this, ...props);
     };
-
-    String.prototype.random = randomString;
-
-    String.prototype.measure = function (...props: PropsWithoutText) {
-        return measureText(this.toString(), ...props);
+    String.prototype.measure = function (...props) {
+        return StringPrototypeUtils.measure(this, ...props);
     };
-
-    String.prototype.searchFor = function (search: string) {
-        const string = this.toString().toLowerCase();
-        const value = search.toString().toLowerCase();
-
-        return string.search(value) >= 0;
+    String.prototype.searchFor = function (...props) {
+        return StringPrototypeUtils.searchFor(this, ...props);
     };
 
     // Array
     Array.prototype.compact = function () {
-        return this.filter(Boolean);
+        return ArrayPrototypeUtils.compact(this);
     };
-
     Array.prototype.last = function () {
-        return this[this.length - 1];
+        return ArrayPrototypeUtils.last(this);
     };
-
     Array.prototype.uniq = function () {
-        return [...new Set(this)];
+        return ArrayPrototypeUtils.uniq(this);
     };
-
     Array.prototype.uniqByKey = function <T>(key: keyof T) {
-        const map = new Map<any, T>();
-
-        this.forEach(item => {
-            map.set(item[key], item);
-        });
-        return [...map.values()];
+        return ArrayPrototypeUtils.uniqByKey(this, key);
     };
-
     Array.prototype.order = function (key, order) {
-        return this.sort((a, b) => {
-            if (a[key] < b[key]) return order === 'asc' ? -1 : 1;
-            if (a[key] > b[key]) return order === 'asc' ? 1 : -1;
-            return 0;
-        });
+        return ArrayPrototypeUtils.order(this, key, order);
+    };
+    Array.prototype.shuffle = function () {
+        return ArrayPrototypeUtils.shuffle(this);
+    };
+    Array.prototype.random = function () {
+        return ArrayPrototypeUtils.random(this);
     };
 
-    Array.prototype.shuffle = function () {
-        const array = this;
+    // Array constructor
+    Array.new = function (length: number) {
+        return arrayify(length);
+    };
 
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
+    // Object constructor
+    Object.get = function <T extends object, K extends KeyOf<T> & string>(
+        obj: T,
+        key: K,
+    ) {
+        const keyParts = key.split('.');
 
-            [array[i], array[j]] = [array[j], array[i]];
+        let returnValue = obj;
+
+        keyParts.forEach(part => {
+            if (returnValue) {
+                returnValue = (returnValue as any)[part];
+            }
+        });
+
+        return returnValue as DeepTypeOf<T, K>;
+    };
+
+    Object.set = function <T extends object, K extends KeyOf<T> & string, V>(
+        obj: T,
+        key: K,
+        value: V,
+    ) {
+        const keyParts = key.split('.');
+
+        if (keyParts.length > 1) {
+            const currentKey = keyParts.shift() as string;
+
+            if (
+                !(obj as any)[currentKey] ||
+                typeof (obj as any)[currentKey] !== 'object'
+            ) {
+                (obj as any)[currentKey] = {};
+            }
+
+            Object.set(
+                (obj as any)[currentKey] as object,
+                keyParts.join('.') as KeyOf<object>,
+                value,
+            );
+        } else {
+            (obj as any)[keyParts[0]] = value;
         }
 
-        return array;
+        return obj as T & GenerateType<K, V>;
     };
 
-    Array.prototype.random = function () {
-        return this[Math.floor(Math.random() * this.length)];
+    Object.delete = function <T extends object, K extends keyof T & string>(
+        object: T,
+        key: K,
+    ) {
+        let returnValue = object;
+
+        delete returnValue[key];
+
+        return returnValue as Omit<T, K>;
+    };
+
+    Object.merge = function <T extends object, U extends object>(
+        target: T,
+        source: U,
+    ) {
+        return mergeObjects<T, U>(target, source);
+    };
+
+    Object.flatten = function <T extends object>(
+        obj: T,
+        delimiter = '.',
+        parentKey = '',
+    ) {
+        let result: any = {};
+
+        for (const [key, value] of Object.entries(obj)) {
+            const newKey = parentKey ? `${parentKey}${delimiter}${key}` : key;
+
+            if (
+                typeof value === 'object' &&
+                !Array.isArray(value) &&
+                Object.keys(value).length > 0
+            ) {
+                const nestedFlatten = Object.flatten<{}>(
+                    value,
+                    delimiter,
+                    newKey,
+                );
+                result = { ...result, ...nestedFlatten };
+            } else {
+                (result as any)[newKey] = value;
+            }
+        }
+
+        return result as Record<KeyOf<T>, any>;
+    };
+
+    Object.equalTo = function (object1: object, object2: object) {
+        if (typeof object1 !== 'object' || typeof object2 !== 'object') {
+            return object1 === object2;
+        }
+
+        const a = JSON.stringify(object1);
+        const b = JSON.stringify(object2);
+
+        const isEqual = a === b;
+
+        return isEqual;
     };
 };
 

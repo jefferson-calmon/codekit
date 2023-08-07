@@ -1,7 +1,7 @@
 import { KeyOf, DeepTypeOf, GenerateType } from '../../types';
 import { mergeObjects } from '../mergeObjects';
 
-export class ObjectJS {
+export class ObjectUtils {
     static get<T extends object, K extends KeyOf<T> & string>(obj: T, key: K) {
         const keyParts = key.split('.');
 
@@ -33,7 +33,7 @@ export class ObjectJS {
                 (obj as any)[currentKey] = {};
             }
 
-            ObjectJS.set(
+            ObjectUtils.set(
                 (obj as any)[currentKey] as object,
                 keyParts.join('.') as KeyOf<object>,
                 value,
@@ -71,7 +71,7 @@ export class ObjectJS {
                 !Array.isArray(value) &&
                 Object.keys(value).length > 0
             ) {
-                const nestedFlatten = ObjectJS.flatten<{}>(
+                const nestedFlatten = ObjectUtils.flatten<{}>(
                     value,
                     delimiter,
                     newKey,
