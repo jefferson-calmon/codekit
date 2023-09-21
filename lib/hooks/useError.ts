@@ -67,24 +67,17 @@ export function useError(customErrors?: Partial<typeof firebaseErrors>) {
     function catcher(error: any) {
         const err = (error.errors ? error.errors[0] : error) as Obj;
         const code = err.code;
-        const message = err.message;
+        const message = err.message || err.error;
 
-        const errorsList = Object.assign(firebaseErrors, customErrors);
-        const isControlledError = !!errorsList[code];
+        const errors = Object.assign(firebaseErrors, customErrors);
+        const isControlled = !!errors[code];
 
         console.error('[+] Error in useError.catcher', error);
 
-        if (!isControlledError) {
-            add({
-                id: 'process',
-                message: `Error: ${message}.`,
-            });
-        } else {
-            add({
-                id: code,
-                message: (errorsList as any)[code],
-            });
-        }
+        add({
+            id: isControlled ? code : 'process',
+            message: isControlled ? errors[code] : message,
+        });
     }
 
     return {
