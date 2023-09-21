@@ -11,6 +11,7 @@ import {
     mergeObjects,
     ObjectUtils,
     arrayify,
+    indexify,
 } from '../utils';
 
 declare global {
@@ -40,7 +41,7 @@ declare global {
         uniq: () => T[];
 
         /** Returns a copy of the array with only unique values by key */
-        uniqByKey: (key: keyof T) => T[];
+        uniqBy: (key: keyof T) => T[];
 
         /** Returns the array ordered by key passed in the props */
         order: (key: keyof T, order?: 'asc' | 'desc') => T[];
@@ -50,6 +51,9 @@ declare global {
 
         /** Returns a random item from array */
         random: () => T;
+
+        /**  */
+        indexifyBy: <K extends string = string>(key: keyof T) => Record<K, T>;
     }
 
     interface ArrayConstructor {
@@ -105,7 +109,7 @@ export const config = (): void => {
     Array.prototype.uniq = function () {
         return ArrayPrototypeUtils.uniq(this);
     };
-    Array.prototype.uniqByKey = function <T>(key: keyof T) {
+    Array.prototype.uniqBy = function <T>(key: keyof T) {
         return ArrayPrototypeUtils.uniqByKey(this, key);
     };
     Array.prototype.order = function (key, order) {
@@ -116,6 +120,9 @@ export const config = (): void => {
     };
     Array.prototype.random = function () {
         return ArrayPrototypeUtils.random(this);
+    };
+    Array.prototype.indexifyBy = function (key) {
+        return indexify(this, key);
     };
 
     // Array constructor
