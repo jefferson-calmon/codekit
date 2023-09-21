@@ -14,7 +14,7 @@ function createErrorFromString(error: string): Error {
     };
 }
 
-type Obj = Record<string, string>;
+type ErrorObj = Record<string, any>;
 
 export function useError(customErrors?: Partial<typeof firebaseErrors>) {
     // States
@@ -65,9 +65,12 @@ export function useError(customErrors?: Partial<typeof firebaseErrors>) {
     }
 
     function catcher(error: any) {
-        const err = (error.errors ? error.errors[0] : error) as Obj;
+        const err = (error.errors ? error.errors[0] : error) as any;
         const code = err.code;
-        const message = err.message || err.error;
+        const message =
+            err?.response?.data?.message ||
+            err?.response?.data?.error ||
+            err?.message;
 
         const errors = Object.assign(firebaseErrors, customErrors);
         const isControlled = !!errors[code];
