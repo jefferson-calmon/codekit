@@ -1,3 +1,5 @@
+import { KeyOf } from '../../types';
+import { ObjectHandler } from '../ObjectHandler';
 import { arrayify } from '../arrayify';
 
 export class ArrayPrototypeUtils {
@@ -47,6 +49,20 @@ export class ArrayPrototypeUtils {
 
     static random<T extends any>(array: T[]) {
         return array[Math.floor(Math.random() * array.length)];
+    }
+
+    static search<T extends object>(array: T[], keys: KeyOf<T>[], values: any) {
+        values = [values].flat();
+
+        return array.filter(item => {
+            for (let i = 0; i < keys.length; i++) {
+                const key = keys[i];
+                const value = ObjectHandler.get(item, key);
+
+                if (values.includes(value)) return true;
+            }
+            return false;
+        });
     }
 }
 

@@ -54,6 +54,9 @@ declare global {
 
         /**  */
         indexifyBy: <K extends string = string>(key: keyof T) => Record<K, T>;
+
+        /**  */
+        search: <T extends object>(keys: KeyOf<T>[], values: any) => T[];
     }
 
     interface ArrayConstructor {
@@ -123,6 +126,9 @@ export const config = (): void => {
     };
     Array.prototype.indexifyBy = function (key) {
         return indexify(this, key);
+    };
+    Array.prototype.search = function (keys, values) {
+        return ArrayPrototypeUtils.search(this, keys, values);
     };
 
     // Array constructor
