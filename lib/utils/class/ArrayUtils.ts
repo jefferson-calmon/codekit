@@ -53,17 +53,18 @@ export class ArrayPrototypeUtils {
 
     static search<T extends object>(
         array: T[],
-        keys: KeyOf<T>[],
+        sources: KeyOf<T>[] | KeyOf<T>,
         queries: any,
     ) {
         const values = [queries].flat().compact().map(String);
+        const keys = [sources].flat();
 
         if (values.length === 0) return array;
 
         return array.filter(item => {
             for (let i = 0; i < keys.length; i++) {
                 const key = keys[i];
-                const value = ObjectHandler.get(item, key);
+                const value = ObjectHandler.get(item, key as any);
 
                 if (values.some(v => String(value).searchFor(v))) return true;
             }
