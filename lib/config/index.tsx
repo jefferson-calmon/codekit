@@ -56,7 +56,7 @@ declare global {
         indexifyBy: <K extends string = string>(key: keyof T) => Record<K, T>;
 
         /**  */
-        search: <T>(keys: KeyOf<T>[], values: any) => T[];
+        search: <Type = T>(keys: KeyOf<Type>[], values: any) => T[];
     }
 
     interface ArrayConstructor {
