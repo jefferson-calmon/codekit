@@ -25,14 +25,17 @@ export class ArrayPrototypeUtils {
         return [...map.values()];
     }
 
-    static order<T extends any>(
+    static order<T extends object>(
         array: T[],
-        key: keyof T,
+        key: KeyOf<T>,
         order?: 'asc' | 'desc',
     ) {
         return array.sort((a, b) => {
-            if (a[key] < b[key]) return order === 'asc' ? -1 : 1;
-            if (a[key] > b[key]) return order === 'asc' ? 1 : -1;
+            const valueA = ObjectHandler.get(a, key);
+            const valueB = ObjectHandler.get(b, key);
+
+            if (valueA < valueB) return order === 'asc' ? -1 : 1;
+            if (valueA > valueB) return order === 'asc' ? 1 : -1;
             return 0;
         });
     }

@@ -44,7 +44,10 @@ declare global {
         uniqBy: (key: keyof T) => T[];
 
         /** Returns the array ordered by key passed in the props */
-        order: (key: keyof T, order?: 'asc' | 'desc') => T[];
+        order: <K extends KeyOf<Type>, Type = T>(
+            key: K,
+            order?: 'asc' | 'desc',
+        ) => T[];
 
         /** Returns a copy of array shuffled */
         shuffle: () => T[];
@@ -73,6 +76,7 @@ declare global {
         merge: typeof ObjectUtils.merge;
         flatten: typeof ObjectUtils.flatten;
         equalTo: typeof ObjectUtils.equalTo;
+        clone: typeof ObjectUtils.clone;
     }
 }
 
@@ -118,8 +122,8 @@ export const config = (): void => {
     Array.prototype.uniqBy = function <T>(key: keyof T) {
         return ArrayPrototypeUtils.uniqByKey(this, key);
     };
-    Array.prototype.order = function (key, order) {
-        return ArrayPrototypeUtils.order(this, key, order);
+    Array.prototype.order = function <T extends object>(key: any, order: any) {
+        return ArrayPrototypeUtils.order<T>(this, key, order);
     };
     Array.prototype.shuffle = function () {
         return ArrayPrototypeUtils.shuffle(this);
@@ -134,7 +138,7 @@ export const config = (): void => {
         keys: any,
         values: any,
     ) {
-        return ArrayPrototypeUtils.search<T>(this, keys, values);   
+        return ArrayPrototypeUtils.search<T>(this, keys, values);
     };
 
     // Array constructor
@@ -248,6 +252,10 @@ export const config = (): void => {
         const isEqual = a === b;
 
         return isEqual;
+    };
+
+    Object.clone = function (obj: any) {
+        return JSON.parse(JSON.stringify(obj));
     };
 };
 
