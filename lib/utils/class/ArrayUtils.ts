@@ -52,7 +52,9 @@ export class ArrayPrototypeUtils {
     }
 
     static search<T extends object>(array: T[], keys: KeyOf<T>[], values: any) {
-        values = [values].flat();
+        values = [values].flat().compact();
+
+        if (values.length === 0) return array;
 
         return array.filter(item => {
             for (let i = 0; i < keys.length; i++) {
