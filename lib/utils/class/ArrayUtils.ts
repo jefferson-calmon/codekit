@@ -51,8 +51,12 @@ export class ArrayPrototypeUtils {
         return array[Math.floor(Math.random() * array.length)];
     }
 
-    static search<T extends object>(array: T[], keys: KeyOf<T>[], values: any) {
-        values = [values].flat().compact();
+    static search<T extends object>(
+        array: T[],
+        keys: KeyOf<T>[],
+        queries: any,
+    ) {
+        const values = [queries].flat().compact().map(String);
 
         if (values.length === 0) return array;
 
@@ -61,7 +65,7 @@ export class ArrayPrototypeUtils {
                 const key = keys[i];
                 const value = ObjectHandler.get(item, key);
 
-                if (values.includes(value)) return true;
+                if (values.some(v => String(value).searchFor(v))) return true;
             }
             return false;
         });
