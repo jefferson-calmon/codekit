@@ -14,3 +14,5 @@ export { useBoolean } from './useBoolean';
 export { useCopyToClipboard } from './useCopyToClipboard';
 export { useError } from './useError';
 export { useChange } from './useChange';
+export { useStep } from './useStep';
+export { usePagination } from './usePagination';
