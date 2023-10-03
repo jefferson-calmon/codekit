@@ -16,3 +16,5 @@ export * from './slugify';
 export * from './ObjectHandler';
 export * from './indexify';
 export * from './class';
+export * from './daysBetween';
+export * from './isActive';
