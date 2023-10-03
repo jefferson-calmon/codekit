@@ -1,4 +1,5 @@
 import { MoneyConfig } from '../../types';
+import { randomNumber } from '../randomNumber';
 
 export class NumberPrototypeUtils {
     static defaultMoneyConfig: MoneyConfig = {
@@ -15,5 +16,11 @@ export class NumberPrototypeUtils {
             currency: config.currency,
             maximumFractionDigits: 2,
         });
+    }
+}
+
+export class NumberConstructorUtils {
+    static random(...props: Parameters<typeof randomNumber>) {
+        return randomNumber(...props);
     }
 }

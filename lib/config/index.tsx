@@ -12,6 +12,7 @@ import {
     ObjectUtils,
     arrayify,
     indexify,
+    NumberConstructorUtils,
 } from '../utils';
 
 declare global {
@@ -78,12 +79,21 @@ declare global {
         equalTo: typeof ObjectUtils.equalTo;
         clone: typeof ObjectUtils.clone;
     }
+
+    interface NumberConstructor {
+        random: typeof NumberConstructorUtils.random;
+    }
 }
 
 export const config = (): void => {
     // Number
     Number.prototype.toMoney = function (...props) {
         return NumberPrototypeUtils.toMoney(this, ...props);
+    };
+
+    // Number constructor
+    Number.random = function (...props) {
+        return NumberConstructorUtils.random(...props);
     };
 
     // String
