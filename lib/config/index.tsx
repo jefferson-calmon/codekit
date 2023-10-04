@@ -45,10 +45,7 @@ declare global {
         uniqBy: (key: keyof T) => T[];
 
         /** Returns the array ordered by key passed in the props */
-        order: <K extends string = KeyOf<T>>(
-            key: K,
-            order?: 'asc' | 'desc',
-        ) => T[];
+        order: (key: keyof T, order?: 'asc' | 'desc') => T[];
 
         /** Returns a copy of array shuffled */
         shuffle: () => T[];
@@ -132,8 +129,8 @@ export const config = (): void => {
     Array.prototype.uniqBy = function <T>(key: keyof T) {
         return ArrayPrototypeUtils.uniqByKey(this, key);
     };
-    Array.prototype.order = function <T extends object>(key: any, order: any) {
-        return ArrayPrototypeUtils.order<T>(this, key, order);
+    Array.prototype.order = function (key, order) {
+        return ArrayPrototypeUtils.order(this, key, order);
     };
     Array.prototype.shuffle = function () {
         return ArrayPrototypeUtils.shuffle(this);

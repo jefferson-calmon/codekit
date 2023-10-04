@@ -27,12 +27,13 @@ export class ArrayPrototypeUtils {
 
     static order<T extends object>(
         array: T[],
-        key: KeyOf<T>,
+        // key: KeyOf<T>,
+        key: keyof T,
         order?: 'asc' | 'desc',
     ) {
         return array.sort((a, b) => {
-            const valueA = ObjectHandler.get(a, key);
-            const valueB = ObjectHandler.get(b, key);
+            const valueA = a[key];
+            const valueB = b[key];
 
             if (valueA < valueB) return order === 'asc' ? -1 : 1;
             if (valueA > valueB) return order === 'asc' ? 1 : -1;
