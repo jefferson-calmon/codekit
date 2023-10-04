@@ -45,10 +45,7 @@ declare global {
         uniqBy: (key: keyof T) => T[];
 
         /** Returns the array ordered by key passed in the props */
-        order: <K extends KeyOf<Type>, Type = T>(
-            key: K,
-            order?: 'asc' | 'desc',
-        ) => T[];
+        order: <Type = T>(key: KeyOf<Type>, order?: 'asc' | 'desc') => T[];
 
         /** Returns a copy of array shuffled */
         shuffle: () => T[];
