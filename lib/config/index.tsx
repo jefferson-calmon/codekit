@@ -172,12 +172,11 @@ export const config = (): void => {
     };
 
     Object.set = function <T extends object, K extends KeyOf<T> & string, V>(
-        o: T,
+        obj: T,
         key: K,
         value: V,
     ) {
         const keyParts = key.split('.');
-        const obj = JSON.parse(JSON.stringify(o));
 
         if (keyParts.length > 1) {
             const currentKey = keyParts.shift() as string;
@@ -198,7 +197,7 @@ export const config = (): void => {
             (obj as any)[keyParts[0]] = value;
         }
 
-        return obj as T & GenerateType<K, V>;
+        return JSON.parse(JSON.stringify(obj)) as T & GenerateType<K, V>;
     };
 
     Object.delete = function <T extends object, K extends keyof T & string>(
