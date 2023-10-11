@@ -29,6 +29,7 @@ declare global {
         random: typeof randomString;
         measure: (...props: PropsWithoutText) => number;
         searchFor: (search: string) => boolean;
+        format: <R>(formatter: (value: string) => R) => R;
     }
 
     interface Array<T> {
@@ -114,6 +115,9 @@ export const config = (): void => {
     };
     String.prototype.searchFor = function (...props) {
         return StringPrototypeUtils.searchFor(this, ...props);
+    };
+    String.prototype.format = function (formatter) {
+        return StringPrototypeUtils.format(this, formatter);
     };
 
     // Array

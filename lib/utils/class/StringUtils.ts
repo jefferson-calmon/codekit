@@ -52,4 +52,11 @@ export class StringPrototypeUtils {
 
         return value.search(query) >= 0;
     }
+
+    static format<S extends String, R>(
+        string: S,
+        formatter: (value: string) => R,
+    ) {
+        return formatter(string.toString());
+    }
 }
