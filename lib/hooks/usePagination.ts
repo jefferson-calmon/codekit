@@ -33,7 +33,7 @@ export const usePagination = <T>(data: T[], pageSize = 6) => {
 		return {
 			number: pageIndex + 1,
 			index: pageIndex,
-			items: pageItems,
+			items: pageItems ?? [],
 			incrementedItems: pages.slice(0, pageIndex + 1).flat(),
 			canAdvance: pageIndex + 1 < pages.length,
 			canBack: pageIndex >= 1,

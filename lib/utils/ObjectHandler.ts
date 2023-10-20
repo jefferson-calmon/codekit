@@ -41,7 +41,7 @@ function set<T extends object, K extends KeyOf<T> & string, V>(
             (obj as any)[currentKey] = {};
         }
 
-        set(
+        Object.set(
             (obj as any)[currentKey] as object,
             keyParts.join('.') as KeyOf<object>,
             value,
@@ -50,7 +50,7 @@ function set<T extends object, K extends KeyOf<T> & string, V>(
         (obj as any)[keyParts[0]] = value;
     }
 
-    return obj as T & GenerateType<K, V>;
+    return JSON.parse(JSON.stringify(obj)) as T & GenerateType<K, V>;
 }
 
 function del<T extends object, K extends keyof T & string>(object: T, key: K) {
