@@ -2,24 +2,22 @@
 import { useMemo, useState } from 'react';
 import { firebaseErrors } from '../constants/firebaseErrors';
 
-interface Error {
+export interface ErrorObject {
     id: string;
     message: string;
 }
 
-function createErrorFromString(error: string): Error {
+function createErrorFromString(error: string): ErrorObject {
     return {
         id: error.slugify(),
         message: error,
     };
 }
 
-type ErrorObj = Record<string, any>;
-
 export function useError(customErrors?: Partial<typeof firebaseErrors>) {
     // States
-    const [errors, setErrors] = useState<Error[]>([]);
-    const [lastError, setLastError] = useState<Error | undefined>();
+    const [errors, setErrors] = useState<ErrorObject[]>([]);
+    const [lastError, setLastError] = useState<ErrorObject | undefined>();
 
     // Memo vars
     const exists = useMemo(() => errors.length > 0, [errors]);
@@ -30,7 +28,7 @@ export function useError(customErrors?: Partial<typeof firebaseErrors>) {
         setLastError(undefined);
     }
 
-    function add(error: Error | string) {
+    function add(error: ErrorObject | string) {
         setErrors(prev => {
             const errors = Array.from(prev);
             const isString = typeof error === 'string';
