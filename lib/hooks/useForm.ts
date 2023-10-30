@@ -5,6 +5,7 @@ import { useChange } from './useChange';
 import { useBoolean } from './useBoolean';
 import { getFormEntriesByForm } from '../forms';
 import { DeepTypeOf, KeyOf } from '../types';
+import { ObjectHandler } from '../utils';
 
 export interface UseFormReturn<T extends object = {}> {
     ref: React.RefObject<HTMLFormElement>;
@@ -14,30 +15,41 @@ export interface UseFormReturn<T extends object = {}> {
     data: T;
     setData: (data: T) => void;
     entry: (key: KeyOf<T>) => DeepTypeOf<T, KeyOf<T>>;
-    isSubmitting: boolean;
+    isLoading: boolean;
     getEntries: () => T | null;
     onSubmit: (
         handler: (props: OnSubmitProps<T>) => Promise<void>,
     ) => (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
-export type OnSubmitProps<T> = { entries: T; nativeEntries: T | null };
+export type OnSubmitProps<T> = { data: T; entries: T | null };
+export type Handler<T> = (props: OnSubmitProps<T>) => Promise<void>;
+export type UseFormValidators<T> = Record<KeyOf<T>, UseFormValidator>;
+export type UseFormValidator = {
+    error: string;
+    validator:
+        | ((value: string) => boolean)
+        | ((value: string) => Promise<boolean>);
+};
 
-export function useForm<T extends object>(initialState?: T): UseFormReturn<T> {
+export function useForm<T extends object>(
+    initialState: T,
+    validators?: UseFormValidators<T>,
+): UseFormReturn<T> {
     // Hooks
     const error = useError();
 
     // Memo vars
-    const initialEntries = initialState ?? ({} as T);
+    const initialData = initialState ?? ({} as T);
 
     // States
-    const [entries, setEntries] = useState<T>(initialEntries);
+    const [data, setData] = useState<T>(initialData);
 
     // Changers
-    const change = useChange(setEntries);
+    const change = useChange(setData);
 
     // Boolean hooks
-    const isSubmitting = useBoolean();
+    const isLoading = useBoolean();
 
     // Refs
     const formRef = useRef<HTMLFormElement>(null);
@@ -51,19 +63,38 @@ export function useForm<T extends object>(initialState?: T): UseFormReturn<T> {
     }, []);
 
     // Functions
-    function handleSubmit(handler: (props: OnSubmitProps<T>) => Promise<void>) {
+    function handleSubmit(handler: Handler<T>) {
         return async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             error.clear();
-            isSubmitting.setTrue();
+            isLoading.setTrue();
 
-            const nativeEntries = getEntries();
-            console.log(nativeEntries);
+            const entries = getEntries();
 
-            await handler({ entries, nativeEntries })
+            validate().catch(error.catcher);
+
+            await handler({ data, entries })
                 .catch(error.catcher)
-                .finally(isSubmitting.setFalse);
+                .finally(isLoading.setFalse);
         };
+    }
+
+    async function validate() {
+        const entries = getEntries();
+        const target = entries ? entries : data;
+
+        await Promise.all(
+            Object.entries(validators ?? {}).map(async ([k, v]) => {
+                const key = k as KeyOf<T>;
+                const error = (v as UseFormValidator).error;
+                const validator = (v as UseFormValidator).validator;
+
+                const value = ObjectHandler.get(target, key) as any;
+
+                const isValid = await validator(value);
+                if (!isValid) throw new Error(error);
+            }),
+        );
     }
 
     return {
@@ -71,10 +102,10 @@ export function useForm<T extends object>(initialState?: T): UseFormReturn<T> {
         errors: error.errors,
         error: error,
         change,
-        data: entries,
-        setData: (data: T) => setEntries(data),
-        entry: (key: KeyOf<T>) => Object.get(entries, key),
-        isSubmitting: isSubmitting.value,
+        data: data,
+        setData: (data: T) => setData(data),
+        entry: (key: KeyOf<T>) => Object.get(data, key),
+        isLoading: isLoading.value,
         getEntries,
         onSubmit: handleSubmit,
     };
