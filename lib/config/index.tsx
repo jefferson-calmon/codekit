@@ -66,7 +66,7 @@ declare global {
     }
 
     interface StringConstructor {
-        uuid: () => void;
+        uuid: () => string;
     }
 
     interface ArrayConstructor {
