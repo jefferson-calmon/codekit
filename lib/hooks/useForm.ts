@@ -24,7 +24,7 @@ export interface UseFormReturn<T extends object = {}> {
 
 export type OnSubmitProps<T> = { data: T; entries: T | null };
 export type Handler<T> = (props: OnSubmitProps<T>) => Promise<void>;
-export type UseFormValidators<T> = Record<KeyOf<T>, UseFormValidator>;
+export type UseFormValidators<T> = Partial<Record<KeyOf<T>, UseFormValidator>>;
 export type UseFormValidator = {
     error: string;
     validator:
