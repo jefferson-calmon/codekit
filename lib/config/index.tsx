@@ -13,6 +13,7 @@ import {
     arrayify,
     indexify,
     NumberConstructorUtils,
+    uuid,
 } from '../utils';
 
 declare global {
@@ -62,6 +63,10 @@ declare global {
             keys: K[] | K,
             values: any,
         ) => T[];
+    }
+
+    interface StringConstructor {
+        uuid: () => void;
     }
 
     interface ArrayConstructor {
@@ -118,6 +123,11 @@ export const config = (): void => {
     };
     String.prototype.format = function (formatter) {
         return StringPrototypeUtils.format(this, formatter);
+    };
+
+    // String constructor
+    String.uuid = function () {
+        return uuid();
     };
 
     // Array
