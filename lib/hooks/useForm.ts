@@ -15,6 +15,7 @@ export interface UseFormReturn<T extends object = {}> {
     data: T;
     setData: (data: T) => void;
     entry: (key: KeyOf<T>) => DeepTypeOf<T, KeyOf<T>>;
+    valueOf: (key: KeyOf<T>) => string;
     isLoading: boolean;
     getEntries: () => T | null;
     onSubmit: (
@@ -105,6 +106,7 @@ export function useForm<T extends object>(
         data: data,
         setData: (data: T) => setData(data),
         entry: (key: KeyOf<T>) => Object.get(data, key),
+        valueOf: (key: KeyOf<T>) => String(Object.get(data, key)),
         isLoading: isLoading.value,
         getEntries,
         onSubmit: handleSubmit,
