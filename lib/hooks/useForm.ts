@@ -72,9 +72,11 @@ export function useForm<T extends object>(
 
             const entries = getEntries();
 
-            validate().catch(error.catcher);
+            return await (async () => {
+                await validate();
 
-            await handler({ data, entries })
+                await handler({ data, entries });
+            })()
                 .catch(error.catcher)
                 .finally(isLoading.setFalse);
         };
