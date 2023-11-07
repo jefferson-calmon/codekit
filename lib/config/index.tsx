@@ -31,6 +31,10 @@ declare global {
         measure: (...props: PropsWithoutText) => number;
         searchFor: (search: string) => boolean;
         format: <R>(formatter: (value: string) => R) => R;
+        hashify: () => string;
+        shuffle: (key?: number) => string;
+        unshuffle: (key?: number) => string;
+        generateKey: (modulo?: number) => number;
     }
 
     interface Array<T> {
@@ -123,6 +127,18 @@ export const config = (): void => {
     };
     String.prototype.format = function (formatter) {
         return StringPrototypeUtils.format(this, formatter);
+    };
+    String.prototype.hashify = function () {
+        return StringPrototypeUtils.hashify(this.toString());
+    };
+    String.prototype.generateKey = function (modulo) {
+        return StringPrototypeUtils.generateKey(this.toString(), modulo);
+    };
+    String.prototype.shuffle = function (key) {
+        return StringPrototypeUtils.shuffle(this.toString(), key);
+    };
+    String.prototype.unshuffle = function (key) {
+        return StringPrototypeUtils.unshuffle(this.toString(), key);
     };
 
     // String constructor
