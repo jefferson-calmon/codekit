@@ -25,17 +25,18 @@ export interface UseFormReturn<T extends object = {}> {
 
 export type OnSubmitProps<T> = { data: T; entries: T | null };
 export type Handler<T> = (props: OnSubmitProps<T>) => Promise<void>;
-export type UseFormValidators<T> = Partial<Record<KeyOf<T>, UseFormValidator>>;
-export type UseFormValidator = {
+export type Validations<T> = Partial<
+    Record<KeyOf<T>, Validation | Validation[]>
+>;
+
+export interface Validation {
     error: string;
-    validator:
-        | ((value: string) => boolean)
-        | ((value: string) => Promise<boolean>);
-};
+    validator: (value: string) => boolean | Promise<boolean>;
+}
 
 export function useForm<T extends object>(
     initialState: T,
-    validators?: UseFormValidators<T>,
+    validations: Validations<T> = {} as Validations<T>,
 ): UseFormReturn<T> {
     // Hooks
     const error = useError();
@@ -87,15 +88,19 @@ export function useForm<T extends object>(
         const target = entries ? entries : data;
 
         await Promise.all(
-            Object.entries(validators ?? {}).map(async ([k, v]) => {
+            Object.entries<any>(validations).map(async ([k, validations]) => {
                 const key = k as KeyOf<T>;
-                const error = (v as UseFormValidator).error;
-                const validator = (v as UseFormValidator).validator;
 
-                const value = ObjectHandler.get(target, key) as any;
+                await Promise.all(
+                    [validations as Validation | Validation[]]
+                        .flat()
+                        .map(async ({ error, validator }) => {
+                            const value = ObjectHandler.get(target, key) as any;
 
-                const isValid = await validator(value);
-                if (!isValid) throw new Error(error);
+                            const isValid = await validator(value);
+                            if (!isValid) throw new Error(error);
+                        }),
+                );
             }),
         );
     }
