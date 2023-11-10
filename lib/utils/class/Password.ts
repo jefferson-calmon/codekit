@@ -1,5 +1,5 @@
 export interface PasswordOptions {
-    length: number;
+    minLength: number;
     includeUppercase?: boolean;
     includeLowercase?: boolean;
     includeNumbers?: boolean;
@@ -56,7 +56,7 @@ export class Password {
 
     static generate(options: PasswordOptions) {
         const {
-            length,
+            minLength,
             includeUppercase = true,
             includeLowercase = true,
             includeNumbers = true,
@@ -77,7 +77,7 @@ export class Password {
 
         let password = '';
 
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < minLength; i++) {
             password += characters.charAt(
                 Math.floor(Math.random() * characters.length),
             );
@@ -88,7 +88,7 @@ export class Password {
 
     static validate(password: string, options: PasswordOptions) {
         const {
-            length,
+            minLength,
             includeUppercase,
             includeLowercase,
             includeNumbers,
@@ -96,7 +96,7 @@ export class Password {
         } = options;
 
         // Check if the password length meets the requirement
-        if (password.length < length) {
+        if (password.length < minLength) {
             return false;
         }
 
