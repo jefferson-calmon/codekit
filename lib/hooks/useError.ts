@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo, useState } from 'react';
-import { firebaseErrors } from '../constants/firebaseErrors';
+import { errors as errorsList } from '../constants/errors';
 
 export interface ErrorObject {
     id: string;
@@ -14,7 +14,7 @@ function createErrorFromString(error: string): ErrorObject {
     };
 }
 
-export function useError(customErrors?: Partial<typeof firebaseErrors>) {
+export function useError(customErrors?: Partial<typeof errorsList>) {
     // States
     const [errors, setErrors] = useState<ErrorObject[]>([]);
     const [lastError, setLastError] = useState<ErrorObject | undefined>();
@@ -70,7 +70,7 @@ export function useError(customErrors?: Partial<typeof firebaseErrors>) {
             err?.response?.data?.error ||
             err?.message;
 
-        const errors = Object.assign(firebaseErrors, customErrors);
+        const errors = Object.assign(errorsList, customErrors);
         const isControlled = !!errors[code];
 
         console.error('[+] Error in useError.catcher', error);

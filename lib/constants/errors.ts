@@ -3,6 +3,7 @@ import { FirebaseErrors } from '../models/Firebase';
 export const firebaseErrors: FirebaseErrors = {
     // Auth
     'auth/wrong-password': 'Sua senha está incorreta.',
+    'auth/invalid-login-credentials': 'Email e/ou senha incorretos.',
     'auth/user-disabled':
         'O usuário correspondente à credencial fornecida foi desativado.',
     'auth/user-not-found': 'O usuário não foi encontrado ou não existe.',
@@ -138,4 +139,8 @@ export const firebaseErrors: FirebaseErrors = {
         'A credencial utilizada não tem permissão para acessar o recurso solicitado.',
     'auth/internal-error':
         'O servidor de autenticação encontrou um erro inesperado ao tentar processar a solicitação.',
+};
+
+export const errors = {
+    ...firebaseErrors,
 };
