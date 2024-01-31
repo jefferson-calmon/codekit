@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 export function usePersistedState<T>(
     key: string,
     initialState: T,
-    revalidator: any,
     type?: 'local' | 'session',
+    revalidator?: any,
 ) {
     // Memo vars
     const storage = useMemo(() => {
