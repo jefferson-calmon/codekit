@@ -1,7 +1,7 @@
 import { MutableRefObject, useEffect, useState } from 'react';
 
 export function useOnScreen<T extends Element>(
-    ref: MutableRefObject<T>,
+    ref: MutableRefObject<T | null>,
     rootMargin: string = '0px',
 ): boolean {
     // States
@@ -18,11 +18,10 @@ export function useOnScreen<T extends Element>(
                 rootMargin,
             },
         );
-        if (ref.current) {
-            observer.observe(ref.current);
-        }
+        if (ref?.current) observer.observe(ref.current);
+
         return () => {
-            observer.unobserve(ref.current);
+            if (ref?.current) observer.unobserve(ref.current);
         };
     }, []);
 
