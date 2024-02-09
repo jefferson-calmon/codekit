@@ -19,3 +19,4 @@ export * from './class';
 export * from './daysBetween';
 export * from './isActive';
 export * from './hashify';
+export * from './clearSiteData';
