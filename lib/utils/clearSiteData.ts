@@ -3,22 +3,30 @@ export interface ClearSiteDataOptions {
     reload?: boolean;
 }
 
-export async function clearSiteData(options: ClearSiteDataOptions) {
+export async function clearSiteData(options?: ClearSiteDataOptions) {
     try {
-        window.localStorage.clear();
-        window.sessionStorage.clear();
-
+        clearLocalStorage();
+        clearSessionStorage();
         clearCookies();
+
         await clearCacheStorage();
         await clearIndexedDatabase();
 
-        if (options.reload) window.location.reload();
+        if (options?.reload) window.location.reload();
     } catch (error) {
         console.error(error);
     }
 }
 
-function clearCookies() {
+export function clearLocalStorage() {
+    window.localStorage.clear();
+}
+
+export function clearSessionStorage() {
+    window.sessionStorage.clear();
+}
+
+export function clearCookies() {
     const allCookies = window.document.cookie.split(';');
 
     // The "expire" attribute of every cookie is Set to "Thu, 01 Jan 1970 00:00:00 GMT"
@@ -27,7 +35,7 @@ function clearCookies() {
             allCookies[i] + '=;expires=' + new Date(0).toUTCString();
 }
 
-async function clearCacheStorage() {
+export async function clearCacheStorage() {
     await window.caches.keys().then(names => {
         names.forEach(name => {
             caches.delete(name);
@@ -35,7 +43,7 @@ async function clearCacheStorage() {
     });
 }
 
-async function clearIndexedDatabase() {
+export async function clearIndexedDatabase() {
     await window.indexedDB?.databases().then(r => {
         for (var i = 0; i < r.length; i++) {
             if (typeof r[i].name === 'string')
