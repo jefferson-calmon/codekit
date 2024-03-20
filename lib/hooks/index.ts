@@ -17,3 +17,4 @@ export { useChange } from './useChange';
 export { useStep } from './useStep';
 export { usePagination } from './usePagination';
 export * from './useForm';
+export * from './useControlledState';
