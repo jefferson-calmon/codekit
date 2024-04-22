@@ -1,1 +1,1 @@
-export { FirebaseError, FirebaseErrors } from './Firebase';
+export * from './Firebase';
