@@ -1,8 +1,8 @@
 import { KeyOf } from '../types';
-import { ObjectHandler, convertMoneyToNumber } from '../utils';
+import { set, toNumber } from '../utils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-interface ChangeOptions {
+export interface ChangeOptions {
     formatter?: (value: any) => any;
 }
 
@@ -16,10 +16,10 @@ export function useChange<T extends object>(setter: Setter<T>) {
 
             const isObj = typeof options === 'object';
 
-            if (options === 'money') value = convertMoneyToNumber(value);
+            if (options === 'money') value = toNumber(value);
             if (isObj && options?.formatter) value = options?.formatter(value);
 
-            setter(prev => ObjectHandler.set(prev, key, value));
+            setter(prev => set(prev, key, value));
         };
 
         const handler = (e: any) => change(e.target.value);

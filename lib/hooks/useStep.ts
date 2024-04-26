@@ -6,7 +6,7 @@ import {
     useState,
 } from 'react';
 
-interface HookReturn {
+export interface UseStepReturn {
     current: number;
     canGoToNext: boolean;
     canGoToPrev: boolean;
@@ -18,7 +18,7 @@ interface HookReturn {
 
 type SetCallbackType = (step: number | ((step: number) => number)) => void;
 
-export function useStep(max: number): HookReturn {
+export function useStep(max: number): UseStepReturn {
     // States
     const [current, setCurrent] = useState(1);
 

@@ -2,18 +2,18 @@ import { useState } from 'react';
 import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 import { delay } from '../utils';
 
-interface WindowSize {
+export interface WindowSize {
     width: number;
     height: number;
 }
 
-interface useWindowSizeData extends WindowSize {
+export interface UseWindowSizeData extends WindowSize {
     isMobile: boolean;
     isTablet: boolean;
     isDesktop: boolean;
 }
 
-export function useWindowSize(): useWindowSizeData {
+export function useWindowSize(): UseWindowSizeData {
     const [windowSize, setWindowSize] = useState<WindowSize>({
         width: 0,
         height: 0,

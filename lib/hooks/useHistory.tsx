@@ -6,7 +6,7 @@ interface Action {
     initialPresent?: any;
 }
 
-interface HookReturn<T = any> {
+export interface UseHistoryReturn<T = any> {
     state: T;
     set: (newPresent: T) => void;
     undo: () => void;
@@ -67,7 +67,7 @@ const reducer = (state: any, action: Action) => {
 };
 
 // Hook
-export function useHistory<T = any>(initialPresent: T): HookReturn<T> {
+export function useHistory<T = any>(initialPresent: T): UseHistoryReturn<T> {
     // Hooks
     const [state, dispatch] = useReducer(reducer, {
         ...initialState,

@@ -1,24 +1,24 @@
-import { DeepTypeOf, GenerateType, KeyOf, MoneyConfig } from '../types';
-import { randomString } from '../utils/randomString';
-import { PropsWithoutText } from '../utils/measureText';
+import { KeyOf } from '../types';
 import { SlugifyOptions } from '../types/slugify';
 
 import {
-    ArrayPrototypeUtils,
-    ArrayConstructorUtils,
-    StringPrototypeUtils,
-    NumberPrototypeUtils,
-    mergeObjects,
-    ObjectUtils,
-    arrayify,
-    indexify,
-    NumberConstructorUtils,
     uuid,
+    randomize,
+    MoneyConfig,
+    MeasurePropsWithoutText,
+    array,
+    object,
+    number,
+    string,
+    GroupOptions,
+    GroupedDataByKey,
+    Query,
+    ReductionObj,
 } from '../utils';
 
 declare global {
     interface Number {
-        toMoney: (config?: MoneyConfig) => string;
+        toCurrency: (config?: MoneyConfig) => string;
     }
 
     interface String {
@@ -27,10 +27,10 @@ declare global {
         extractNumbers: () => string;
         mask: (pattern: string) => string;
         slugify: (options?: SlugifyOptions) => string;
-        random: typeof randomString;
-        measure: (...props: PropsWithoutText) => number;
+        random: typeof randomize.string;
+        measure: (...props: MeasurePropsWithoutText) => number;
         searchFor: (search: string) => boolean;
-        format: <R>(formatter: (value: string) => R) => R;
+        transform: <Result>(transformer: (value: string) => Result) => Result;
         hashify: () => string;
         shuffle: (key?: number) => string;
         unshuffle: (key?: number) => string;
@@ -48,10 +48,13 @@ declare global {
         uniq: () => T[];
 
         /** Returns a copy of the array with only unique values by key */
-        uniqBy: (key: keyof T) => T[];
+        uniqBy: <K extends KeyOf<Type>, Type = T>(key: K) => T[];
 
         /** Returns the array ordered by key passed in the props */
-        order: (key: keyof T, order?: 'asc' | 'desc') => T[];
+        order: <K extends KeyOf<Type>, Type = T>(
+            key: K,
+            order?: 'asc' | 'desc',
+        ) => T[];
 
         /** Returns a copy of array shuffled */
         shuffle: () => T[];
@@ -60,13 +63,25 @@ declare global {
         random: () => T;
 
         /**  */
-        indexifyBy: <K extends string = string>(key: keyof T) => Record<K, T>;
+        indexify: <K extends string = string>(key: keyof T) => Record<K, T>;
 
         /**  */
         search: <K extends KeyOf<Type>, Type = T>(
             keys: K[] | K,
             values: any,
         ) => T[];
+
+        group: <K extends KeyOf<Type>, Type = T>(
+            key: K,
+            options?: GroupOptions<T>,
+        ) => GroupedDataByKey;
+
+        query: (query: Query<T>) => T[];
+
+        reduction: <K extends KeyOf<Type>, V extends KeyOf<Type>, Type = T>(
+            key: K,
+            value: V,
+        ) => ReductionObj;
     }
 
     interface StringConstructor {
@@ -74,71 +89,71 @@ declare global {
     }
 
     interface ArrayConstructor {
-        new: typeof ArrayConstructorUtils.new;
+        new: typeof array.fresh;
     }
 
     interface ObjectConstructor {
-        get: typeof ObjectUtils.get;
-        set: typeof ObjectUtils.set;
-        delete: typeof ObjectUtils.delete;
-        merge: typeof ObjectUtils.merge;
-        flatten: typeof ObjectUtils.flatten;
-        equalTo: typeof ObjectUtils.equalTo;
-        clone: typeof ObjectUtils.clone;
+        get: typeof object.get;
+        set: typeof object.set;
+        exclude: typeof object.exclude;
+        merge: typeof object.merge;
+        flatten: typeof object.flatten;
+        isEqual: typeof object.isEqual;
+        clone: typeof object.clone;
     }
 
     interface NumberConstructor {
-        random: typeof NumberConstructorUtils.random;
+        random: typeof randomize.number;
     }
 }
 
 export const config = (): void => {
     // Number
-    Number.prototype.toMoney = function (...props) {
-        return NumberPrototypeUtils.toMoney(this, ...props);
+    Number.prototype.toCurrency = function (...props) {
+        return number.toCurrency(Number(this), ...props);
     };
 
     // Number constructor
     Number.random = function (...props) {
-        return NumberConstructorUtils.random(...props);
+        return randomize.number(...props);
     };
 
     // String
     String.prototype.toNumber = function () {
-        return StringPrototypeUtils.toNumber(this);
+        return string.toNumber(String(this));
     };
     String.prototype.toCapitalize = function () {
-        return StringPrototypeUtils.toCapitalize(this);
+        return string.toCapitalize(String(this));
     };
     String.prototype.extractNumbers = function () {
-        return StringPrototypeUtils.extractNumbers(this);
+        return string.extractNumbers(String(this));
     };
     String.prototype.mask = function (...props) {
-        return StringPrototypeUtils.mask(this, ...props);
+        return string.mask(String(this), ...props);
     };
     String.prototype.slugify = function (...props) {
-        return StringPrototypeUtils.slugify(this, ...props);
+        return string.slugify(String(this), ...props);
     };
     String.prototype.measure = function (...props) {
-        return StringPrototypeUtils.measure(this, ...props);
+        return string.measure(String(this), ...props);
     };
     String.prototype.searchFor = function (...props) {
-        return StringPrototypeUtils.searchFor(this, ...props);
+        return string.searchFor(String(this), ...props);
     };
-    String.prototype.format = function (formatter) {
-        return StringPrototypeUtils.format(this, formatter);
+    String.prototype.transform = function <R>(transformer: any) {
+        return string.transform<R>(String(this), transformer);
     };
     String.prototype.hashify = function () {
-        return StringPrototypeUtils.hashify(this.toString());
+        return string.hashify(String(this).toString());
     };
     String.prototype.generateKey = function (modulo) {
-        return StringPrototypeUtils.generateKey(this.toString(), modulo);
+        return string.generateKey(String(this).toString(), modulo);
     };
     String.prototype.shuffle = function (key) {
-        return StringPrototypeUtils.shuffle(this.toString(), key);
+        return string.shuffle(String(this).toString(), key);
     };
     String.prototype.unshuffle = function (key) {
-        return StringPrototypeUtils.unshuffle(this.toString(), key);
+        return string.unshuffle(String(this).toString(), key);
     };
 
     // String constructor
@@ -148,39 +163,36 @@ export const config = (): void => {
 
     // Array
     Array.prototype.compact = function () {
-        return ArrayPrototypeUtils.compact(this);
+        return array.compact(this);
     };
     Array.prototype.last = function () {
-        return ArrayPrototypeUtils.last(this);
+        return array.last(this);
     };
     Array.prototype.uniq = function () {
-        return ArrayPrototypeUtils.uniq(this);
+        return array.uniq(this);
     };
-    Array.prototype.uniqBy = function <T>(key: keyof T) {
-        return ArrayPrototypeUtils.uniqByKey(this, key);
+    Array.prototype.uniqBy = function (key: any) {
+        return array.uniqBy<object, never>(this, key as never);
     };
-    Array.prototype.order = function (key, order) {
-        return ArrayPrototypeUtils.order(this, key, order);
+    Array.prototype.order = function (key: any, order: any) {
+        return array.order<object, never>(this, key as never, order);
     };
     Array.prototype.shuffle = function () {
-        return ArrayPrototypeUtils.shuffle(this);
+        return array.shuffleArray(this);
     };
     Array.prototype.random = function () {
-        return ArrayPrototypeUtils.random(this);
+        return array.random(this);
     };
-    Array.prototype.indexifyBy = function (key) {
-        return indexify(this, key);
+    Array.prototype.indexify = function (key) {
+        return array.indexify(this, key);
     };
-    Array.prototype.search = function <T extends object>(
-        keys: any,
-        values: any,
-    ) {
-        return ArrayPrototypeUtils.search<T>(this, keys, values);
+    Array.prototype.search = function (keys: any, values: any) {
+        return array.search(this as object[], keys as never[], values);
     };
 
     // Array constructor
     Array.new = function (length: number) {
-        return arrayify(length);
+        return array.fresh(length);
     };
 
     // Object constructor
@@ -188,17 +200,7 @@ export const config = (): void => {
         obj: T,
         key: K,
     ) {
-        const keyParts = key.split('.');
-
-        let returnValue = obj;
-
-        keyParts.forEach(part => {
-            if (returnValue) {
-                returnValue = (returnValue as any)[part];
-            }
-        });
-
-        return returnValue as DeepTypeOf<T, K>;
+        return object.get(obj, key);
     };
 
     Object.set = function <T extends object, K extends KeyOf<T> & string, V>(
@@ -206,46 +208,21 @@ export const config = (): void => {
         key: K,
         value: V,
     ) {
-        const keyParts = key.split('.');
-
-        if (keyParts.length > 1) {
-            const currentKey = keyParts.shift() as string;
-
-            if (
-                !(obj as any)[currentKey] ||
-                typeof (obj as any)[currentKey] !== 'object'
-            ) {
-                (obj as any)[currentKey] = {};
-            }
-
-            Object.set(
-                (obj as any)[currentKey] as object,
-                keyParts.join('.') as KeyOf<object>,
-                value,
-            );
-        } else {
-            (obj as any)[keyParts[0]] = value;
-        }
-
-        return JSON.parse(JSON.stringify(obj)) as T & GenerateType<K, V>;
+        return object.set(obj, key, value);
     };
 
-    Object.delete = function <T extends object, K extends keyof T & string>(
-        object: T,
+    Object.exclude = function <T extends object, K extends keyof T & string>(
+        obj: T,
         key: K,
     ) {
-        let returnValue = object;
-
-        delete returnValue[key];
-
-        return returnValue as Omit<T, K>;
+        return object.exclude(obj, key);
     };
 
     Object.merge = function <T extends object, U extends object>(
         target: T,
         source: U,
     ) {
-        return mergeObjects<T, U>(target, source);
+        return object.merge(target, source);
     };
 
     Object.flatten = function <T extends object>(
@@ -253,45 +230,15 @@ export const config = (): void => {
         delimiter = '.',
         parentKey = '',
     ) {
-        let result: any = {};
-
-        for (const [key, value] of Object.entries(obj)) {
-            const newKey = parentKey ? `${parentKey}${delimiter}${key}` : key;
-
-            if (
-                typeof value === 'object' &&
-                !Array.isArray(value) &&
-                Object.keys(value).length > 0
-            ) {
-                const nestedFlatten = Object.flatten<{}>(
-                    value,
-                    delimiter,
-                    newKey,
-                );
-                result = { ...result, ...nestedFlatten };
-            } else {
-                (result as any)[newKey] = value;
-            }
-        }
-
-        return result as Record<KeyOf<T>, any>;
+        return object.flatten(obj, delimiter, parentKey);
     };
 
-    Object.equalTo = function (object1: object, object2: object) {
-        if (typeof object1 !== 'object' || typeof object2 !== 'object') {
-            return object1 === object2;
-        }
-
-        const a = JSON.stringify(object1);
-        const b = JSON.stringify(object2);
-
-        const isEqual = a === b;
-
-        return isEqual;
+    Object.isEqual = function (object1: object, object2: object) {
+        return object.isEqual(object1, object2);
     };
 
     Object.clone = function (obj: any) {
-        return JSON.parse(JSON.stringify(obj));
+        return object.clone(obj);
     };
 };
 

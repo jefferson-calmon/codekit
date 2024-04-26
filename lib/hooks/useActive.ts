@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 type HookProps<T extends string> = Partial<Record<T, boolean>>;
 
-interface HookReturn<T extends string> {
+export interface UseActiveReturn<T extends string> {
     isActive: Record<T, boolean>;
     handleActive: (
         item: T | Partial<Record<T, boolean>>,
@@ -12,7 +12,7 @@ interface HookReturn<T extends string> {
 
 export function useActive<T extends string>(
     props: HookProps<T> | void,
-): HookReturn<T> {
+): UseActiveReturn<T> {
     const [isActive, setIsActive] = useState<Record<T, boolean>>({
         ...props,
     } as Record<T, boolean>);

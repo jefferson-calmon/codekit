@@ -3,9 +3,9 @@ import { useCallback, useRef, useState } from 'react';
 import { useError } from './useError';
 import { useChange } from './useChange';
 import { useBoolean } from './useBoolean';
-import { getFormEntriesByForm } from '../forms';
+import { getFormEntriesByForm } from '../utils/getFormEntries';
 import { DeepTypeOf, KeyOf } from '../types';
-import { ObjectHandler } from '../utils';
+import { get } from '../utils';
 
 export interface UseFormReturn<T extends object = {}> {
     ref: React.RefObject<HTMLFormElement>;
@@ -95,7 +95,7 @@ export function useForm<T extends object>(
                     [validations as Validation | Validation[]]
                         .flat()
                         .map(async ({ error, validator }) => {
-                            const value = ObjectHandler.get(target, key) as any;
+                            const value = get(target, key) as any;
 
                             const isValid = await validator(value);
                             if (!isValid) throw new Error(error);

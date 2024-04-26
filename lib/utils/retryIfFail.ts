@@ -1,4 +1,4 @@
-interface retryIfTimeoutOptions {
+export interface retryIfTimeoutOptions {
 	maxRetries: number;
 	delayBetweenRetries: number;
     onRetry?: (error: any, retries: number) => void;

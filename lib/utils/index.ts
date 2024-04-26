@@ -1,22 +1,31 @@
-export * from './convertMoneyToNumber';
+export * from './collections/array';
+export * as array from './collections/array';
+
+export * from './collections/date';
+export * as date from './collections/date';
+
+export * from './collections/number';
+export * as number from './collections/number';
+
+export * from './collections/object';
+export * as object from './collections/object';
+
+export * from './collections/string';
+export * as string from './collections/string';
+
 export * from './getImageDataURLFromFile';
 export * from './getCSSVarValue';
 export * from './uuid';
-export * from './blob2DataURL';
+export * from './blobToDataURL';
 export * from './delay';
 export * from './retryIfFail';
-export * from './arrayify';
 export * from './debounce';
-export * from './randomString';
-export * from './measureText';
 export * from './crypto';
-export * from './mergeObjects';
 export * from './calculateSimilarityScore';
-export * from './slugify';
-export * from './ObjectHandler';
-export * from './indexify';
-export * from './class';
-export * from './daysBetween';
 export * from './isActive';
-export * from './hashify';
 export * from './clearSiteData';
+export * from './randomize';
+export * from './getFormEntries';
+
+export * from './validators';
+export * from './classes';

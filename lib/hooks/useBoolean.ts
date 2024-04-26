@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 
-interface HookReturn {
+export interface UseBooleanReturn {
     value: boolean;
     setValue: Dispatch<SetStateAction<boolean>>;
     setTrue: () => void;
@@ -8,7 +8,7 @@ interface HookReturn {
     toggle: () => void;
 }
 
-export function useBoolean(defaultValue?: boolean): HookReturn {
+export function useBoolean(defaultValue?: boolean): UseBooleanReturn {
     // States
     const [value, setValue] = useState(!!defaultValue);
 
