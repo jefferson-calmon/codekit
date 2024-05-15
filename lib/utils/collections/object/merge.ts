@@ -4,7 +4,14 @@ export function merge<T extends object, U extends object>(
     target: T,
     source: U,
 ) {
-    const merged = { ...clone(target) } as any;
+    return merger(clone(target), clone(source));
+}
+
+export function merger<T extends object, U extends object>(
+    target: T,
+    source: U,
+) {
+    const merged = target as any;
 
     for (const key in source) {
         if (source.hasOwnProperty(key)) {
@@ -19,12 +26,12 @@ export function merge<T extends object, U extends object>(
                     merged[key] = {};
                 }
 
-                merged[key] = merge(merged[key], sourceValue);
+                merged[key] = merger(merged[key], sourceValue);
             } else {
                 merged[key] = sourceValue;
             }
         }
     }
 
-    return clone(merged) as T & U;
+    return merged as T & U;
 }

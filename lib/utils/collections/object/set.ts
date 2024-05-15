@@ -6,7 +6,14 @@ export function set<T extends object, K extends KeyOf<T> & string, V>(
     key: K,
     value: V,
 ) {
-    obj = clone(obj);
+    return setter(clone(obj), key, value);
+}
+
+function setter<T extends object, K extends KeyOf<T> & string, V>(
+    obj: T,
+    key: K,
+    value: V,
+) {
     const keyParts = key.split('.');
 
     if (keyParts.length > 1) {
@@ -19,7 +26,7 @@ export function set<T extends object, K extends KeyOf<T> & string, V>(
             (obj as any)[currentKey] = {};
         }
 
-        Object.set(
+        setter(
             (obj as any)[currentKey] as object,
             keyParts.join('.') as KeyOf<object>,
             value,
@@ -28,5 +35,5 @@ export function set<T extends object, K extends KeyOf<T> & string, V>(
         (obj as any)[keyParts[0]] = value;
     }
 
-    return clone(obj) as T & GenerateType<K, V>;
+    return obj as T & GenerateType<K, V>;
 }

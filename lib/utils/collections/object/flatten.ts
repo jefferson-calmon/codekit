@@ -6,7 +6,14 @@ export function flatten<T extends object>(
     delimiter = '.',
     parentKey = '',
 ) {
-    obj = clone(obj);
+    return flatter(clone(obj), delimiter, parentKey);
+}
+
+export function flatter<T extends object>(
+    obj: T,
+    delimiter = '.',
+    parentKey = '',
+) {
     let result: any = {};
 
     for (const [key, value] of Object.entries(obj)) {
@@ -17,12 +24,12 @@ export function flatten<T extends object>(
             !Array.isArray(value) &&
             Object.keys(value).length > 0
         ) {
-            const nestedFlatten = flatten<{}>(value, delimiter, newKey);
+            const nestedFlatten = flatter<{}>(value, delimiter, newKey);
             result = { ...result, ...nestedFlatten };
         } else {
             (result as any)[newKey] = value;
         }
     }
 
-    return clone(result) as Record<KeyOf<T>, any>;
+    return result as Record<KeyOf<T>, any>;
 }
