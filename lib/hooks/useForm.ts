@@ -11,12 +11,13 @@ export interface UseFormReturn<T extends object = {}> {
     ref: React.RefObject<HTMLFormElement>;
     errors: ReturnType<typeof useError>['errors'];
     error: ReturnType<typeof useError>;
-    change: ReturnType<typeof useChange<T>>;
+    set: ReturnType<typeof useChange<T>>;
     data: T;
+    isLoading: boolean;
+    clear: () => void;
     setData: (data: T) => void;
     entry: (key: KeyOf<T>) => DeepTypeOf<T, KeyOf<T>>;
     valueOf: (key: KeyOf<T>) => string;
-    isLoading: boolean;
     getEntries: () => T | null;
     onSubmit: (
         handler: (props: OnSubmitProps<T>) => Promise<void>,
@@ -83,6 +84,11 @@ export function useForm<T extends object>(
         };
     }
 
+    function handleClear() {
+        setData(initialData);
+        formRef?.current?.reset();
+    }
+
     async function validate() {
         const entries = getEntries();
         const target = entries ? entries : data;
@@ -109,13 +115,14 @@ export function useForm<T extends object>(
         ref: formRef,
         errors: error.errors,
         error: error,
-        change,
+        set: change,
         data: data,
-        setData: (data: T) => setData(data),
-        entry: (key: KeyOf<T>) => Object.get(data, key),
-        valueOf: (key: KeyOf<T>) => String(Object.get(data, key)),
         isLoading: isLoading.value,
         getEntries,
         onSubmit: handleSubmit,
+        clear: handleClear,
+        setData: (data: T) => setData(data),
+        entry: (key: KeyOf<T>) => Object.get(data, key),
+        valueOf: (key: KeyOf<T>) => String(Object.get(data, key)),
     };
 }
