@@ -1,8 +1,8 @@
-import { config } from "../config";
+import { config } from '../config';
 
-config()
+config();
 
-export function calculateSimilarityScore(str1: string, str2: string): number {
+export function calculateSimilarityScore(str1: string, str2: string) {
     const text1 = str1.toString().toLowerCase();
     const text2 = str2.toString().toLowerCase();
 
@@ -40,7 +40,17 @@ export function calculateSimilarityScore(str1: string, str2: string): number {
     const sumScore = scores.reduce((acc, score) => (acc += score), 0);
     const averageScore = sumScore / scores.length;
 
-    return averageScore;
+    return {
+        score: averageScore,
+        algorithmsScores: {
+            jaccard: jaccardScore,
+            levenshtein: levenshteinScore,
+            cosine: cosineScore,
+            jaroWinkler: jaroWinklerScore,
+            ngram: ngramScore,
+            vectorSpace: vectorSpaceScore,
+        },
+    };
 }
 
 export function levenshteinDistance(s: string, t: string): number {
