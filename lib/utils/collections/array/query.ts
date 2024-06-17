@@ -1,4 +1,4 @@
-import { KeyOf } from "../../../types";
+import { KeyOf, DeepTypeOf } from '../../../types';
 
 export type QueryValue = string | string[];
 export type Query<T> = Partial<Record<KeyOf<T>, QueryValue>>;
@@ -27,17 +27,35 @@ export function query<T extends object>(data: T[], query: Query<T>) {
                             item as T,
                             lastKey as KeyOf<T>,
                         );
-                        if (typeof keyValue === 'undefined') return true;
 
-                        return keyValue === value;
+                        return validateValues(keyValue, value);
                     });
                 }
 
                 const keyValue = Object.get(item, key as KeyOf<T>);
-                if (typeof keyValue === 'undefined') return true;
 
-                return keyValue === value;
+                return validateValues(keyValue, value);
             });
         });
     });
+}
+
+function validateValues<T>(
+    keyValue: DeepTypeOf<T, KeyOf<T, '', '.'>>,
+    value: any,
+) {
+    if (typeof keyValue === 'undefined') return true;
+
+    // Filter query type: range (min/max)
+    if (
+        typeof keyValue === 'number' &&
+        typeof value === 'string' &&
+        value.startsWith('minmax:')
+    ) {
+        const [min, max] = value.substring(7).split('-').map(Number);
+
+        return keyValue >= min && keyValue <= (max || Infinity);
+    }
+
+    return keyValue === value;
 }

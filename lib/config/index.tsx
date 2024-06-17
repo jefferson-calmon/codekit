@@ -76,7 +76,7 @@ declare global {
             options?: GroupOptions<T>,
         ) => GroupedDataByKey;
 
-        query: (query: Query<T>) => T[];
+        query: <Type = T>(query: Query<Type>) => T[];
 
         reduction: <K extends KeyOf<Type>, V extends KeyOf<Type>, Type = T>(
             key: K,
@@ -188,6 +188,15 @@ export const config = (): void => {
     };
     Array.prototype.search = function (keys: any, values: any) {
         return array.search(this as object[], keys as never[], values);
+    };
+    Array.prototype.group = function (key: any, options) {
+        return array.group<object>(this, key as never, options);
+    };
+    Array.prototype.query = function (query: any) {
+        return array.query<object>(this, query);
+    };
+    Array.prototype.reduction = function (key: any, value) {
+        return array.reduction<object>(this, key as never, value as never);
     };
 
     // Array constructor
