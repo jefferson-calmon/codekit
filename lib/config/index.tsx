@@ -14,6 +14,9 @@ import {
     GroupedDataByKey,
     Query,
     ReductionObj,
+    NormalizedOption,
+    FiltersOptions,
+    NormalizedFilters,
 } from '../utils';
 
 declare global {
@@ -82,6 +85,16 @@ declare global {
             key: K,
             value: V,
         ) => ReductionObj;
+
+        toOptions: <K extends KeyOf<Type>, V extends KeyOf<Type>, Type = T>(
+            key: K,
+            value: V,
+        ) => NormalizedOption[];
+
+        toFilters: <K extends KeyOf<Type>, Type = T>(
+            key: K,
+            options?: FiltersOptions,
+        ) => NormalizedFilters<K>;
     }
 
     interface StringConstructor {

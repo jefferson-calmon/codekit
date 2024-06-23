@@ -11,3 +11,5 @@ export * from './uniq';
 export * from './uniqBy';
 export * from './fresh';
 export * from './indexify';
+export * from './toOptions';
+export * from './toFilters';
