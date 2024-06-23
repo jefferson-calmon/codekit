@@ -1,23 +1,32 @@
 import { useCallback, useRef, useState } from 'react';
 
 import { useError } from './useError';
-import { useChange } from './useChange';
+import { ChangeOptions, DataType, useChange } from './useChange';
 import { useBoolean } from './useBoolean';
 import { getFormEntriesByForm } from '../utils/getFormEntries';
 import { DeepTypeOf, KeyOf } from '../types';
-import { get } from '../utils';
+import { get, toNumber } from '../utils';
 
 export interface UseFormReturn<T extends object = {}> {
     ref: React.RefObject<HTMLFormElement>;
     errors: ReturnType<typeof useError>['errors'];
     error: ReturnType<typeof useError>;
-    set: ReturnType<typeof useChange<T>>;
     data: T;
     isLoading: boolean;
     clear: () => void;
+    set: (
+        key: KeyOf<T>,
+        options?: ChangeOptions | DataType,
+    ) => {
+        value: (value: any) => void;
+    };
+    change: (
+        key: KeyOf<T>,
+        options?: ChangeOptions | DataType,
+    ) => (e: any) => void;
     setData: (data: T) => void;
     entry: (key: KeyOf<T>) => DeepTypeOf<T, KeyOf<T>>;
-    valueOf: (key: KeyOf<T>) => string;
+    value: (key: KeyOf<T>) => string;
     getEntries: () => T | null;
     onSubmit: (
         handler: (props: OnSubmitProps<T>) => Promise<void>,
@@ -89,6 +98,23 @@ export function useForm<T extends object>(
         formRef?.current?.reset();
     }
 
+    function handleSet(key: KeyOf<T>, options?: ChangeOptions | DataType) {
+        return { value: change(key, options).value };
+    }
+
+    function handleChange(key: KeyOf<T>, options?: ChangeOptions | DataType) {
+        return change(key, options).handler;
+    }
+
+    function handleValue(key: KeyOf<T>) {
+        const value = Object.get(data, key);
+
+        if (value === undefined) return '';
+        if (value === null) return '';
+
+        return String(value);
+    }
+
     async function validate() {
         const entries = getEntries();
         const target = entries ? entries : data;
@@ -115,14 +141,15 @@ export function useForm<T extends object>(
         ref: formRef,
         errors: error.errors,
         error: error,
-        set: change,
         data: data,
         isLoading: isLoading.value,
         getEntries,
         onSubmit: handleSubmit,
         clear: handleClear,
-        setData: (data: T) => setData(data),
+        set: handleSet,
+        change: handleChange,
+        value: handleValue,
         entry: (key: KeyOf<T>) => Object.get(data, key),
-        valueOf: (key: KeyOf<T>) => String(Object.get(data, key)),
+        setData: (data: T) => setData(data),
     };
 }

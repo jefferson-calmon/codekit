@@ -197,9 +197,11 @@ export function ngramSimilarity(text1: string, text2: string, n: number) {
 }
 
 export function vectorSpaceModelSimilarity(text1: string, text2: string) {
-    // Define uma função auxiliar para tokenizar o texto em palavras
-    const tokenize = (text: string): string[] =>
-        text.toLowerCase().match(/\b\w+\b/g) ?? [];
+    const tokenize = (text: string) =>
+        text
+            .toLowerCase()
+            .match(/\b\w+\b/g)
+            ?.map(String) ?? [];
 
     // Tokeniza ambos os textos
     const words1 = tokenize(text1);

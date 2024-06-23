@@ -1,29 +1,53 @@
 import { KeyOf } from '../types';
-import { set, toNumber } from '../utils';
+import { set, toNumber, validator } from '../utils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ChangeOptions {
-    formatter?: (value: any) => any;
+    /**
+     * Transform value for change
+     * @param value
+     * @returns any
+     */
+    transformer?: (value: any) => any;
 }
 
 type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
-type DataType = 'money';
+export type DataType = 'currency';
 
 export function useChange<T extends object>(setter: Setter<T>) {
     return (key: KeyOf<T>, options?: ChangeOptions | DataType) => {
         const change = (v: any) => {
             let value = v;
 
-            const isObj = typeof options === 'object';
+            const isObject = typeof options === 'object';
 
-            if (options === 'money') value = toNumber(value);
-            if (isObj && options?.formatter) value = options?.formatter(value);
+            const isNumber = !Number.isNaN(Number(value)) && value !== '';
+            const isCurrency =
+                options === 'currency' || validator.isCurrency(value);
+
+            if (isNumber) value = Number(value);
+            if (isCurrency) value = toNumber(value);
+
+            if (isObject && options?.transformer)
+                value = options?.transformer(value);
 
             setter(prev => set(prev, key, value));
         };
 
-        const handler = (e: any) => change(e.target.value);
         const value = (value: any) => change(value);
+        const handler = (e: any) => {
+            const isEvent =
+                e?.target || e?.currentTarget || e?.nativeEvent?.target;
+
+            const value = isEvent
+                ? e?.target?.value ??
+                  e?.target?.textContent ??
+                  e?.currentTarget?.value ??
+                  e?.nativeEvent?.target?.value
+                : e;
+
+            return change(String(value));
+        };
 
         return {
             handler,

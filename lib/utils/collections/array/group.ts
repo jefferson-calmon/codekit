@@ -1,7 +1,7 @@
 import { KeyOf } from '../../../types';
 
-export interface GroupOptions<T> {
-    sum?: KeyOf<T>;
+export interface GroupOptions<K> {
+    sum?: K;
     keyTransformer?: KeyTransformer;
 }
 
@@ -18,7 +18,7 @@ export type KeyTransformer = (key: string) => string;
 export function group<T extends object>(
     data: T[],
     key: KeyOf<T>,
-    options?: GroupOptions<T>,
+    options?: GroupOptions<KeyOf<T>>,
 ) {
     return data
         .order(key, 'asc')

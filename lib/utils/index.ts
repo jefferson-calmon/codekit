@@ -21,7 +21,7 @@ export * from './delay';
 export * from './retryIfFail';
 export * from './debounce';
 export * from './crypto';
-export * from './calculateSimilarityScore';
+export * from './calculateSimilarity';
 export * from './isActive';
 export * from './clearSiteData';
 export * from './randomize';

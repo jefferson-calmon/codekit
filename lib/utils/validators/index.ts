@@ -28,6 +28,9 @@ export { validateUrl } from './validateUrl';
 import { validateTypeOf } from './validateTypeOf';
 export { validateTypeOf } from './validateTypeOf';
 
+import { validateCurrency } from './validateCurrency';
+export { validateCurrency } from './validateCurrency';
+
 export const validator = {
     isUrl: validateUrl,
     isEmail: validateEmail,
@@ -37,6 +40,7 @@ export const validator = {
     isCpfOrCnpj: validateCpfOrCnpj,
     isPhoneNumber: validatePhoneNumber,
     isLatLng: validateLatLng,
+    isCurrency: validateCurrency,
     regex: validateByRegex,
 
     isUndefined: (value: any) => validateTypeOf(value, 'undefined'),
