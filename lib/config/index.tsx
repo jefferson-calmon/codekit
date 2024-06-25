@@ -217,6 +217,12 @@ export const config = (): void => {
     Array.prototype.reduction = function (key: any, value) {
         return array.reduction<object>(this, key as never, value as never);
     };
+    Array.prototype.toOptions = function (key: any, value) {
+        return array.toOptions<object>(this, key as never, value as never);
+    };
+    Array.prototype.toFilters = function (key: any, options) {
+        return array.toFilters<object>(this, key as never, options as never);
+    };
 
     // Date prototype
     Date.prototype.shift = function (values) {
