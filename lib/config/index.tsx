@@ -10,6 +10,7 @@ import {
     object,
     number,
     string,
+    date,
     GroupOptions,
     GroupedDataByKey,
     Query,
@@ -17,6 +18,7 @@ import {
     NormalizedOption,
     FiltersOptions,
     NormalizedFilters,
+    ShiftDateValues,
 } from '../utils';
 
 declare global {
@@ -95,6 +97,10 @@ declare global {
             key: K,
             options?: FiltersOptions,
         ) => NormalizedFilters<K>;
+    }
+
+    interface Date {
+        shift: (values: ShiftDateValues) => Date;
     }
 
     interface StringConstructor {
@@ -210,6 +216,11 @@ export const config = (): void => {
     };
     Array.prototype.reduction = function (key: any, value) {
         return array.reduction<object>(this, key as never, value as never);
+    };
+
+    // Date prototype
+    Date.prototype.shift = function (values) {
+        return date.shift(this, values);
     };
 
     // Array constructor
