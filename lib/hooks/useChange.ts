@@ -21,7 +21,10 @@ export function useChange<T extends object>(setter: Setter<T>) {
 
             const isObject = typeof options === 'object';
 
-            const isNumber = !Number.isNaN(Number(value)) && value !== '';
+            const isNumber =
+                !Number.isNaN(Number(value)) &&
+                value !== '' &&
+                !String(value).startsWith('0');
             const isCurrency =
                 options === 'currency' || validator.isCurrency(value);
 

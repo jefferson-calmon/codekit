@@ -19,6 +19,7 @@ export interface UseFormReturn<T extends object = {}> {
         options?: ChangeOptions | DataType,
     ) => {
         value: (value: any) => void;
+        handler: (e: any) => void;
     };
     change: (
         key: KeyOf<T>,
@@ -99,7 +100,7 @@ export function useForm<T extends object>(
     }
 
     function handleSet(key: KeyOf<T>, options?: ChangeOptions | DataType) {
-        return { value: change(key, options).value };
+        return change(key, options);
     }
 
     function handleChange(key: KeyOf<T>, options?: ChangeOptions | DataType) {
