@@ -16,8 +16,10 @@ export type DataType = 'currency';
 
 export function useChange<T extends object>(setter: Setter<T>) {
     return (key: KeyOf<T>, options?: ChangeOptions | DataType) => {
-        const change = (v: any) => {
+        const change = (v: any, formatted = true) => {
             let value = v;
+
+            if (!formatted) return setter(prev => set(prev, key, value));
 
             const isObject = typeof options === 'object';
 
@@ -37,7 +39,9 @@ export function useChange<T extends object>(setter: Setter<T>) {
             setter(prev => set(prev, key, value));
         };
 
-        const value = (value: any) => change(value);
+        const value = (value: any, formatted = false) =>
+            change(value, formatted);
+
         const handler = (e: any) => {
             const isEvent =
                 e?.target || e?.currentTarget || e?.nativeEvent?.target;
