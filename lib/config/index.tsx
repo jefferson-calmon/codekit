@@ -108,7 +108,7 @@ declare global {
     }
 
     interface ArrayConstructor {
-        new: typeof array.fresh;
+        new: (length: number) => Array<Record<'id', string>>;
     }
 
     interface ObjectConstructor {
