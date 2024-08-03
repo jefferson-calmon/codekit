@@ -43,5 +43,5 @@ export function group<T extends object>(
             return { ...groupedDataByKey };
         }, {});
 
-    return grouped;
+    return Object.values(grouped);
 }
