@@ -12,13 +12,13 @@ import {
     string,
     date,
     GroupOptions,
-    GroupedDataByKey,
     Query,
     ReductionObj,
     NormalizedOption,
     FiltersOptions,
     NormalizedFilters,
     ShiftDateValues,
+    GroupedData,
 } from '../utils';
 
 declare global {
@@ -79,7 +79,7 @@ declare global {
         group: <K extends KeyOf<Type>, Type = T>(
             key: K,
             options?: GroupOptions<K>,
-        ) => GroupedDataByKey;
+        ) => GroupedData[];
 
         query: <Type = T>(query: Query<Type>) => T[];
 
