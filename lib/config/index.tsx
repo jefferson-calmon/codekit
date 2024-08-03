@@ -20,6 +20,7 @@ import {
     ShiftDateValues,
     GroupedData,
 } from '../utils';
+import { DateUnit } from '../utils/collections/array/groupByDate';
 
 declare global {
     interface Number {
@@ -78,6 +79,12 @@ declare global {
 
         group: <K extends KeyOf<Type>, Type = T>(
             key: K,
+            options?: GroupOptions<K>,
+        ) => GroupedData[];
+
+        groupByDate: <K extends KeyOf<Type>, Type = T>(
+            key: K,
+            unit: DateUnit,
             options?: GroupOptions<K>,
         ) => GroupedData[];
 
@@ -210,6 +217,9 @@ export const config = (): void => {
     };
     Array.prototype.group = function (key, options) {
         return array.group<object>(this, key as never, options as any);
+    };
+    Array.prototype.groupByDate = function (key, unit, options) {
+        return array.groupByDate<object>(this, key as never, unit, options as any);
     };
     Array.prototype.query = function (query: any) {
         return array.query<object>(this, query);

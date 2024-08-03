@@ -1,5 +1,6 @@
 export * from './compact';
 export * from './group';
+export * from './groupByDate';
 export * from './last';
 export * from './order';
 export * from './query';
