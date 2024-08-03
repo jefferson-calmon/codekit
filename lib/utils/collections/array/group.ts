@@ -2,25 +2,24 @@ import { KeyOf } from '../../../types';
 
 export interface GroupOptions<K> {
     sum?: K;
-    keyTransformer?: KeyTransformer;
+    keyTransformer?: (key: string) => string;
 }
 
 export interface GroupedData {
     key: string;
+    original: string;
     count: number;
     sum: number;
 }
 
 export type GroupedDataByKey = Record<string, GroupedData>;
 
-export type KeyTransformer = (key: string) => string;
-
 export function group<T extends object>(
     data: T[],
     key: KeyOf<T>,
     options?: GroupOptions<KeyOf<T>>,
 ) {
-    return data
+    const grouped = data
         .order(key, 'asc')
         .reduce<GroupedDataByKey>((groupedDataByKey, item) => {
             const { keyTransformer, sum } = options ?? {};
@@ -34,6 +33,7 @@ export function group<T extends object>(
 
             const newGroupedData: GroupedData = {
                 key: keyValue,
+                original: key,
                 count: data?.count ? data.count + 1 : 1,
                 sum: (data?.sum || 0) + sumValue,
             };
@@ -42,4 +42,6 @@ export function group<T extends object>(
 
             return { ...groupedDataByKey };
         }, {});
+
+    return grouped;
 }
