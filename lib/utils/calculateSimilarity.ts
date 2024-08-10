@@ -2,7 +2,7 @@ import { config } from '../config';
 
 config();
 
-export function calculateSimilarityScore(str1: string, str2: string) {
+export function calculateSimilarity(str1: string, str2: string) {
     const text1 = str1.toString().toLowerCase();
     const text2 = str2.toString().toLowerCase();
 
