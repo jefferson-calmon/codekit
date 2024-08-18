@@ -13,15 +13,15 @@
     },
     "license": "MIT",
     "scripts": {
-        "build": "bili lib/index.ts -d dist/ --format cjs --format esm",
+        "build": "tsup",
         "pub": "npm run build && npm version patch && npm publish && hesto git:commit",
         "pub:dev": "npm run build && npm version patch && npm publish"
     },
     "devDependencies": {
         "@types/crypto-js": "^4.1.1",
+        "@types/node": "^22.4.0",
         "@types/react": "^18.0.6",
         "@typescript-eslint/eslint-plugin": "^5.20.0",
-        "bili": "^5.0.5",
         "eslint": "8.13.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-prettier": "^8.5.0",
@@ -30,12 +30,16 @@
         "prettier": "^2.6.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "rollup-plugin-typescript2": "^0.31.2",
-        "ts-node": "^10.9.1",
+        "tsup": "^8.2.4",
         "typescript": "^4.6.3"
     },
-    "peerDependencies": {},
-    "dependencies": {
+    "peerDependencies": {
         "crypto-js": "^4.1.1"
-    }
+    },
+    "peerDependenciesMeta": {
+        "crypto-js": {
+            "optional": true
+        }
+    },
+    "dependencies": {}
 }
