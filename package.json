@@ -14,7 +14,7 @@
     "license": "MIT",
     "scripts": {
         "build": "tsup",
-        "pub": "npm run build && npm version patch && npm publish && hesto git:commit",
+        "pub": "npm run build && npm version patch && npm publish && gt && git push",
         "pub:dev": "npm run build && npm version patch && npm publish"
     },
     "devDependencies": {
