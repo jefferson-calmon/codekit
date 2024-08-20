@@ -16,7 +16,7 @@ export function nanoid(size = 21, seed?: string) {
     return id;
 }
 
-interface CustomNanoIdProps {
+export interface CustomNanoIdProps {
     prefix?: string;
     suffix?: string;
     size?: number;
