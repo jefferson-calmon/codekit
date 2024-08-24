@@ -23,6 +23,7 @@ export * from './debounce';
 export * from './crypto';
 export * from './calculateSimilarity';
 export * from './isActive';
+export * from './isPromise';
 export * from './clearSiteData';
 export * from './randomize';
 export * from './getFormEntries';
