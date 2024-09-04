@@ -1,6 +1,6 @@
 {
     "name": "codekit",
-    "version": "2.0.38",
+    "version": "2.0.39",
     "description": "CodeKit is the most complete collection of tools, utilities and services for javascript developers.",
     "types": "dist/index.d.ts",
     "main": "dist/index.js",
