@@ -19,3 +19,4 @@ export * from './usePagination';
 export * from './useForm';
 export * from './useControlledState';
 export * from './useGeolocation';
+export * from './useSystemTheme';
