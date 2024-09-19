@@ -2,15 +2,15 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 
 import { createPortal } from 'react-dom';
 
-interface MountedPortalProps {
+export interface MountedPortalProps {
 	children: Parameters<typeof createPortal>['0'];
 	container: HTMLElement;
 }
 
-type PortalProps = Pick<MountedPortalProps, 'children'>;
-type Container = HTMLElement | (() => HTMLElement | null) | null;
+export type PortalProps = Pick<MountedPortalProps, 'children'>;
+export type PortalContainer = HTMLElement | (() => HTMLElement | null) | null;
 
-export function usePortal(container: Container, waitMount = true) {
+export function usePortal(container: PortalContainer, waitMount = true) {
 	// Common vars
 	const containerElement =
 		typeof container === 'function' ? container() : container;
