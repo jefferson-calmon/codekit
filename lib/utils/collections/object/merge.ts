@@ -7,7 +7,7 @@ export function merge<T extends object, U extends object>(
     return merger(clone(target), clone(source));
 }
 
-export function merger<T extends object, U extends object>(
+function merger<T extends object, U extends object>(
     target: T,
     source: U,
 ) {

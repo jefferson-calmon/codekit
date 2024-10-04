@@ -14,7 +14,7 @@
     "license": "MIT",
     "scripts": {
         "build": "tsup",
-        "pub": "gt && npm run build && npm version minor && npm publish && git push",
+        "pub": "npm run build && gt && npm version minor && npm publish && git push",
         "pub:dev": "npm run build && npm version patch && npm publish"
     },
     "devDependencies": {
