@@ -27,7 +27,8 @@ export * from './isPromise';
 export * from './clearSiteData';
 export * from './randomize';
 export * from './getFormEntries';
+export * from './nanoId';
+export * from './cookies';
 
 export * from './validators';
 export * from './classes';
-export * from './nanoId';
