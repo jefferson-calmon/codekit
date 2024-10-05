@@ -9,20 +9,26 @@ export interface CreateInstanceProps {
     ) => Promise<Response> | Response;
 }
 
-type Options = Omit<RequestInit, 'method' | 'body'>;
+export interface RequestOptions extends Omit<RequestInit, 'method' | 'body'> {
+    params?: Record<string, any>;
+}
 
 const url = (...paths: string[]) => paths.join('/').replaceAll('//', '/');
 const error = (data: any) => data?.message ?? data.error ?? data.detail;
 
 export function createFetchInstance(props: CreateInstanceProps) {
-    async function get<T>(endpoint: string, options?: Options) {
+    async function get<T>(endpoint: string, options?: RequestOptions) {
         return await request<T>(endpoint, {
             method: 'GET',
             ...(options ?? {}),
         });
     }
 
-    async function post<T>(endpoint: string, data: any, options?: Options) {
+    async function post<T>(
+        endpoint: string,
+        data: any,
+        options?: RequestOptions,
+    ) {
         return await request<T>(endpoint, {
             method: 'POST',
             body: JSON.stringify(data),
@@ -30,7 +36,11 @@ export function createFetchInstance(props: CreateInstanceProps) {
         });
     }
 
-    async function del<T>(endpoint: string, data: any, options?: Options) {
+    async function del<T>(
+        endpoint: string,
+        data: any,
+        options?: RequestOptions,
+    ) {
         return await request<T>(endpoint, {
             method: 'DELETE',
             body: JSON.stringify(data),
@@ -38,7 +48,11 @@ export function createFetchInstance(props: CreateInstanceProps) {
         });
     }
 
-    async function put<T>(endpoint: string, data: any, options?: Options) {
+    async function put<T>(
+        endpoint: string,
+        data: any,
+        options?: RequestOptions,
+    ) {
         return await request<T>(endpoint, {
             method: 'PUT',
             body: JSON.stringify(data),
@@ -46,7 +60,11 @@ export function createFetchInstance(props: CreateInstanceProps) {
         });
     }
 
-    async function patch<T>(endpoint: string, data: any, options?: Options) {
+    async function patch<T>(
+        endpoint: string,
+        data: any,
+        options?: RequestOptions,
+    ) {
         return await request<T>(endpoint, {
             method: 'PATCH',
             body: JSON.stringify(data),
@@ -54,12 +72,22 @@ export function createFetchInstance(props: CreateInstanceProps) {
         });
     }
 
-    async function request<T>(endpoint: string, options: RequestInit) {
+    async function request<T>(
+        endpoint: string,
+        options: RequestInit & RequestOptions,
+    ) {
+        const params = new URLSearchParams(options.params).toString();
+
+        const requestUrl = url(
+            props.baseUrl,
+            [endpoint, params].compact().join('?'),
+        );
+
         if (props.onBeforeRequest) {
             options = await props.onBeforeRequest(options);
         }
 
-        let response = await fetch(url(props.baseUrl, endpoint), options);
+        let response = await fetch(requestUrl, options);
 
         if (props.onResponse) {
             response = await props.onResponse(response, () =>
