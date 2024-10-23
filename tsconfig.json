@@ -1,4 +1,5 @@
 {
+    "$schema": "https://json.schemastore.org/tsconfig",
     "compilerOptions": {
         "moduleResolution": "node",
         "esModuleInterop": true,
@@ -19,5 +20,7 @@
         "strictNullChecks": true,
         "strictFunctionTypes": true,
         "experimentalDecorators": true
-    }
+    },
+    "include": ["lib"],
+    "exclude": ["node_modules", "dist"]
 }

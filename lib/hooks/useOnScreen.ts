@@ -12,7 +12,7 @@ export function useOnScreen<T extends Element>(
         const observer = new IntersectionObserver(
             ([entry]) => {
                 // Update our state when observer callback fires
-                setIntersecting(entry.isIntersecting);
+                setIntersecting(!!entry?.isIntersecting);
             },
             {
                 rootMargin,

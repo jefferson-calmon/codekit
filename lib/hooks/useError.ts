@@ -57,7 +57,7 @@ export function useError(customErrors?: Partial<typeof errorsList>) {
             const errors = Array.from(prev);
             const index = errors.findIndex(error => error.id === id);
 
-            if (index >= 0) errors[index].message = message;
+            if (index >= 0 && errors[index]) errors[index].message = message;
             return errors;
         });
     }

@@ -1,18 +1,13 @@
-import { defineConfig } from 'tsup';
+import { Options } from "tsup";
 
-export default defineConfig({
-    entry: ['lib/index.ts'],
-    format: ['cjs', 'esm'],
-    dts: true,
-    outDir: 'dist',
-    minify: true,
+export const tsup: Options = {
+    target: "esnext",
     clean: true,
-    target: 'es2020',
-    esbuildOptions(options) {
-        options.minifyIdentifiers = true;
-    },
-    external: ['react', 'react-dom', 'crypto-js'],
-    env: {
-        NODE_ENV: 'production',
-    },
-});
+    dts: true,
+    entry: ["lib/index.ts"],
+    keepNames: true,
+    minify: true,
+    sourcemap: true,
+    format: ["cjs"],
+    external: ["firebase", "firebase-admin"],
+};
