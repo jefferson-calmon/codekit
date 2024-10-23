@@ -126,6 +126,7 @@ declare global {
         flatten: typeof object.flatten;
         isEqual: typeof object.isEqual;
         clone: typeof object.clone;
+        pick: typeof object.pick;
     }
 
     interface NumberConstructor {
@@ -288,6 +289,10 @@ export const config = (): void => {
 
     Object.clone = function (obj: any) {
         return object.clone(obj);
+    };
+
+    Object.pick = function (obj: any, keys: any) {
+        return object.pick(obj, keys);
     };
 };
 

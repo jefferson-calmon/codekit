@@ -5,3 +5,4 @@ export * from './isEqual';
 export * from './merge';
 export * from './set';
 export * from './flatten';
+export * from './pick';
