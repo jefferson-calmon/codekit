@@ -6,3 +6,4 @@ export * from './merge';
 export * from './set';
 export * from './flatten';
 export * from './pick';
+export * from './omit';
