@@ -108,6 +108,7 @@ declare global {
 
     interface Date {
         shift: (values: ShiftDateValues) => Date;
+        diff: (end: Date) => ReturnType<typeof date['diff']>;
     }
 
     interface StringConstructor {
@@ -221,7 +222,12 @@ export const config = (): void => {
         return array.group<object>(this, key as never, options as any);
     };
     Array.prototype.groupByDate = function (key, unit, options) {
-        return array.groupByDate<object>(this, key as never, unit, options as any);
+        return array.groupByDate<object>(
+            this,
+            key as never,
+            unit,
+            options as any,
+        );
     };
     Array.prototype.query = function (query: any) {
         return array.query<object>(this, query);
@@ -239,6 +245,9 @@ export const config = (): void => {
     // Date prototype
     Date.prototype.shift = function (values) {
         return date.shift(this, values);
+    };
+    Date.prototype.diff = function (end) {
+        return date.diff(this, end);
     };
 
     // Array constructor
