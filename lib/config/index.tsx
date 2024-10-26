@@ -62,6 +62,9 @@ declare global {
             order?: 'asc' | 'desc',
         ) => T[];
 
+        /** Returns the sum of specified prop value object array  */
+        sum: <K extends KeyOf<Type>, Type = T>(key: K) => number;
+
         /** Returns a copy of array shuffled */
         shuffle: () => T[];
 
@@ -205,6 +208,9 @@ export const config = (): void => {
     };
     Array.prototype.order = function (key: any, order: any) {
         return array.order<object, never>(this, key as never, order);
+    };
+    Array.prototype.sum = function (key: any) {
+        return array.sum<object, never>(this, key as never);
     };
     Array.prototype.shuffle = function () {
         return array.shuffleArray(this);
