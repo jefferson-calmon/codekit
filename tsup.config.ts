@@ -9,5 +9,5 @@ export const tsup: Options = {
     minify: true,
     sourcemap: true,
     format: ['cjs'],
-    external: ['react', 'react-dom'],
+    external: ['react', 'react-dom', 'crypto-js'],
 };

@@ -1,6 +1,6 @@
 {
     "name": "codekit",
-    "version": "2.11.0",
+    "version": "2.11.1",
     "description": "CodeKit is the most complete collection of tools, utilities and services for javascript developers.",
     "types": "dist/index.d.ts",
     "main": "dist/index.js",
@@ -15,7 +15,7 @@
     "scripts": {
         "build": "tsup",
         "pub": "npm run build && gt && npm version minor && npm publish && git push",
-        "pub:dev": "npm run build && npm version patch && npm publish"
+        "pub:dev": "npm run build && npm version patch --no-git-tag-version && npm publish"
     },
     "devDependencies": {
         "@types/crypto-js": "^4.1.1",
@@ -33,11 +33,13 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "tsup": "^8.2.4",
-        "typescript": "^4.6.3"
+        "typescript": "^4.6.3",
+        "crypto-js": "^4.1.1"
     },
     "peerDependencies": {
         "react": ">=18",
-        "react-dom": ">=18"
+        "react-dom": ">=18",
+        "crypto-js": ">4"
     },
     "peerDependenciesMeta": {
         "react": {
@@ -48,7 +50,6 @@
         }
     },
     "dependencies": {
-        "crypto-js": "^4.1.1",
         "seedrandom": "^3.0.5"
     }
 }
