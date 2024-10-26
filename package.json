@@ -47,6 +47,9 @@
         },
         "react-dom": {
             "optional": true
+        },
+        "crypto-js": {
+            "optional": true
         }
     },
     "dependencies": {
