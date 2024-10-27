@@ -12,6 +12,16 @@
         "email": "jeffjeff0197@gmail.com"
     },
     "license": "MIT",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./crypto": {
+            "types": "./dist/crypto.d.ts",
+            "default": "./dist/crypto.js"
+        }
+    },
     "scripts": {
         "build": "tsup",
         "pub": "npm run build && gt && npm version minor && npm publish && git push",

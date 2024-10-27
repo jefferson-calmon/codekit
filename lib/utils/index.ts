@@ -20,7 +20,6 @@ export * from './blobToDataURL';
 export * from './delay';
 export * from './retryIfFail';
 export * from './debounce';
-export * from './crypto';
 export * from './calculateSimilarity';
 export * from './isActive';
 export * from './isPromise';
