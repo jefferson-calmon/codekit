@@ -78,4 +78,4 @@ function cryptObject<T extends O = O>(...props: ProcessObjectProps<T>): T {
     return object;
 }
 
-export const AES = { encrypt, decrypt, cryptObject };
+export const aes = { encrypt, decrypt, cryptObject };
