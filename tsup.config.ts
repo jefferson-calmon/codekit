@@ -4,7 +4,7 @@ export const tsup: Options = {
     target: 'esnext',
     clean: true,
     dts: true,
-    entry: ['lib/index.ts', 'lib/crypto.ts'],
+    entry: ['lib/index.ts', 'lib/crypto.ts', 'lib/edge.ts'],
     keepNames: true,
     minify: true,
     sourcemap: true,
