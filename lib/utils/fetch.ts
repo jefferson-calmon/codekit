@@ -97,9 +97,11 @@ export function createFetchInstance(props: CreateInstanceProps) {
 
         if (!response.ok) throw new Error(error(await response.json()));
 
+        const data = (await response.json()) as T;
+
         return {
             ...response,
-            data: response.json() as T,
+            data,
         };
     }
 
