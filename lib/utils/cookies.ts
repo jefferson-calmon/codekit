@@ -1,7 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { clone, merge } from './collections/object';
-
 export interface CookieOptions {
     expires?: number | Date;
     path?: string;
@@ -19,7 +16,7 @@ export function setCookie(
 ) {
     if (typeof document === 'undefined') return;
 
-    options = merge(clone(defaultAttributes), options ?? {});
+    options = merge(defaultAttributes, options ?? {});
 
     if (typeof options.expires === 'number') {
         options.expires = new Date(Date.now() + options.expires * 864e5);
@@ -65,6 +62,48 @@ export function getCookie(name: string) {
 
 export function removeCookie(name: string) {
     setCookie(name, '');
+}
+
+// Utils
+
+function clone<T>(obj: T) {
+    return JSON.parse(JSON.stringify(obj)) as T;
+}
+
+function merge<T extends object, U extends object>(
+    target: T,
+    source: U,
+) {
+    return merger(clone(target), clone(source));
+}
+
+function merger<T extends object, U extends object>(
+    target: T,
+    source: U,
+) {
+    const merged = target as any;
+
+    for (const key in source) {
+        if (source.hasOwnProperty(key)) {
+            const sourceValue = source[key];
+
+            if (
+                sourceValue &&
+                typeof sourceValue === 'object' &&
+                !Array.isArray(sourceValue)
+            ) {
+                if (!merged[key] || typeof merged[key] !== 'object') {
+                    merged[key] = {};
+                }
+
+                merged[key] = merger(merged[key], sourceValue);
+            } else {
+                merged[key] = sourceValue;
+            }
+        }
+    }
+
+    return merged as T & U;
 }
 
 export const cookies = {
