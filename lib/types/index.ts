@@ -1,3 +1,6 @@
+export * from './slugify';
+export * from './color';
+
 // Global
 export type TypeOf =
     | 'undefined'
@@ -170,8 +173,6 @@ export type TargetKey =
     | '['
     | ']'
     | "'";
-
-export * from './slugify';
 
 /** All locales with the dashes and capitalization, e.g. `en-US`, `zh-Hant-HK`. */
 export type Locale =
