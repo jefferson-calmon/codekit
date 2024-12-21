@@ -13,6 +13,9 @@ export * as object from './collections/object';
 export * from './collections/string';
 export * as string from './collections/string';
 
+export * from './collections/file';
+export * as file from './collections/file';
+
 export * from './getImageDataURLFromFile';
 export * from './getCSSVarValue';
 export * from './uuid';
