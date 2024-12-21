@@ -30,6 +30,14 @@ export type DeepKeyOf<T, Prefix extends string = ''> = T extends object
       }[keyof T]
     : '';
 
+export type IsArray<T> = T extends any[] ? true : false;
+
+export type WithoutArrayProps<T> = {
+    [K in keyof T as IsArray<T[K]> extends true
+        ? never
+        : K]: T[K] extends object ? WithoutArrayProps<T[K]> : T[K];
+};
+
 export type DeepTypeOf<
     T,
     K extends string,
