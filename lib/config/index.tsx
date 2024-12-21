@@ -114,10 +114,6 @@ declare global {
         diff: (end: Date) => ReturnType<typeof date['diff']>;
     }
 
-    interface StringConstructor {
-        uuid: () => string;
-    }
-
     interface ArrayConstructor {
         new: (length: number) => Array<Record<'id', string>>;
     }
@@ -136,6 +132,11 @@ declare global {
 
     interface NumberConstructor {
         random: typeof randomize.number;
+    }
+
+    interface StringConstructor {
+        uuid: () => string;
+        random: typeof randomize.string;
     }
 }
 
@@ -191,6 +192,9 @@ export const config = (): void => {
     // String constructor
     String.uuid = function () {
         return uuid();
+    };
+    String.random = function (...props) {
+        return randomize.string(...props);
     };
 
     // Array
