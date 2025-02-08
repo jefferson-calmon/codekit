@@ -7,6 +7,7 @@ export interface CreateInstanceProps {
         response: Response,
         refetch: () => Promise<Response>,
     ) => Promise<Response> | Response;
+    headers?: RequestInit['headers'];
 }
 
 export interface RequestOptions extends Omit<RequestInit, 'method' | 'body'> {
@@ -87,7 +88,10 @@ export function createFetchInstance(props: CreateInstanceProps) {
             options = await props.onBeforeRequest(options);
         }
 
-        let response = await fetch(requestUrl, options);
+        let response = await fetch(requestUrl, {
+            ...options,
+            headers: { ...(props.headers ?? {}), ...(options.headers ?? {}) },
+        });
 
         if (props.onResponse) {
             response = await props.onResponse(response, () =>
