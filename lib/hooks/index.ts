@@ -8,7 +8,7 @@ export * from './useActive';
 export * from './useDebounce';
 export * from './useEventListener';
 export * from './useMedia';
-export * from './useKeyPress';
+export * from './useKey';
 export * from './usePrevious';
 export * from './useBoolean';
 export * from './useCopyToClipboard';
