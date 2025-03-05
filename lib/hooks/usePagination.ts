@@ -70,8 +70,8 @@ export const usePagination = <T>(data: T[], pageSize = 6) => {
         pages,
         page: {
             ...page,
-            next: prevPage,
-            prev: nextPage,
+            next: nextPage,
+            prev: prevPage,
             changePage,
         },
         isFirstPage,

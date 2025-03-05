@@ -6,19 +6,19 @@ import {
     useState,
 } from 'react';
 
-export interface UseStepReturn {
-    current: number;
+export interface UseStepReturn<T extends number> {
+    current: T;
     canGoToNext: boolean;
     canGoToPrev: boolean;
-    set: Dispatch<SetStateAction<number>>;
+    set: Dispatch<SetStateAction<T>>;
     next: () => void;
     prev: () => void;
     reset: () => void;
 }
 
-type SetCallbackType = (step: number | ((step: number) => number)) => void;
+type SetCallbackType<T extends number> = (step: T | ((step: T) => T)) => void;
 
-export function useStep(max: number): UseStepReturn {
+export function useStep<T extends number>(max: number): UseStepReturn<T> {
     // States
     const [current, setCurrent] = useState(1);
 
@@ -27,10 +27,10 @@ export function useStep(max: number): UseStepReturn {
     const canGoToPrev = useMemo(() => current - 1 >= 1, [current]);
 
     // Callbacks
-    const set = useCallback<SetCallbackType>(
+    const set = useCallback<SetCallbackType<T>>(
         step => {
             // Allow value to be a function so we have the same API as useState
-            const newStep = step instanceof Function ? step(current) : step;
+            const newStep = step instanceof Function ? step(current as T) : step;
 
             if (newStep >= 1 && newStep <= max) {
                 setCurrent(newStep);
@@ -55,7 +55,7 @@ export function useStep(max: number): UseStepReturn {
     }, []);
 
     return {
-        current,
+        current: current as T,
         next,
         prev,
         canGoToNext,
