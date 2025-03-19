@@ -23,12 +23,12 @@ export interface CustomNanoIdProps {
     charset?:
         | string
         | {
-              numbers: boolean;
-              lowercase: boolean;
-              uppercase: boolean;
-              underscore: boolean;
-              hyphen: boolean;
-              special: boolean;
+              numbers?: boolean;
+              lowercase?: boolean;
+              uppercase?: boolean;
+              underscore?: boolean;
+              hyphen?: boolean;
+              special?: boolean;
           };
 }
 
