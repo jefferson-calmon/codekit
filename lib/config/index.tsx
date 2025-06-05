@@ -19,6 +19,7 @@ import {
     NormalizedFilters,
     ShiftDateValues,
     GroupedData,
+    CreateDateInput,
 } from '../utils';
 import { DateUnit } from '../utils/collections/array/groupByDate';
 
@@ -112,6 +113,7 @@ declare global {
     interface Date {
         shift: (values: ShiftDateValues) => Date;
         diff: (end: Date) => ReturnType<typeof date['diff']>;
+        create: (values: CreateDateInput) => Date;
     }
 
     interface ArrayConstructor {
@@ -258,6 +260,9 @@ export const config = (): void => {
     };
     Date.prototype.diff = function (end) {
         return date.diff(this, end);
+    };
+    Date.prototype.create = function (values) {
+        return date.create(values);
     };
 
     // Array constructor
