@@ -1,7 +1,7 @@
-import { DeprecatedKeyOf } from '../../../types';
+import { KeyOf } from '../../../types';
 import { get } from '../object';
 
-export function uniqBy<T extends object, K extends DeprecatedKeyOf<T>>(
+export function uniqBy<T extends object, K extends KeyOf<T>>(
     array: T[],
     key: K,
 ) {

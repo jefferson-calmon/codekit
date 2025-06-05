@@ -1,7 +1,7 @@
-import { DeprecatedKeyOf, DeepTypeOf } from '../../../types';
+import { KeyOf, DeepTypeOf } from '../../../types';
 
 export type QueryValue = string | string[];
-export type Query<T> = Partial<Record<DeprecatedKeyOf<T>, QueryValue>>;
+export type Query<T> = Partial<Record<KeyOf<T>, QueryValue>>;
 
 export function query<T extends object>(data: T[], query: Query<T>) {
     return data.filter(item => {
@@ -18,21 +18,21 @@ export function query<T extends object>(data: T[], query: Query<T>) {
 
                     const keyValueArray = Object.get(
                         item,
-                        firstKey as DeprecatedKeyOf<T>,
+                        firstKey as KeyOf<T>,
                     );
                     if (typeof keyValueArray === 'undefined') return true;
 
                     return [keyValueArray].flat().some(item => {
                         const keyValue = Object.get(
                             item as T,
-                            lastKey as DeprecatedKeyOf<T>,
+                            lastKey as KeyOf<T>,
                         );
 
                         return validateValues(keyValue, value);
                     });
                 }
 
-                const keyValue = Object.get(item, key as DeprecatedKeyOf<T>);
+                const keyValue = Object.get(item, key as KeyOf<T>);
 
                 return validateValues(keyValue, value);
             });
@@ -41,7 +41,7 @@ export function query<T extends object>(data: T[], query: Query<T>) {
 }
 
 function validateValues<T>(
-    keyValue: DeepTypeOf<T, DeprecatedKeyOf<T, '', '.'>>,
+    keyValue: DeepTypeOf<T, KeyOf<T>>,
     value: any,
 ) {
     if (typeof keyValue === 'undefined') return true;

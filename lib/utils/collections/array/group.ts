@@ -1,4 +1,4 @@
-import { DeprecatedKeyOf } from '../../../types';
+import { KeyOf } from '../../../types';
 
 export interface GroupOptions<K> {
     sum?: K;
@@ -16,8 +16,8 @@ export type GroupedDataByKey = Record<string, GroupedData>;
 
 export function group<T extends object>(
     data: T[],
-    key: DeprecatedKeyOf<T>,
-    options?: GroupOptions<DeprecatedKeyOf<T>>,
+    key: KeyOf<T>,
+    options?: GroupOptions<KeyOf<T>>,
 ) {
     const grouped = data
         .order(key, 'asc')

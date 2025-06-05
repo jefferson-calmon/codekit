@@ -1,9 +1,9 @@
-import { DeprecatedKeyOf } from '../../../types';
+import { KeyOf } from '../../../types';
 import { get } from '../object';
 import { searchFor } from '../string/searchFor';
 import { compact } from './compact';
 
-export function search<T extends object, K extends DeprecatedKeyOf<T>, Q extends any>(
+export function search<T extends object, K extends KeyOf<T>, Q extends any>(
     array: T[],
     sources: K | K[],
     queries: Q | Q[],

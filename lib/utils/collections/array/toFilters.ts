@@ -1,7 +1,7 @@
-import { DeprecatedKeyOf } from '../../../types';
+import { KeyOf } from '../../../types';
 
 export interface NormalizedFilters<T> {
-    key: DeprecatedKeyOf<T>;
+    key: KeyOf<T>;
     values: {
         label: string;
         value: string;
@@ -15,7 +15,7 @@ export interface FiltersOptions {
 
 export function toFilters<T extends object>(
     data: T[],
-    key: DeprecatedKeyOf<T>,
+    key: KeyOf<T>,
     options?: FiltersOptions,
 ): NormalizedFilters<T> {
     const values = data
@@ -31,7 +31,7 @@ export function toFilters<T extends object>(
             return { value: newValue, label };
         });
 
-    if (options?.key) key = options?.key as DeprecatedKeyOf<T>;
+    if (options?.key) key = options?.key as KeyOf<T>;
 
     return {
         key,

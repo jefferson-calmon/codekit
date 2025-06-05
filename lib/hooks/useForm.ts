@@ -4,7 +4,7 @@ import { useError } from './useError';
 import { ChangeOptions, DataType, useChange } from './useChange';
 import { useBoolean } from './useBoolean';
 import { getFormEntriesByForm } from '../utils/getFormEntries';
-import { DeepTypeOf, DeprecatedKeyOf } from '../types';
+import { DeepTypeOf, KeyOf } from '../types';
 import { get, toNumber } from '../utils';
 
 export interface UseFormReturn<T extends object = {}> {
@@ -15,19 +15,19 @@ export interface UseFormReturn<T extends object = {}> {
     isLoading: boolean;
     clear: () => void;
     set: (
-        key: DeprecatedKeyOf<T>,
+        key: KeyOf<T>,
         options?: ChangeOptions | DataType,
     ) => {
         value: (value: any) => void;
         handler: (e: any) => void;
     };
     change: (
-        key: DeprecatedKeyOf<T>,
+        key: KeyOf<T>,
         options?: ChangeOptions | DataType,
     ) => (e: any) => void;
     setData: (data: T) => void;
-    entry: (key: DeprecatedKeyOf<T>) => DeepTypeOf<T, DeprecatedKeyOf<T>>;
-    value: (key: DeprecatedKeyOf<T>) => string;
+    entry: (key: KeyOf<T>) => DeepTypeOf<T, KeyOf<T>>;
+    value: (key: KeyOf<T>) => string;
     getEntries: () => T | null;
     onSubmit: (
         handler: (props: OnSubmitProps<T>) => Promise<void>,
@@ -37,7 +37,7 @@ export interface UseFormReturn<T extends object = {}> {
 export type OnSubmitProps<T> = { data: T; entries: T | null };
 export type Handler<T> = (props: OnSubmitProps<T>) => Promise<void>;
 export type Validations<T> = Partial<
-    Record<DeprecatedKeyOf<T>, Validation | Validation[]>
+    Record<KeyOf<T>, Validation | Validation[]>
 >;
 
 export interface Validation {
@@ -99,15 +99,15 @@ export function useForm<T extends object>(
         formRef?.current?.reset();
     }
 
-    function handleSet(key: DeprecatedKeyOf<T>, options?: ChangeOptions | DataType) {
+    function handleSet(key: KeyOf<T>, options?: ChangeOptions | DataType) {
         return change(key, options);
     }
 
-    function handleChange(key: DeprecatedKeyOf<T>, options?: ChangeOptions | DataType) {
+    function handleChange(key: KeyOf<T>, options?: ChangeOptions | DataType) {
         return change(key, options).handler;
     }
 
-    function handleValue(key: DeprecatedKeyOf<T>) {
+    function handleValue(key: KeyOf<T>) {
         const value = Object.get(data, key);
 
         if (value === undefined) return '';
@@ -122,7 +122,7 @@ export function useForm<T extends object>(
 
         await Promise.all(
             Object.entries<any>(validations).map(async ([k, validations]) => {
-                const key = k as DeprecatedKeyOf<T>;
+                const key = k as KeyOf<T>;
 
                 await Promise.all(
                     [validations as Validation | Validation[]]
@@ -150,7 +150,7 @@ export function useForm<T extends object>(
         set: handleSet,
         change: handleChange,
         value: handleValue,
-        entry: (key: DeprecatedKeyOf<T>) => Object.get(data, key),
+        entry: (key: KeyOf<T>) => Object.get(data, key),
         setData: (data: T) => setData(data),
     };
 }
