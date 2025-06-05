@@ -1,63 +1,10 @@
 export * from './slugify';
 export * from './color';
 
-// Global
-export type TypeOf =
-    | 'undefined'
-    | 'boolean'
-    | 'number'
-    | 'string'
-    | 'object'
-    | 'function'
-    | 'symbol'
-    | 'bigint';
-
-export type DeprecatedKeyOf<
-    T,
-    Prefix extends string = '',
-    Separator extends string = '.',
-> = T extends object
-    ? {
-          [K in keyof T]-?:
-              | `${Prefix & string}${K & string}`
-              | DeprecatedKeyOf<
-                    T[K],
-                    `${Prefix & string}${K & string}${Separator & string}`
-                >;
-      }[keyof T]
-    : '';
-
-export type DeepKeyOf<T, Prefix extends string = ''> = T extends object
-    ? {
-          [K in keyof T]: `${Prefix}${K & string}${DeepKeyOf<T[K], '.'>}`;
-      }[keyof T]
-    : '';
-
-export type IsArray<T> = T extends any[] ? true : false;
-
-export type WithoutArrayProps<T> = {
-    [K in keyof T as IsArray<T[K]> extends true
-        ? never
-        : K]: T[K] extends object ? WithoutArrayProps<T[K]> : T[K];
-};
-
-export type DeepTypeOf<
-    T,
-    K extends string,
-> = K extends `${infer FirstKey}.${infer RestKeys}`
-    ? FirstKey extends keyof T
-        ? DeepTypeOf<T[FirstKey], RestKeys>
-        : never
-    : K extends keyof T
-    ? T[K]
-    : never;
-
-export type GenerateType<
-    T extends string,
-    V,
-> = T extends `${infer FirstKey}.${infer RestKeys}`
-    ? { [K in FirstKey]: GenerateType<RestKeys, V> }
-    : { [K in T]: V };
+export * from './collections/keys';
+export * from './collections/primitives';
+export * from './collections/is';
+export * from './collections/generators';
 
 // useEventListener
 export type EventName = keyof WindowEventMap;
