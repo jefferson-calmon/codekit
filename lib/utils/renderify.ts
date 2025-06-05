@@ -1,4 +1,4 @@
-import { KeyOf } from '../types';
+import { DeprecatedKeyOf } from '../types';
 import { get } from './collections/object';
 
 export function renderify<T extends object>(data: T, string: string) {
@@ -8,7 +8,7 @@ export function renderify<T extends object>(data: T, string: string) {
 
     if (placeholders) {
         for (const placeholder of placeholders) {
-            const keyOf = placeholder.slice(2, -2).trim() as KeyOf<T>;
+            const keyOf = placeholder.slice(2, -2).trim() as DeprecatedKeyOf<T>;
             const realValue = String(get(data, keyOf));
 
             if (realValue !== undefined) {

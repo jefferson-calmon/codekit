@@ -1,4 +1,4 @@
-import { KeyOf } from '../types';
+import { DeprecatedKeyOf } from '../types';
 import { set, toNumber, validator } from '../utils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -15,7 +15,7 @@ type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
 export type DataType = 'currency';
 
 export function useChange<T extends object>(setter: Setter<T>) {
-    return (key: KeyOf<T>, options?: ChangeOptions | DataType) => {
+    return (key: DeprecatedKeyOf<T>, options?: ChangeOptions | DataType) => {
         const change = (v: any, formatted = true) => {
             let value = v;
 

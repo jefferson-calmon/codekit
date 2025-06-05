@@ -12,7 +12,7 @@ export type TypeOf =
     | 'symbol'
     | 'bigint';
 
-export type KeyOf<
+export type DeprecatedKeyOf<
     T,
     Prefix extends string = '',
     Separator extends string = '.',
@@ -20,7 +20,7 @@ export type KeyOf<
     ? {
           [K in keyof T]-?:
               | `${Prefix & string}${K & string}`
-              | KeyOf<
+              | DeprecatedKeyOf<
                     T[K],
                     `${Prefix & string}${K & string}${Separator & string}`
                 >;

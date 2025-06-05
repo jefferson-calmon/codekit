@@ -1,4 +1,4 @@
-import { KeyOf } from '../../../types';
+import { DeprecatedKeyOf } from '../../../types';
 import { clone } from './clone';
 
 export function flatten<T extends object>(
@@ -31,5 +31,5 @@ export function flatter<T extends object>(
         }
     }
 
-    return result as Record<KeyOf<T>, any>;
+    return result as Record<DeprecatedKeyOf<T>, any>;
 }

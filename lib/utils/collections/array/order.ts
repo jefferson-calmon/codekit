@@ -1,7 +1,7 @@
-import { KeyOf } from '../../../types';
+import { DeprecatedKeyOf } from '../../../types';
 import { get } from '../object';
 
-export function order<T extends object, K extends KeyOf<T>>(
+export function order<T extends object, K extends DeprecatedKeyOf<T>>(
     array: T[],
     key: K,
     order?: 'asc' | 'desc',

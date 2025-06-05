@@ -1,7 +1,7 @@
-import { DeepTypeOf, KeyOf } from '../../../types';
+import { DeepTypeOf, DeprecatedKeyOf } from '../../../types';
 import { clone } from './clone';
 
-export function get<T extends object, K extends KeyOf<T> & string>(
+export function get<T extends object, K extends DeprecatedKeyOf<T> & string>(
     obj: T,
     key: K,
 ) {

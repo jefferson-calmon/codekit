@@ -1,4 +1,4 @@
-import { KeyOf } from '../../../types';
+import { DeprecatedKeyOf } from '../../../types';
 import { reduction } from './reduction';
 
 export type NormalizedOption = {
@@ -8,8 +8,8 @@ export type NormalizedOption = {
 
 export function toOptions<T extends object>(
     data: T[],
-    key: KeyOf<T>,
-    value: KeyOf<T>,
+    key: DeprecatedKeyOf<T>,
+    value: DeprecatedKeyOf<T>,
 ) {
     const reduced = reduction(data, key, value);
 

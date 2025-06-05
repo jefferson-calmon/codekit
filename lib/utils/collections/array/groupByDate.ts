@@ -1,5 +1,5 @@
 import { group, GroupOptions } from './group';
-import { KeyOf } from '../../../types';
+import { DeprecatedKeyOf } from '../../../types';
 export type DateUnit = 'minute' | 'hour' | 'day' | 'week' | 'month' | 'year';
 
 export interface GroupOptionsWithTimezone<K> extends GroupOptions<K> {
@@ -8,9 +8,9 @@ export interface GroupOptionsWithTimezone<K> extends GroupOptions<K> {
 
 export function groupByDate<T extends object>(
     data: T[],
-    key: KeyOf<T>,
+    key: DeprecatedKeyOf<T>,
     unit: DateUnit,
-    options?: GroupOptionsWithTimezone<KeyOf<T>>,
+    options?: GroupOptionsWithTimezone<DeprecatedKeyOf<T>>,
 ) {
     const timezone = options?.timezone || 'America/Sao_Paulo';
 

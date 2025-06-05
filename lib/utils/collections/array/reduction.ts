@@ -1,12 +1,12 @@
-import { KeyOf } from '../../../types';
+import { DeprecatedKeyOf } from '../../../types';
 import { get } from '../object';
 
 export type ReductionObj = { [key: string]: string };
 
 export function reduction<T extends object>(
     data: T[],
-    key: KeyOf<T>,
-    value: KeyOf<T>,
+    key: DeprecatedKeyOf<T>,
+    value: DeprecatedKeyOf<T>,
 ): ReductionObj {
     return data.reduce((acc: ReductionObj, item) => {
         const obj = item as Record<string, string>;

@@ -1,4 +1,4 @@
-import { KeyOf } from '../types';
+import { DeprecatedKeyOf } from '../types';
 import { SlugifyOptions } from '../types/slugify';
 
 import {
@@ -55,16 +55,16 @@ declare global {
         uniq: () => T[];
 
         /** Returns a copy of the array with only unique values by key */
-        uniqBy: <K extends KeyOf<Type>, Type = T>(key: K) => T[];
+        uniqBy: <K extends DeprecatedKeyOf<Type>, Type = T>(key: K) => T[];
 
         /** Returns the array ordered by key passed in the props */
-        order: <K extends KeyOf<Type>, Type = T>(
+        order: <K extends DeprecatedKeyOf<Type>, Type = T>(
             key: K,
             order?: 'asc' | 'desc',
         ) => T[];
 
         /** Returns the sum of specified prop value object array  */
-        sum: <K extends KeyOf<Type>, Type = T>(key: K) => number;
+        sum: <K extends DeprecatedKeyOf<Type>, Type = T>(key: K) => number;
 
         /** Returns a copy of array shuffled */
         shuffle: () => T[];
@@ -76,17 +76,17 @@ declare global {
         indexify: <K extends string = string>(key: keyof T) => Record<K, T>;
 
         /**  */
-        search: <K extends KeyOf<Type>, Type = T>(
+        search: <K extends DeprecatedKeyOf<Type>, Type = T>(
             keys: K[] | K,
             values: any,
         ) => T[];
 
-        group: <K extends KeyOf<Type>, Type = T>(
+        group: <K extends DeprecatedKeyOf<Type>, Type = T>(
             key: K,
             options?: GroupOptions<K>,
         ) => GroupedData[];
 
-        groupByDate: <K extends KeyOf<Type>, Type = T>(
+        groupByDate: <K extends DeprecatedKeyOf<Type>, Type = T>(
             key: K,
             unit: DateUnit,
             options?: GroupOptions<K>,
@@ -94,17 +94,17 @@ declare global {
 
         query: <Type = T>(query: Query<Type>) => T[];
 
-        reduction: <K extends KeyOf<Type>, V extends KeyOf<Type>, Type = T>(
+        reduction: <K extends DeprecatedKeyOf<Type>, V extends DeprecatedKeyOf<Type>, Type = T>(
             key: K,
             value: V,
         ) => ReductionObj;
 
-        toOptions: <K extends KeyOf<Type>, V extends KeyOf<Type>, Type = T>(
+        toOptions: <K extends DeprecatedKeyOf<Type>, V extends DeprecatedKeyOf<Type>, Type = T>(
             key: K,
             value: V,
         ) => NormalizedOption[];
 
-        toFilters: <K extends KeyOf<Type>, Type = T>(
+        toFilters: <K extends DeprecatedKeyOf<Type>, Type = T>(
             key: K,
             options?: FiltersOptions,
         ) => NormalizedFilters<K>;
@@ -271,14 +271,14 @@ export const config = (): void => {
     };
 
     // Object constructor
-    Object.get = function <T extends object, K extends KeyOf<T> & string>(
+    Object.get = function <T extends object, K extends DeprecatedKeyOf<T> & string>(
         obj: T,
         key: K,
     ) {
         return object.get(obj, key);
     };
 
-    Object.set = function <T extends object, K extends KeyOf<T> & string, V>(
+    Object.set = function <T extends object, K extends DeprecatedKeyOf<T> & string, V>(
         obj: T,
         key: K,
         value: V,

@@ -1,7 +1,7 @@
-import { GenerateType, KeyOf } from '../../../types';
+import { GenerateType, DeprecatedKeyOf } from '../../../types';
 import { clone } from './clone';
 
-export function set<T extends object, K extends KeyOf<T> & string, V>(
+export function set<T extends object, K extends DeprecatedKeyOf<T> & string, V>(
     obj: T,
     key: K,
     value: V,
@@ -9,7 +9,7 @@ export function set<T extends object, K extends KeyOf<T> & string, V>(
     return setter(clone(obj), key, value);
 }
 
-function setter<T extends object, K extends KeyOf<T> & string, V>(
+function setter<T extends object, K extends DeprecatedKeyOf<T> & string, V>(
     obj: T,
     key: K,
     value: V,
@@ -28,7 +28,7 @@ function setter<T extends object, K extends KeyOf<T> & string, V>(
 
         setter(
             (obj as any)[currentKey] as object,
-            keyParts.join('.') as KeyOf<object>,
+            keyParts.join('.') as DeprecatedKeyOf<object>,
             value,
         );
     } else {
