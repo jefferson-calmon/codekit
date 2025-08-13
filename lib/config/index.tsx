@@ -1,5 +1,4 @@
 import { KeyOf } from '../types';
-import { SlugifyOptions } from '../types/slugify';
 
 import {
     uuid,
@@ -20,6 +19,7 @@ import {
     ShiftDateValues,
     GroupedData,
     CreateDateInput,
+    SlugifyOptions,
 } from '../utils';
 import { DateUnit } from '../utils/collections/array/groupByDate';
 
@@ -166,8 +166,8 @@ export const config = (): void => {
     String.prototype.mask = function (...props) {
         return string.mask(String(this), ...props);
     };
-    String.prototype.slugify = function (...props) {
-        return string.slugify(String(this), ...props);
+    String.prototype.slugify = function (options) {
+        return string.slugify(String(this), options);
     };
     String.prototype.measure = function (...props) {
         return string.measure(String(this), ...props);

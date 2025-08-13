@@ -1,6 +1,4 @@
-import { SlugifyOptions } from '../types/slugify';
-
-export const locales = {
+export const langsMap = {
     bg: {
         Й: 'Y',
         Ц: 'Ts',
@@ -766,12 +764,4 @@ export const charMap = {
     ﻷ: 'laa',
     ﻹ: 'lai',
     ﻻ: 'la',
-};
-
-export const defaultOptions: SlugifyOptions = {
-    locale: 'pt',
-    lowerCase: true,
-    replacement: '-',
-    strict: false,
-    trim: true,
 };

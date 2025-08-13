@@ -1,4 +1,3 @@
-export * from './slugify';
 export * from './color';
 
 export * from './collections/keys';
