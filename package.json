@@ -176,16 +176,6 @@
                 "default": "./dist/extend.js"
             }
         },
-        "./firebase": {
-            "import": {
-                "types": "./dist/firebase.d.mts",
-                "default": "./dist/firebase.mjs"
-            },
-            "require": {
-                "types": "./dist/firebase.d.ts",
-                "default": "./dist/firebase.js"
-            }
-        },
         "./edge": {
             "import": {
                 "types": "./dist/edge.d.mts",

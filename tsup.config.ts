@@ -21,7 +21,6 @@ export const tsup: Options = {
         crypto: 'lib/crypto/index.ts',
         react: 'lib/react/index.ts',
         extend: 'lib/extend/index.ts',
-        firebase: 'lib/firebase/index.ts',
         edge: 'lib/edge.ts',
     },
     keepNames: true,

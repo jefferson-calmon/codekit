@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo, useState } from 'react';
-import { errors as errorsList } from '../firebase/errors';
 
 export interface ErrorObject {
     id: string;
@@ -14,7 +13,7 @@ function createErrorFromString(error: string): ErrorObject {
     };
 }
 
-export function useError(customErrors?: Partial<typeof errorsList>) {
+export function useError() {
     // States
     const [errors, setErrors] = useState<ErrorObject[]>([]);
     const [lastError, setLastError] = useState<ErrorObject | undefined>();
@@ -70,14 +69,11 @@ export function useError(customErrors?: Partial<typeof errorsList>) {
             err?.response?.data?.error ||
             err?.message;
 
-        const errors = Object.assign(errorsList, customErrors);
-        const isControlled = !!errors[code];
-
         console.error('[+] Error in useError.catcher', error);
 
         add({
-            id: isControlled ? code : 'process',
-            message: isControlled ? errors[code] : message,
+            id: code ?? 'process',
+            message: message,
         });
     }
 
