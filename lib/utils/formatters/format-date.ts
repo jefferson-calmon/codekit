@@ -2,7 +2,7 @@ import { Locale } from '../../types/locale';
 
 type FormatDatePreset = 'pretty' | 'numeric';
 
-interface FormatDateOptions extends Intl.DateTimeFormatOptions {
+export interface FormatDateOptions extends Intl.DateTimeFormatOptions {
     preset?: FormatDatePreset;
     locale?: Locale;
 }

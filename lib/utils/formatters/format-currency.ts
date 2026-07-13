@@ -2,7 +2,7 @@ import { Locale } from '../../types/locale';
 
 type Currency = 'BRL' | 'USD' | 'EUR';
 
-interface FormatCurrencyOptions {
+export interface FormatCurrencyOptions {
     locale?: Locale;
     currency?: Currency;
 }
