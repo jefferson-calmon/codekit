@@ -1,5 +1,5 @@
 export * from './format';
-export * from './is';
+export * from './validations';
 export * from './async';
 export * from './random';
 export * from './browser';
