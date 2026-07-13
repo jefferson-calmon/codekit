@@ -1,1 +1,1 @@
-export * from './utils/cookies';
+export * from './browser/cookies';

@@ -1,0 +1,48 @@
+import { KeyOf } from '../types';
+import { get } from '../object/get';
+import { order } from './order';
+
+export interface GroupOptions<K> {
+    sum?: K;
+    keyTransformer?: (key: string) => string;
+}
+
+export interface GroupedData {
+    key: string;
+    original: string;
+    count: number;
+    sum: number;
+}
+
+export type GroupedDataByKey = Record<string, GroupedData>;
+
+export function group<T extends object>(
+    data: T[],
+    key: KeyOf<T>,
+    options?: GroupOptions<KeyOf<T>>,
+) {
+    const grouped = order(data, key, 'asc')
+        .reduce<GroupedDataByKey>((groupedDataByKey, item) => {
+            const { keyTransformer, sum } = options ?? {};
+
+            let keyValue = String(get(item, key));
+            const sumValue = Number(sum ? get(item, sum) : 0);
+
+            if (keyTransformer) keyValue = keyTransformer(keyValue);
+
+            const data = groupedDataByKey[keyValue];
+
+            const newGroupedData: GroupedData = {
+                key: keyValue,
+                original: key,
+                count: data?.count ? data.count + 1 : 1,
+                sum: (data?.sum || 0) + sumValue,
+            };
+
+            groupedDataByKey[keyValue] = newGroupedData;
+
+            return { ...groupedDataByKey };
+        }, {});
+
+    return Object.values(grouped);
+}

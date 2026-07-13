@@ -1,0 +1,323 @@
+import { KeyOf } from '../types';
+import * as array from '../array';
+import * as date from '../date';
+import * as number from '../number';
+import * as object from '../object';
+import * as text from '../text';
+import { hashify } from '../crypto/hashify';
+import { randomize } from '../random/randomize';
+import { uuid } from '../random/uuid';
+import type {
+    DateUnit,
+    FiltersOptions,
+    GroupedData,
+    GroupOptions,
+    NormalizedFilters,
+    NormalizedOption,
+    Query,
+    ReductionObj,
+} from '../array';
+import type { MoneyConfig } from '../number';
+import type { CreateDateInput, ShiftDateValues } from '../date';
+import type { MeasurePropsWithoutText, SlugifyOptions } from '../text';
+declare global {
+    interface Number {
+        toCurrency: (config?: MoneyConfig) => string;
+    }
+
+    interface String {
+        toNumber: () => number;
+        toCapitalize: () => string;
+        extractNumbers: () => string;
+        mask: (pattern: string) => string;
+        slugify: (options?: SlugifyOptions) => string;
+        random: typeof randomize.string;
+        measure: (...props: MeasurePropsWithoutText) => number;
+        searchFor: (search: string) => boolean;
+        transform: <Result>(transformer: (value: string) => Result) => Result;
+        hashify: () => string;
+        shuffle: (key?: number) => string;
+        unshuffle: (key?: number) => string;
+        generateKey: (modulo?: number) => number;
+    }
+
+    interface Array<T> {
+        /** Returns a copy of the array with all falsy values removed */
+        compact: () => Exclude<T, null | undefined | false>[];
+
+        /** Returns the last value from array */
+        last: () => T;
+
+        /** Returns a copy of the array with only unique values */
+        uniq: () => T[];
+
+        /** Returns a copy of the array with only unique values by key */
+        uniqBy: <K extends KeyOf<Type>, Type = T>(key: K) => T[];
+
+        /** Returns the array ordered by key passed in the props */
+        order: <K extends KeyOf<Type>, Type = T>(
+            key: K,
+            order?: 'asc' | 'desc',
+        ) => T[];
+
+        /** Returns the sum of specified prop value object array  */
+        sum: <K extends KeyOf<Type>, Type = T>(key: K) => number;
+
+        /** Returns a copy of array shuffled */
+        shuffle: () => T[];
+
+        /** Returns a random item from array */
+        random: () => T;
+
+        /**  */
+        indexify: <K extends string = string>(key: keyof T) => Record<K, T>;
+
+        /**  */
+        search: <K extends KeyOf<Type>, Type = T>(
+            keys: K[] | K,
+            values: any,
+        ) => T[];
+
+        group: <K extends KeyOf<Type>, Type = T>(
+            key: K,
+            options?: GroupOptions<K>,
+        ) => GroupedData[];
+
+        groupByDate: <K extends KeyOf<Type>, Type = T>(
+            key: K,
+            unit: DateUnit,
+            options?: GroupOptions<K>,
+        ) => GroupedData[];
+
+        query: <Type = T>(query: Query<Type>) => T[];
+
+        reduction: <K extends KeyOf<Type>, V extends KeyOf<Type>, Type = T>(
+            key: K,
+            value: V,
+        ) => ReductionObj;
+
+        toOptions: <K extends KeyOf<Type>, V extends KeyOf<Type>, Type = T>(
+            key: K,
+            value: V,
+        ) => NormalizedOption[];
+
+        toFilters: <K extends KeyOf<Type>, Type = T>(
+            key: K,
+            options?: FiltersOptions,
+        ) => NormalizedFilters<K>;
+    }
+
+    interface Date {
+        shift: (values: ShiftDateValues) => Date;
+        diff: (end: Date) => ReturnType<typeof date['diff']>;
+        create: (values: CreateDateInput) => Date;
+    }
+
+    interface ArrayConstructor {
+        new: (length: number) => Array<Record<'id', string>>;
+    }
+
+    interface ObjectConstructor {
+        get: typeof object.get;
+        set: typeof object.set;
+        exclude: typeof object.exclude;
+        merge: typeof object.merge;
+        flatten: typeof object.flatten;
+        isEqual: typeof object.isEqual;
+        clone: typeof object.clone;
+        pick: typeof object.pick;
+        omit: typeof object.omit;
+    }
+
+    interface NumberConstructor {
+        random: typeof randomize.number;
+    }
+
+    interface StringConstructor {
+        uuid: () => string;
+        random: typeof randomize.string;
+    }
+}
+
+export const extendPrototypes = (): void => {
+    // Number
+    Number.prototype.toCurrency = function (...props) {
+        return number.toCurrency(Number(this), ...props);
+    };
+
+    // Number constructor
+    Number.random = function (...props) {
+        return randomize.number(...props);
+    };
+
+    // String
+    String.prototype.toNumber = function () {
+        return text.toNumber(String(this));
+    };
+    String.prototype.toCapitalize = function () {
+        return text.toCapitalize(String(this));
+    };
+    String.prototype.extractNumbers = function () {
+        return text.extractNumbers(String(this));
+    };
+    String.prototype.mask = function (...props) {
+        return text.mask(String(this), ...props);
+    };
+    String.prototype.slugify = function (options) {
+        return text.slugify(String(this), options);
+    };
+    String.prototype.measure = function (...props) {
+        return text.measure(String(this), ...props);
+    };
+    String.prototype.searchFor = function (...props) {
+        return text.searchFor(String(this), ...props);
+    };
+    String.prototype.transform = function <R>(transformer: any) {
+        return text.transform<R>(String(this), transformer);
+    };
+    String.prototype.hashify = function () {
+        return hashify(String(this));
+    };
+    String.prototype.generateKey = function (modulo) {
+        return text.generateKey(String(this).toString(), modulo);
+    };
+    String.prototype.shuffle = function (key) {
+        return text.shuffle(String(this).toString(), key);
+    };
+    String.prototype.unshuffle = function (key) {
+        return text.unshuffle(String(this).toString(), key);
+    };
+
+    // String constructor
+    String.uuid = function () {
+        return uuid();
+    };
+    String.random = function (...props) {
+        return randomize.string(...props);
+    };
+
+    // Array
+    Array.prototype.compact = function () {
+        return array.compact(this);
+    };
+    Array.prototype.last = function () {
+        return array.last(this);
+    };
+    Array.prototype.uniq = function () {
+        return array.uniq(this);
+    };
+    Array.prototype.uniqBy = function (key: any) {
+        return array.uniqBy<object, never>(this, key as never);
+    };
+    Array.prototype.order = function (key: any, order: any) {
+        return array.order<object, never>(this, key as never, order);
+    };
+    Array.prototype.sum = function (key: any) {
+        return array.sum<object, never>(this, key as never);
+    };
+    Array.prototype.shuffle = function () {
+        return array.shuffle(this);
+    };
+    Array.prototype.random = function () {
+        return array.random(this);
+    };
+    Array.prototype.indexify = function (key) {
+        return array.indexify(this, key);
+    };
+    Array.prototype.search = function (keys: any, values: any) {
+        return array.search(this as object[], keys as never[], values);
+    };
+    Array.prototype.group = function (key, options) {
+        return array.group<object>(this, key as never, options as any);
+    };
+    Array.prototype.groupByDate = function (key, unit, options) {
+        return array.groupByDate<object>(
+            this,
+            key as never,
+            unit,
+            options as any,
+        );
+    };
+    Array.prototype.query = function (query: any) {
+        return array.query<object>(this, query);
+    };
+    Array.prototype.reduction = function (key: any, value) {
+        return array.reduction<object>(this, key as never, value as never);
+    };
+    Array.prototype.toOptions = function (key: any, value) {
+        return array.toOptions<object>(this, key as never, value as never);
+    };
+    Array.prototype.toFilters = function (key: any, options) {
+        return array.toFilters(this, key as never, options as never);
+    };
+
+    // Date prototype
+    Date.prototype.shift = function (values) {
+        return date.shift(this, values);
+    };
+    Date.prototype.diff = function (end) {
+        return date.diff(this, end);
+    };
+    Date.prototype.create = function (values) {
+        return date.create(values);
+    };
+
+    // Array constructor
+    Array.new = function (length: number) {
+        return array.fresh(length);
+    };
+
+    // Object constructor
+    Object.get = function <T extends object, K extends KeyOf<T> & string>(
+        obj: T,
+        key: K,
+    ) {
+        return object.get(obj, key);
+    };
+
+    Object.set = function <T extends object, K extends KeyOf<T> & string, V>(
+        obj: T,
+        key: K,
+        value: V,
+    ) {
+        return object.set(obj, key, value);
+    };
+
+    Object.exclude = function <T extends object, K extends keyof T & string>(
+        obj: T,
+        key: K,
+    ) {
+        return object.exclude(obj, key);
+    };
+
+    Object.merge = function <T extends object, U extends object>(
+        target: T,
+        source: U,
+    ) {
+        return object.merge(target, source);
+    };
+
+    Object.flatten = function <T extends object>(
+        obj: T,
+        delimiter = '.',
+        parentKey = '',
+    ) {
+        return object.flatten(obj, delimiter, parentKey);
+    };
+
+    Object.isEqual = function (object1: object, object2: object) {
+        return object.isEqual(object1, object2);
+    };
+
+    Object.clone = function (obj: any) {
+        return object.clone(obj);
+    };
+
+    Object.pick = function (obj: any, keys: any) {
+        return object.pick(obj, keys);
+    };
+
+    Object.omit = function (obj: any, keys: any) {
+        return object.omit(obj, keys);
+    };
+};
