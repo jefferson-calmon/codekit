@@ -1,0 +1,6 @@
+<svg width="140" height="32" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="4" width="24" height="24" rx="6" fill="#000000" />
+    <text x="13" y="21.5" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#FFFFFF">ck</text>
+    <text x="33" y="22" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" letter-spacing="-0.4" fill="#000000">codekit</text>
+    <circle cx="112" cy="10" r="3" fill="#0070F3" />
+</svg>
