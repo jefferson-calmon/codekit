@@ -1,0 +1,58 @@
+---
+title: "extend"
+description: "Extensões de prototype para Number, String, Array, Date e Object. Opt-in explícito."
+icon: "puzzle-piece"
+---
+
+<Warning>
+    Estender prototypes nativos é uma decisão de time. Use apenas se sua equipe
+    já concorda com o estilo `[1, null, 2].compact()` em vez de
+    `array.compact([1, null, 2])`.
+</Warning>
+
+O módulo `extend` liga métodos nos prototypes nativos, chamando `extendPrototypes()` uma única vez no bootstrap da aplicação:
+
+```ts
+// app/bootstrap.ts, ou equivalente, executado uma vez
+import { extendPrototypes } from 'codekit/extend';
+
+extendPrototypes();
+```
+
+Depois disso, os métodos ficam disponíveis diretamente nos tipos nativos:
+
+```ts
+[1, null, 2, false].compact();          // [1, 2]
+[3, 1, 2].order();                       // [1, 2, 3]
+users.groupByDate('createdAt', 'month');
+
+'Ação & Aventura'.slugify();            // 'acao-e-aventura'
+'joão'.toCapitalize();                  // 'João'
+
+(1500).toCurrency();                    // 'R$ 1.500,00'
+
+new Date().shift({ days: 7 });
+```
+
+## Em React
+
+Se preferir ligar a extensão como um componente declarativo no topo da árvore, use `CodeKitConfig`, exportado de `codekit/react`:
+
+```tsx
+import { CodeKitConfig } from 'codekit/react';
+
+function App() {
+    return (
+        <>
+            <CodeKitConfig />
+            <YourApp />
+        </>
+    );
+}
+```
+
+<Note>
+    `CodeKitConfig` e `extendPrototypes` fazem a mesma coisa. Use a função em
+    Node/scripts e o componente em apps React quando quiser deixar a extensão
+    visível na árvore de componentes.
+</Note>

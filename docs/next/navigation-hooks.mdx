@@ -1,0 +1,86 @@
+---
+title: "Hooks de navegação"
+description: "Hidratação segura, detecção de link ativo e reação a troca de rota no App Router."
+icon: "route"
+---
+
+<Tabs>
+    <Tab title="useHydrated">
+        Boolean SSR-safe para evitar hydration mismatch em conteúdo que só existe no cliente (datas, `window`, tema, `localStorage`).
+        ```ts
+        useHydrated(): boolean
+        ```
+        ```tsx
+        'use client';
+        import { useHydrated } from 'codekit/next';
+
+        function ThemeToggle() {
+            const hydrated = useHydrated();
+
+            // No servidor e no primeiro render do cliente: false, bate com o SSR.
+            if (!hydrated) return <button aria-hidden className="skeleton" />;
+
+            const theme = localStorage.getItem('theme') ?? 'light';
+            return <button>{theme === 'dark' ? 'Escuro' : 'Claro'}</button>;
+        }
+        ```
+    </Tab>
+    <Tab title="useIsActiveLink">
+        Detecta se uma rota está ativa, considerando rotas aninhadas.
+        ```ts
+        useIsActiveLink(href: string, options?: { exact?: boolean }): boolean
+        ```
+        ```tsx
+        'use client';
+        import Link from 'next/link';
+        import { useIsActiveLink } from 'codekit/next';
+
+        function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+            const isActive = useIsActiveLink(href);
+
+            return (
+                <Link href={href} aria-current={isActive ? 'page' : undefined}
+                      className={isActive ? 'text-blue-600 font-semibold' : 'text-gray-500'}>
+                    {children}
+                </Link>
+            );
+        }
+
+        // Em /dashboard/settings:
+        <NavLink href="/dashboard">Dashboard</NavLink>          {/* ativo, rota aninhada */}
+        <NavLink href="/dashboard/settings">Settings</NavLink>  {/* ativo */}
+        <NavLink href="/">Home</NavLink>                        {/* não ativo */}
+        ```
+        Para acender apenas na rota exata, sem considerar filhas:
+        ```tsx
+        const onlyExact = useIsActiveLink('/dashboard', { exact: true });
+        ```
+    </Tab>
+    <Tab title="useRouteChange">
+        Reage a mudanças de pathname ou query string, preenchendo o buraco deixado pela remoção do `router.events` no App Router.
+        ```ts
+        useRouteChange(
+            onChange: (context: { pathname: string; searchParams: URLSearchParams; previousUrl: string | null }) => void,
+            options?: { runOnMount?: boolean },
+        ): void
+        ```
+        ```tsx
+        'use client';
+        import { useRouteChange } from 'codekit/next';
+
+        function RouteEffects() {
+            useRouteChange(({ pathname, previousUrl }) => {
+                analytics.pageview(pathname);
+                closeMobileMenu();
+                console.log(`veio de ${previousUrl} para ${pathname}`);
+            });
+
+            return null;
+        }
+        ```
+        <Note>
+            Por padrão não dispara no mount, apenas em navegações reais. Use
+            `{ runOnMount: true }` para rodar também na primeira renderização.
+        </Note>
+    </Tab>
+</Tabs>

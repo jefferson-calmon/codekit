@@ -1,0 +1,127 @@
+---
+title: "createSafeAction"
+description: "Valida o input com qualquer lib de schema e devolve um resultado tipado, nunca lança exceção."
+icon: "shield-check"
+---
+
+Transforma uma Server Action comum numa action validada, com erros tipados e retorno em shape consistente. Roda no servidor, importe de `codekit/next/server`.
+
+```ts
+createSafeAction<TSchema, TData>(
+    schema: TSchema,
+    handler: (input: InferOutput<TSchema>) => Promise<TData>,
+): (input: InferInput<TSchema>) => Promise<
+    | { success: true; data: TData }
+    | { success: false; error: string; fieldErrors: Record<string, string[]> }
+>
+```
+
+## Uso básico
+
+```ts
+// app/actions/create-user.ts
+'use server';
+import { z } from 'zod';
+import { createSafeAction } from 'codekit/next/server';
+
+const schema = z.object({
+    name: z.string().min(2, 'Nome muito curto'),
+    email: z.string().email('Email inválido'),
+});
+
+export const createUser = createSafeAction(schema, async ({ name, email }) => {
+    const user = await db.user.create({ name, email });
+    return user;
+});
+```
+
+O resultado é sempre um objeto discriminado, nunca uma exceção não tratada:
+
+```ts
+const result = await createUser({ name: 'A', email: 'inválido' });
+// { success: false, error: 'Validation failed.', fieldErrors: { name: [...], email: [...] } }
+
+const result = await createUser({ name: 'Ana', email: 'ana@example.com' });
+// { success: true, data: { id: '1', name: 'Ana', email: 'ana@example.com' } }
+```
+
+## Erros de negócio com SafeActionError
+
+Para erros esperados do seu domínio (email duplicado, saldo insuficiente), lance `SafeActionError`, a mensagem chega ao cliente sem passar pelo tratamento genérico:
+
+```ts
+import { createSafeAction, SafeActionError } from 'codekit/next/server';
+
+export const createUser = createSafeAction(schema, async ({ name, email }) => {
+    const existing = await db.user.findByEmail(email);
+    if (existing) throw new SafeActionError('Email já cadastrado');
+
+    return db.user.create({ name, email });
+});
+```
+
+Qualquer outro erro não tratado (uma falha de banco, por exemplo) vira uma mensagem genérica no cliente, sem vazar detalhes internos:
+
+```ts
+// throw new Error('coluna users.x não existe') no handler vira:
+// { success: false, error: 'Something went wrong. Please try again.', fieldErrors: {} }
+```
+
+## redirect() e notFound() funcionam normalmente
+
+O control-flow interno do Next (`redirect`, `notFound`) é detectado pelo `digest` do erro e propagado sem interferência:
+
+```ts
+import { redirect } from 'next/navigation';
+
+export const createUser = createSafeAction(schema, async (input) => {
+    const user = await db.user.create(input);
+    redirect(`/users/${user.id}`); // funciona normalmente
+});
+```
+
+## Standard Schema, sem acoplamento a nenhuma lib
+
+`createSafeAction` depende apenas do contrato [Standard Schema](https://github.com/standard-schema/standard-schema) (`~standard`), não de uma implementação específica. Funciona com qualquer lib compatível:
+
+<CodeGroup>
+
+```ts Zod
+import { z } from 'zod';
+const schema = z.object({ email: z.string().email() });
+```
+
+```ts Valibot
+import * as v from 'valibot';
+const schema = v.object({ email: v.pipe(v.string(), v.email()) });
+```
+
+```ts ArkType
+import { type } from 'arktype';
+const schema = type({ email: 'string.email' });
+```
+
+</CodeGroup>
+
+## Uso no cliente
+
+Combine com `useServerAction` para ter loading, erro e sucesso já resolvidos:
+
+```tsx
+'use client';
+import { useServerAction } from 'codekit/next';
+import { createUser } from '@/app/actions/create-user';
+
+function Form() {
+    const { execute, isLoading } = useServerAction(createUser, { immediate: false });
+
+    async function onSubmit(values: { name: string; email: string }) {
+        const result = await execute(values);
+        if (!result?.success) {
+            setFieldErrors(result?.fieldErrors);
+            return;
+        }
+        toast.success('Criado!');
+    }
+}
+```

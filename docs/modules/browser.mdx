@@ -1,0 +1,73 @@
+---
+title: "browser"
+description: "Cookies, limpeza de dados do site, variáveis CSS e leitura de formulários."
+icon: "window"
+---
+
+```ts
+import { cookies, clearSiteData, getCSSVarValue, getFormEntriesByForm } from 'codekit/browser';
+```
+
+<Tabs>
+    <Tab title="cookies">
+        ```ts
+        cookies.set(name: string, value: string, options?: {
+            expires?: number | Date;
+            path?: string;
+            domain?: string;
+            secure?: boolean;
+            sameSite?: 'Strict' | 'Lax' | 'None';
+        }): void
+        cookies.get(name: string): string | null
+        cookies.remove(name: string): void
+        ```
+        ```ts
+        cookies.set('theme', 'dark', { expires: 30 });   // expira em 30 dias
+        cookies.get('theme');                             // 'dark'
+        cookies.remove('theme');
+        ```
+    </Tab>
+    <Tab title="clearSiteData">
+        Limpa localStorage, sessionStorage, cookies, Cache Storage e IndexedDB de uma vez, útil no logout.
+        ```ts
+        clearSiteData(options?: { indexDBName?: string; reload?: boolean }): Promise<void>
+        ```
+        ```ts
+        await clearSiteData({ reload: true });
+        ```
+    </Tab>
+    <Tab title="getCSSVarValue">
+        ```ts
+        getCSSVarValue(variable: string): string
+        ```
+        ```ts
+        getCSSVarValue('--primary-color'); // '#0070F3'
+        ```
+    </Tab>
+    <Tab title="getFormEntries">
+        Lê os campos de um formulário como objeto tipado, direto do evento de submit ou do elemento.
+        ```ts
+        getFormEntriesByEvent<T>(event: React.FormEvent): T
+        getFormEntriesByForm<T>(form: HTMLFormElement): T
+        ```
+        ```tsx
+        function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+            event.preventDefault();
+            const data = getFormEntriesByEvent<{ email: string }>(event);
+        }
+        ```
+    </Tab>
+    <Tab title="generateUIAvatarURL">
+        Monta uma URL do serviço UI Avatars a partir do nome, sem precisar montar a query string na mão.
+        ```ts
+        generateUIAvatarURL(name: string, options?: {
+            size?: number;
+            rounded?: boolean;
+            bold?: boolean;
+        }): string
+        ```
+        ```tsx
+        <img src={generateUIAvatarURL('Ana Silva', { rounded: true })} />
+        ```
+    </Tab>
+</Tabs>

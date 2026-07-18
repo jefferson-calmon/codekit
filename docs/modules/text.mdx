@@ -1,0 +1,97 @@
+---
+title: "text"
+description: "Manipulação de strings: slug, máscara, similaridade, embaralhamento e mais."
+icon: "font"
+---
+
+```ts
+import { text } from 'codekit';
+// ou
+import { slugify, mask } from 'codekit/text';
+```
+
+<Tabs>
+    <Tab title="slugify">
+        Converte texto em slug de URL, com suporte a múltiplos idiomas.
+        ```ts
+        slugify(value: string, options?: SlugifyOptions): string
+        ```
+        ```ts
+        slugify('Ação & Aventura');                        // 'acao-e-aventura'
+        slugify('Café com Leite', { lowerCase: false });   // 'Cafe-com-Leite'
+        ```
+    </Tab>
+    <Tab title="mask">
+        Aplica uma máscara posicional usando `#` como placeholder.
+        ```ts
+        mask(value: string, pattern: string): string
+        ```
+        ```ts
+        mask('01310100', '#####-###'); // '01310-100'
+        ```
+    </Tab>
+    <Tab title="extractNumbers / extractChars">
+        ```ts
+        extractNumbers(value: string): string
+        extractChars(value: string): string
+        ```
+        ```ts
+        extractNumbers('(71) 98765-4321'); // '71987654321'
+        extractChars('R$ 1.500,00');       // 'R$ ,'
+        ```
+    </Tab>
+    <Tab title="toCapitalize / toNumber">
+        ```ts
+        toCapitalize(value: string): string
+        toNumber(value: string): number
+        ```
+        ```ts
+        toCapitalize('joão');       // 'João'
+        toNumber('R$ 1.500,50');    // 1500.5
+        ```
+    </Tab>
+    <Tab title="searchFor">
+        Busca ignorando acentos e maiúsculas/minúsculas.
+        ```ts
+        searchFor(value: string, search: string): boolean
+        ```
+        ```ts
+        searchFor('João da Silva', 'joao'); // true
+        ```
+    </Tab>
+    <Tab title="shuffle / unshuffle">
+        Embaralhamento reversível baseado em chave numérica, útil para ofuscar IDs sem criptografia.
+        ```ts
+        shuffle(value: string, key?: number): string
+        unshuffle(shuffledStr: string, key?: number): string
+        generateKey(value: string, module?: number): number
+        ```
+        ```ts
+        const key = generateKey('order-123');
+        const hidden = shuffle('order-123', key);
+        unshuffle(hidden, key); // 'order-123'
+        ```
+    </Tab>
+    <Tab title="calculateSimilarity">
+        Combina 6 algoritmos (Jaccard, Levenshtein, Cosseno, Jaro-Winkler, N-gram, Vector Space) num score único.
+        ```ts
+        calculateSimilarity(str1: string, str2: string): {
+            score: number;
+            algorithmsScores: Record<string, number>;
+        }
+        ```
+        ```ts
+        calculateSimilarity('João Silva', 'Joao da Silva');
+        // { score: 0.87, algorithmsScores: { jaccard: 0.5, levenshtein: 0.8, ... } }
+        ```
+    </Tab>
+    <Tab title="measure / renderify">
+        ```ts
+        measure(text: string, fontSize: number, fontWeight: string, fontFamily: string): number
+        renderify<T>(data: T, template: string): string
+        ```
+        ```ts
+        renderify({ name: 'Ana' }, 'Olá, {{name}}!'); // 'Olá, Ana!'
+        ```
+    </Tab>
+</Tabs>

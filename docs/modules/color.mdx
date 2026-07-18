@@ -1,0 +1,42 @@
+---
+title: "color"
+description: "Conversão hex/RGB, luminância e ajuste de brilho de cores."
+icon: "palette"
+---
+
+```ts
+import { color } from 'codekit';
+// ou
+import { hexToRgb, highlight } from 'codekit/color';
+```
+
+<Tabs>
+    <Tab title="hexToRgb / rgbToHex">
+        ```ts
+        hexToRgb(color: string): [number, number, number]
+        rgbToHex(rgb: [number, number, number]): string
+        ```
+        ```ts
+        color.hexToRgb('#0070F3');   // [0, 112, 243]
+        color.rgbToHex([0, 112, 243]); // '#0070F3'
+        ```
+    </Tab>
+    <Tab title="getLuminance">
+        Calcula a luminância relativa de uma cor, base para decidir contraste de texto.
+        ```ts
+        getLuminance(rgb: [number, number, number]): number
+        ```
+        ```ts
+        const isLight = color.getLuminance(color.hexToRgb('#FAFAFA')) > 0.5;
+        ```
+    </Tab>
+    <Tab title="highlight">
+        Clareia ou escurece uma cor automaticamente, detectando se ela já é clara ou escura.
+        ```ts
+        highlight(color: string, amount: number, options?: HighlighOptions): string
+        ```
+        ```ts
+        color.highlight('#0070F3', 0.2); // versão mais clara do azul
+        ```
+    </Tab>
+</Tabs>

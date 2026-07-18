@@ -1,0 +1,56 @@
+---
+title: "object"
+description: "Acesso seguro por caminho, merge profundo, comparação e transformação de objetos."
+icon: "brackets-curly"
+---
+
+```ts
+import { object } from 'codekit';
+// ou
+import { get, set, merge } from 'codekit/object';
+```
+
+<Tabs>
+    <Tab title="get / set">
+        Acesso e escrita por caminho, com tipagem preservada.
+        ```ts
+        get<T, K extends KeyOf<T>>(obj: T, key: K): DeepTypeOf<T, K>
+        set<T, K extends KeyOf<T>, V>(obj: T, key: K, value: V): T
+        ```
+        ```ts
+        object.get(user, 'address.city');
+        object.set(user, 'address.city', 'Salvador');
+        ```
+    </Tab>
+    <Tab title="merge / flatten">
+        ```ts
+        merge<T, U>(target: T, source: U): T & U
+        flatten<T>(obj: T, delimiter?: string): Record<string, unknown>
+        ```
+        ```ts
+        object.merge({ a: 1 }, { b: 2 });          // { a: 1, b: 2 }
+        object.flatten({ user: { name: 'Ana' } });  // { 'user.name': 'Ana' }
+        ```
+    </Tab>
+    <Tab title="pick / omit / exclude">
+        ```ts
+        pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K>
+        omit<T, K extends keyof T>(obj: T, keys: K[]): Omit<T, K>
+        exclude<T, K extends keyof T>(obj: T, key: K): Omit<T, K>
+        ```
+        ```ts
+        object.pick(user, ['id', 'name']);
+        object.omit(user, ['password']);
+        ```
+    </Tab>
+    <Tab title="isEqual / clone">
+        ```ts
+        isEqual(object1: unknown, object2: unknown): boolean
+        clone<T>(obj: T): T
+        ```
+        ```ts
+        object.isEqual(formValues, initialValues);
+        const copy = object.clone(user); // deep clone
+        ```
+    </Tab>
+</Tabs>

@@ -1,0 +1,56 @@
+---
+title: "Introdução"
+description: "Toolkit TypeScript com formatters, validators, hooks e utilitários, projetado para DX."
+icon: "sparkles"
+---
+
+**codekit** é uma coleção de ferramentas TypeScript para o dia a dia de desenvolvimento: formatação, validação, manipulação de dados, hooks React e helpers para Next.js, tudo com tipagem forte, zero dependências pesadas e defaults pensados para produtos brasileiros (`pt-BR`, CPF/CNPJ, CEP, telefone).
+
+```ts
+import { format, is } from 'codekit';
+
+format.cpf('12345678909');        // '123.456.789-09'
+format.currency(1500);            // 'R$ 1.500,00'
+format.relativeTime(date);        // 'há 3 minutos'
+
+is.email('dev@example.com');      // true
+is.cpf('123.456.789-09');         // true
+```
+
+## Princípios
+
+<CardGroup cols={2}>
+    <Card title="DX em primeiro lugar" icon="wand-magic-sparkles">
+        Namespaces unificados (`format.`, `is.`) com autocomplete completo,
+        assinaturas reais em cada função e null-safety embutida.
+    </Card>
+    <Card title="Tree-shakeable" icon="leaf">
+        ESM + CJS, `sideEffects: false` e um subpath por módulo, seu bundle
+        leva apenas o que você importa.
+    </Card>
+    <Card title="Zero acoplamento" icon="link-slash">
+        React, Next e crypto-js são peer dependencies opcionais, isoladas em
+        subpaths. O core roda em Node, browser e edge.
+    </Card>
+    <Card title="Intl nativo" icon="globe">
+        Formatação de moeda, datas relativas, listas, unidades e plurais via
+        `Intl`, muito resultado, zero dependência.
+    </Card>
+</CardGroup>
+
+## Comece por aqui
+
+<CardGroup cols={2}>
+    <Card title="Quickstart" icon="rocket" href="/quickstart">
+        Instale e use em menos de um minuto.
+    </Card>
+    <Card title="Arquitetura" icon="folder-tree" href="/architecture">
+        Como os módulos e subpaths se organizam.
+    </Card>
+    <Card title="Formatação" icon="wand-magic-sparkles" href="/format/overview">
+        23 formatters unificados no namespace `format`.
+    </Card>
+    <Card title="React & Next.js" icon="react" href="/react/overview">
+        24+ hooks e helpers para App Router.
+    </Card>
+</CardGroup>

@@ -1,0 +1,278 @@
+---
+title: "Referência"
+description: "Assinatura, options e exemplos de cada formatter."
+icon: "book"
+---
+
+## Documentos
+
+<AccordionGroup>
+    <Accordion title="cpf" icon="id-card">
+        ```ts
+        format.cpf(value: string): string
+        ```
+        ```ts
+        format.cpf('12345678909');   // '123.456.789-09'
+        format.cpf(null);            // 'N/A'
+        ```
+    </Accordion>
+    <Accordion title="cnpj" icon="id-card">
+        ```ts
+        format.cnpj(value: string): string
+        ```
+        ```ts
+        format.cnpj('12345678000195'); // '12.345.678/0001-95'
+        ```
+    </Accordion>
+    <Accordion title="document" icon="id-card">
+        Detecta CPF (11 dígitos) ou CNPJ (14 dígitos) pelo tamanho e aplica a máscara correta.
+        ```ts
+        format.document(value: string): string
+        ```
+        ```ts
+        format.document('12345678909');     // '123.456.789-09'
+        format.document('12345678000195');  // '12.345.678/0001-95'
+        ```
+    </Accordion>
+    <Accordion title="redact" icon="eye-slash">
+        Mascara parcialmente um dado sensível, útil para telas de confirmação, logs e suporte.
+        ```ts
+        format.redact(value: string, target: 'cpf' | 'cnpj' | 'email' | 'phone'): string
+        ```
+        ```ts
+        format.redact('12345678909', 'cpf');           // '•••.456.789-••'
+        format.redact('dev@example.com', 'email');     // 'd•••@example.com'
+        format.redact('71987654321', 'phone');         // '(••) •••••-4321'
+        ```
+    </Accordion>
+</AccordionGroup>
+
+## Contato
+
+<AccordionGroup>
+    <Accordion title="phone" icon="phone">
+        Detecta o formato pelo total de dígitos (fixo, celular, com DDI).
+        ```ts
+        format.phone(value: string): string
+        ```
+        ```ts
+        format.phone('71987654321');    // '(71) 98765-4321'
+        format.phone('5571987654321');  // '+55 (71) 98765-4321'
+        ```
+    </Accordion>
+    <Accordion title="cep" icon="map-pin">
+        ```ts
+        format.cep(value: string): string
+        ```
+        ```ts
+        format.cep('01310100'); // '01310-100'
+        ```
+    </Accordion>
+</AccordionGroup>
+
+## Números
+
+<AccordionGroup>
+    <Accordion title="currency" icon="coins">
+        ```ts
+        format.currency(value: number, options?: {
+            locale?: SupportedLocale;
+            currency?: 'BRL' | 'USD' | 'EUR';
+        }): string
+        ```
+        ```ts
+        format.currency(1500);                          // 'R$ 1.500,00'
+        format.currency(1500, { currency: 'USD' });      // 'US$ 1.500,00'
+        ```
+    </Accordion>
+    <Accordion title="number" icon="hashtag">
+        ```ts
+        format.number(value: number, options?: {
+            locale?: SupportedLocale;
+            compact?: boolean;
+        } & Intl.NumberFormatOptions): string
+        ```
+        ```ts
+        format.number(1234567.89);                       // '1.234.567,89'
+        format.number(1234567, { compact: true });       // '1,2 mi'
+        ```
+    </Accordion>
+    <Accordion title="percent" icon="percent">
+        ```ts
+        format.percent(value: number, options?: {
+            locale?: SupportedLocale;
+            decimals?: number;
+        }): string
+        ```
+        Recebe fração (0 a 1), não o valor já multiplicado por 100.
+        ```ts
+        format.percent(0.153);   // '15,3%'
+        format.percent(0.5);     // '50%'
+        ```
+    </Accordion>
+    <Accordion title="unit" icon="ruler">
+        Usa `Intl.NumberFormat` com `style: 'unit'`, aceita qualquer unidade suportada pelo runtime.
+        ```ts
+        format.unit(value: number, unit: string, options?: Intl.NumberFormatOptions): string
+        ```
+        ```ts
+        format.unit(72.5, 'kilogram');   // '72,5 kg'
+        format.unit(5.4, 'kilometer');   // '5,4 km'
+        format.unit(36.6, 'celsius');    // '36,6°C'
+        ```
+    </Accordion>
+    <Accordion title="ordinal" icon="ranking-star">
+        ```ts
+        format.ordinal(value: number, options?: {
+            locale?: SupportedLocale;
+            gender?: 'm' | 'f';
+        }): string
+        ```
+        ```ts
+        format.ordinal(3);                          // '3º'
+        format.ordinal(3, { gender: 'f' });          // '3ª'
+        format.ordinal(22, { locale: 'en-US' });     // '22nd'
+        ```
+    </Accordion>
+    <Accordion title="count" icon="list-ol">
+        ```ts
+        format.count(value: number, singular: string, plural?: string, options?: {
+            locale?: SupportedLocale;
+            zero?: string;
+        }): string
+        ```
+        ```ts
+        format.count(3, 'item', 'itens');    // '3 itens'
+        format.count(1, 'item', 'itens');    // '1 item'
+        format.count(0, 'item', 'itens');    // 'Nenhum item'
+        ```
+    </Accordion>
+    <Accordion title="bytes" icon="database">
+        ```ts
+        format.bytes(value: string): string
+        ```
+        ```ts
+        format.bytes('1536000');   // '1.5MB'
+        ```
+    </Accordion>
+</AccordionGroup>
+
+## Data e tempo
+
+<AccordionGroup>
+    <Accordion title="date" icon="calendar">
+        ```ts
+        format.date(value: string | number | Date, options?: {
+            preset?: 'pretty' | 'numeric';
+            locale?: SupportedLocale;
+        } & Intl.DateTimeFormatOptions): string
+        ```
+        ```ts
+        format.date('2026-07-13');                      // '13 de jul. de 2026'
+        format.date('2026-07-13', { preset: 'numeric' }); // '13/07/2026'
+        ```
+    </Accordion>
+    <Accordion title="age" icon="cake-candles">
+        Calcula corretamente se o aniversário do ano já passou.
+        ```ts
+        format.age(value: string | number | Date, options?: {
+            suffix?: boolean;
+            now?: string | number | Date;
+        }): string
+        ```
+        ```ts
+        format.age('1990-03-15');                  // '36 anos'
+        format.age('1990-03-15', { suffix: false }); // '36'
+        ```
+    </Accordion>
+    <Accordion title="relativeTime" icon="clock-rotate-left">
+        ```ts
+        format.relativeTime(value: string | number | Date, options?: {
+            locale?: SupportedLocale;
+            now?: string | number | Date;
+        }): string
+        ```
+        ```ts
+        format.relativeTime(new Date(Date.now() - 3 * 60000)); // 'há 3 minutos'
+        ```
+    </Accordion>
+    <Accordion title="time" icon="stopwatch">
+        Converte milissegundos em duração legível.
+        ```ts
+        format.time(value: number): string
+        ```
+        ```ts
+        format.time(5025000); // '1h 23m 45s'
+        ```
+    </Accordion>
+</AccordionGroup>
+
+## Texto
+
+<AccordionGroup>
+    <Accordion title="list" icon="list">
+        Usa `Intl.ListFormat`.
+        ```ts
+        format.list(value: (string | number)[], options?: {
+            locale?: SupportedLocale;
+            type?: Intl.ListFormatType;
+        }): string
+        ```
+        ```ts
+        format.list(['João', 'Maria', 'Pedro']); // 'João, Maria e Pedro'
+        ```
+    </Accordion>
+    <Accordion title="truncate" icon="scissors">
+        Corta no limite de word boundary, sem cortar palavra no meio.
+        ```ts
+        format.truncate(value: string, maxLength: number, options?: {
+            ellipsis?: string;
+            wordBoundary?: boolean;
+        }): string
+        ```
+        ```ts
+        format.truncate('Lorem ipsum dolor sit amet', 20); // 'Lorem ipsum dolor...'
+        ```
+    </Accordion>
+    <Accordion title="slug" icon="link">
+        ```ts
+        format.slug(value: string, options?: SlugifyOptions): string
+        ```
+        ```ts
+        format.slug('Ação & Aventura'); // 'acao-e-aventura'
+        ```
+    </Accordion>
+    <Accordion title="titleCase" icon="text-height">
+        Respeita partículas comuns em português (de, da, dos, e...).
+        ```ts
+        format.titleCase(value: string): string
+        ```
+        ```ts
+        format.titleCase('JOÃO DA silva E souza'); // 'João da Silva e Souza'
+        ```
+    </Accordion>
+    <Accordion title="initials" icon="user">
+        Ignora partículas e pega primeira e última palavra.
+        ```ts
+        format.initials(value: string, options?: { max?: number }): string
+        ```
+        ```ts
+        format.initials('jefferson de souza calmon'); // 'JC'
+        ```
+    </Accordion>
+    <Accordion title="url" icon="globe">
+        Remove protocolo, `www.` e query string por padrão.
+        ```ts
+        format.url(value: string, options?: { query?: boolean }): string
+        ```
+        ```ts
+        format.url('https://www.github.com/user/repo?utm_source=x'); // 'github.com/user/repo'
+        ```
+    </Accordion>
+</AccordionGroup>
+
+<Tip>
+    Todo formatter também existe como função standalone, sem o guard de
+    null-safety do namespace: `formatCpf`, `formatCurrency`, `formatDate` e
+    assim por diante, importáveis de `codekit/format`.
+</Tip>

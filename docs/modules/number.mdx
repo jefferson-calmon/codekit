@@ -1,0 +1,40 @@
+---
+title: "number"
+description: "Conversão para moeda e geração de números aleatórios."
+icon: "hashtag"
+---
+
+```ts
+import { number } from 'codekit';
+// ou
+import { toCurrency, random } from 'codekit/number';
+```
+
+<Tabs>
+    <Tab title="toCurrency">
+        ```ts
+        toCurrency(value: number, config?: {
+            locale: SupportedLocale;
+            currency: 'BRL' | 'USD' | 'EUR';
+        }): string
+        ```
+        ```ts
+        toCurrency(1500); // 'R$ 1.500,00'
+        ```
+        <Tip>
+            Para uso em UI, prefira `format.currency`, que inclui null-safety
+            automática.
+        </Tip>
+    </Tab>
+    <Tab title="random">
+        Gera um inteiro entre `min` e `max`, ou uma sequência de dígitos com o comprimento informado.
+        ```ts
+        random(min: number, max: number): number
+        random(length: number): number
+        ```
+        ```ts
+        number.random(1, 10);   // 7
+        number.random(6);       // 483920 (sequência de 6 dígitos)
+        ```
+    </Tab>
+</Tabs>

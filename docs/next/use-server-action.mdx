@@ -1,0 +1,132 @@
+---
+title: "useServerAction"
+description: "Executa uma Server Action com estado de loading, dado e callbacks de sucesso/erro."
+icon: "bolt"
+---
+
+Recebe uma Server Action e devolve `data`, `isLoading` e uma função `execute` para rodar de novo sob demanda, com proteção contra race conditions e updates após unmount.
+
+```ts
+useServerAction<TArgs, TResult>(
+    action: (...args: TArgs) => Promise<TResult>,
+    options?: {
+        immediate?: boolean;
+        args?: TArgs;
+        onSuccess?: (data: TResult) => void;
+        onError?: (error: Error) => void;
+        onSettled?: () => void;
+    },
+): {
+    data: TResult | undefined;
+    error: Error | null;
+    isLoading: boolean;
+    isError: boolean;
+    isSuccess: boolean;
+    execute: (...args: TArgs) => Promise<TResult | undefined>;
+}
+```
+
+## Execução imediata
+
+Por padrão, a action roda assim que o componente monta:
+
+```tsx
+'use client';
+import { useServerAction } from 'codekit/next';
+import { getUser } from '@/app/actions/get-user';
+
+function UserProfile({ id }: { id: string }) {
+    const { data, isLoading, execute } = useServerAction(getUser, { args: [id] });
+
+    if (isLoading) return <Spinner />;
+    return <Card user={data} onRefresh={() => execute(id)} />;
+}
+```
+
+## Execução manual
+
+Use `immediate: false` para só rodar quando `execute` for chamado, o padrão para mutações disparadas por clique:
+
+```tsx
+'use client';
+import { useServerAction } from 'codekit/next';
+import { deleteUser } from '@/app/actions/delete-user';
+
+function DeleteButton({ id }: { id: string }) {
+    const { execute, isLoading } = useServerAction(deleteUser, {
+        immediate: false,
+        onSuccess: () => toast.success('Usuário removido'),
+        onError: (error) => toast.error(error.message),
+    });
+
+    return (
+        <button disabled={isLoading} onClick={() => execute(id)}>
+            {isLoading ? 'Removendo...' : 'Remover'}
+        </button>
+    );
+}
+```
+
+## Callbacks
+
+`onSuccess`, `onError` e `onSettled` disparam em toda chamada de `execute`, inclusive na execução imediata:
+
+```tsx
+const { data } = useServerAction(createUser, {
+    immediate: false,
+    onSuccess: (user) => {
+        toast.success(`${user.name} criado`);
+        router.push(`/users/${user.id}`);
+    },
+    onError: (error) => setFormError(error.message),
+    onSettled: () => setSubmitting(false),
+});
+```
+
+## Combinando com createSafeAction
+
+O par natural do `useServerAction` é uma action criada com `createSafeAction`, que devolve um resultado tipado em vez de lançar exceção:
+
+```tsx
+'use client';
+import { useServerAction } from 'codekit/next';
+import { createUser } from '@/app/actions/create-user';
+
+function Form() {
+    const { execute, isLoading } = useServerAction(createUser, { immediate: false });
+
+    async function onSubmit(values: { name: string; email: string }) {
+        const result = await execute(values);
+
+        if (result?.success) {
+            toast.success('Criado!');
+        } else {
+            toast.error(result?.error);
+            setFieldErrors(result?.fieldErrors);
+        }
+    }
+}
+```
+
+<Card title="createSafeAction" icon="shield-check" href="/next/create-safe-action">
+    Veja como validar o input e tratar erros do lado do servidor.
+</Card>
+
+## Comportamento interno
+
+<AccordionGroup>
+    <Accordion title="Proteção contra race conditions" icon="shuffle">
+        Cada chamada de `execute` recebe um ID interno. Se uma chamada mais
+        recente terminar antes de uma mais antiga, o resultado da mais antiga
+        é descartado, o estado nunca regride para uma resposta desatualizada.
+    </Accordion>
+    <Accordion title="Segurança no unmount" icon="power-off">
+        Se o componente desmontar antes da promise resolver, nenhum
+        `setState` é disparado, evitando o warning de atualização em
+        componente desmontado.
+    </Accordion>
+    <Accordion title="data preservado no erro" icon="database">
+        Quando `execute` falha, `data` mantém o último valor bem-sucedido, em
+        vez de zerar, o que evita a UI piscar para um estado vazio.
+    </Accordion>
+</AccordionGroup>

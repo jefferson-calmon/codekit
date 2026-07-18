@@ -1,0 +1,76 @@
+---
+title: "Arquitetura"
+description: "Módulos de domínio, subpaths e as regras que mantêm o codekit previsível."
+icon: "folder-tree"
+---
+
+O codekit é organizado em **módulos de domínio**: cada pasta resolve um problema, tem anatomia idêntica (um arquivo por função + barrel) e vira um subpath do pacote.
+
+## Mapa de módulos
+
+| Módulo | Import | Conteúdo |
+| --- | --- | --- |
+| `format` | `codekit/format` | 23 formatters unificados (`format.cpf`, `format.currency`...) |
+| `is` | `codekit/is` | Validators (`is.email`, `is.cpf`, `createIs`...) |
+| `text` | `codekit/text` | Strings: `slugify`, `mask`, `toNumber`, `calculateSimilarity`... |
+| `number` | `codekit/number` | `toCurrency`, `random` |
+| `date` | `codekit/date` | `create`, `diff`, `shift`, `timeline`, `daysBetween`... |
+| `array` | `codekit/array` | `group`, `query`, `uniqBy`, `order`, `toOptions`... |
+| `object` | `codekit/object` | `get`, `set`, `merge`, `pick`, `omit`, `flatten`... |
+| `color` | `codekit/color` | `hexToRgb`, `getLuminance`, `highlight` |
+| `file` | `codekit/file` | `parseSize`, `blobToDataURL`, `getImageDataURLFromFile` |
+| `async` | `codekit/async` | `delay`, `debounce`, `retryIfFail`, `createFetchInstance` |
+| `random` | `codekit/random` | `uuid`, `nanoid`, `randomize` |
+| `crypto` | `codekit/crypto` | `aes`, `hashify`, `Password` |
+| `browser` | `codekit/browser` | `cookies`, `clearSiteData`, `getFormEntries`... |
+| `react` | `codekit/react` | 24 hooks client-side |
+| `next` | `codekit/next` | Hooks para App Router (client) |
+| `next/server` | `codekit/next/server` | `createSafeAction` (server) |
+| `extend` | `codekit/extend` | Extensões de prototype (opt-in explícito) |
+| `firebase` | `codekit/firebase` | Mapa de erros e types do Firebase |
+
+## Root vs subpath
+
+O entry raiz (`codekit`) exporta:
+
+- **Flat**: módulos com nomes autoexplicativos, `format`, `is`, `async`, `random`, `browser`, `file` e os types.
+- **Namespace**: módulos por tipo de dado, cujos nomes são genéricos, `array.random`, `text.random`, `object.get`, `date.diff`, `number.toCurrency`, `color.hexToRgb`.
+
+```ts
+import { format, uuid, array, text } from 'codekit';
+
+array.random(users);       // item aleatório
+text.random(8);            // string aleatória
+```
+
+<Note>
+    `react`, `next`, `crypto`, `extend` e `firebase` **não** são exportados no
+    root, são subpath-only. Isso garante que importar o core nunca puxa React,
+    node-crypto ou mutações de prototype.
+</Note>
+
+## Client vs server
+
+O módulo Next segue a mesma divisão do próprio framework:
+
+```ts
+// Client Components, bundle com 'use client'
+import { useServerAction, useHydrated } from 'codekit/next';
+
+// Server (actions, RSC), bundle sem diretivo
+import { createSafeAction } from 'codekit/next/server';
+```
+
+## Convenções
+
+| Coisa | Regra | Exemplo |
+| --- | --- | --- |
+| Arquivo | kebab-case, um por função | `format-cpf.ts`, `use-debounce.ts` |
+| Função | camelCase, verbo primeiro | `formatCpf`, `isEmail`, `parseSize` |
+| Namespace | substantivo do módulo | `format.cpf`, `is.email`, `text.slugify` |
+| Options | `<Função>Options`, sempre exportado | `FormatDateOptions` |
+| Factory | `createX(config)` + instância default | `createFormat`, `createIs` |
+
+## Build
+
+ESM + CJS + type declarations por entry (`tsup`), `sideEffects: false` para tree-shaking pleno, e exports map completo, `import` e `require` funcionam em qualquer bundler ou runtime moderno.

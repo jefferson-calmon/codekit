@@ -1,0 +1,42 @@
+---
+title: "file"
+description: "Conversão de arquivos e blobs, e formatação de tamanho em bytes."
+icon: "file"
+---
+
+```ts
+import { parseSize, blobToDataURL } from 'codekit/file';
+```
+
+<Tabs>
+    <Tab title="parseSize">
+        ```ts
+        parseSize(bytes: number): string
+        ```
+        ```ts
+        parseSize(1536000); // '1.5MB'
+        ```
+    </Tab>
+    <Tab title="blobToDataURL">
+        ```ts
+        blobToDataURL(blob: Blob): Promise<string>
+        ```
+        ```ts
+        const dataUrl = await blobToDataURL(imageBlob);
+        ```
+    </Tab>
+    <Tab title="getImageDataURLFromFile">
+        Lê um `File` de input e devolve a data URL, lançando erro se a leitura falhar.
+        ```ts
+        getImageDataURLFromFile(image: File): Promise<string>
+        ```
+        ```tsx
+        function onFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+            const file = event.target.files?.[0];
+            if (!file) return;
+
+            getImageDataURLFromFile(file).then(setPreviewUrl);
+        }
+        ```
+    </Tab>
+</Tabs>

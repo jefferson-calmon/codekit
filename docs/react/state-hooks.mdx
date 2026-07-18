@@ -1,0 +1,157 @@
+---
+title: "Hooks de estado"
+description: "Boolean, estado controlado/incontrolado, wizard de etapas, undo/redo, persistência e formulários."
+icon: "toggle-on"
+---
+
+<Tabs>
+    <Tab title="useBoolean">
+        Estado booleano com atalhos para as operações mais comuns.
+        ```ts
+        useBoolean(defaultValue?: boolean): {
+            value: boolean;
+            setValue: Dispatch<SetStateAction<boolean>>;
+            setTrue: () => void;
+            setFalse: () => void;
+            toggle: () => void;
+        }
+        ```
+        ```tsx
+        function Modal() {
+            const { value: isOpen, setTrue: open, setFalse: close, toggle } = useBoolean();
+
+            return (
+                <>
+                    <button onClick={open}>Abrir</button>
+                    {isOpen && <Dialog onClose={close} />}
+                </>
+            );
+        }
+        ```
+    </Tab>
+    <Tab title="useControlledState">
+        Para componentes que aceitam tanto uso controlado quanto incontrolado, com `onChange` disparando nos dois modos.
+        ```ts
+        useControlledState<T>(props: {
+            value?: T;
+            defaultValue?: T;
+            onChange?: (value: T) => void;
+        }): [T, (next: SetStateAction<T>) => void, boolean]
+        ```
+        ```tsx
+        function Toggle({ checked, defaultChecked, onChange }: ToggleProps) {
+            const [isOn, setIsOn] = useControlledState({
+                value: checked,
+                defaultValue: defaultChecked ?? false,
+                onChange,
+            });
+
+            return <button onClick={() => setIsOn(prev => !prev)}>{isOn ? 'On' : 'Off'}</button>;
+        }
+
+        // uso incontrolado: <Toggle defaultChecked />
+        // uso controlado:   <Toggle checked={state} onChange={setState} />
+        ```
+    </Tab>
+    <Tab title="useStep">
+        Navegação entre etapas numeradas, com limites automáticos.
+        ```ts
+        useStep<T extends number>(max: number): {
+            current: T;
+            canGoToNext: boolean;
+            canGoToPrev: boolean;
+            next: () => void;
+            prev: () => void;
+            reset: () => void;
+        }
+        ```
+        ```tsx
+        function Wizard() {
+            const { current, next, prev, canGoToNext, canGoToPrev } = useStep(4);
+
+            return (
+                <>
+                    <StepContent step={current} />
+                    <button disabled={!canGoToPrev} onClick={prev}>Voltar</button>
+                    <button disabled={!canGoToNext} onClick={next}>Avançar</button>
+                </>
+            );
+        }
+        ```
+    </Tab>
+    <Tab title="useHistory">
+        Undo/redo genérico para qualquer valor.
+        ```ts
+        useHistory<T>(initialPresent: T): {
+            state: T;
+            set: (newPresent: T) => void;
+            undo: () => void;
+            redo: () => void;
+            canUndo: boolean;
+            canRedo: boolean;
+        }
+        ```
+        ```tsx
+        function Canvas() {
+            const { state: shapes, set, undo, redo, canUndo, canRedo } = useHistory<Shape[]>([]);
+
+            return (
+                <>
+                    <button disabled={!canUndo} onClick={undo}>Desfazer</button>
+                    <button disabled={!canRedo} onClick={redo}>Refazer</button>
+                </>
+            );
+        }
+        ```
+    </Tab>
+    <Tab title="usePersistedState">
+        Estado sincronizado com `localStorage` ou `sessionStorage`.
+        ```ts
+        usePersistedState<T>(key: string, initialState: T, type?: 'local' | 'session'): [T, (value: T) => void]
+        ```
+        ```tsx
+        const [theme, setTheme] = usePersistedState('theme', 'light', 'local');
+        ```
+    </Tab>
+    <Tab title="useForm">
+        Formulário completo: valores, erros, submit e mudança de campo, sem biblioteca externa.
+        ```ts
+        useForm<T extends object>(initialData: T, validations?: Validations<T>): {
+            data: T;
+            errors: ErrorObject[];
+            isLoading: boolean;
+            change: (key: KeyOf<T>) => (event: ChangeEvent) => void;
+            value: (key: KeyOf<T>) => string;
+            onSubmit: (handler: (props: { data: T }) => Promise<void>) => (e: FormEvent) => Promise<void>;
+        }
+        ```
+        ```tsx
+        function LoginForm() {
+            const { value, change, onSubmit, isLoading } = useForm({ email: '', password: '' });
+
+            return (
+                <form onSubmit={onSubmit(async ({ data }) => await login(data))}>
+                    <input value={value('email')} onChange={change('email')} />
+                    <input value={value('password')} onChange={change('password')} type="password" />
+                    <button disabled={isLoading}>Entrar</button>
+                </form>
+            );
+        }
+        ```
+    </Tab>
+    <Tab title="useActive">
+        Controla múltiplos estados booleanos nomeados, útil para tabs, accordions e menus.
+        ```ts
+        useActive<T extends string>(initial?: Partial<Record<T, boolean>>): {
+            isActive: Record<T, boolean>;
+            handleActive: (item: T, state?: boolean) => void;
+        }
+        ```
+        ```tsx
+        const { isActive, handleActive } = useActive<'menu' | 'search'>();
+
+        <button onClick={() => handleActive('menu')}>Menu</button>
+        {isActive.menu && <MenuDropdown />}
+        ```
+    </Tab>
+</Tabs>

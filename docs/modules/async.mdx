@@ -1,0 +1,73 @@
+---
+title: "async"
+description: "Delay, debounce, retry com backoff e um cliente fetch minimalista."
+icon: "clock"
+---
+
+```ts
+import { delay, debounce, retryIfFail, createFetchInstance } from 'codekit/async';
+```
+
+<Tabs>
+    <Tab title="delay">
+        ```ts
+        delay(seconds: number): Promise<void>
+        ```
+        ```ts
+        await delay(2); // aguarda 2 segundos
+        ```
+    </Tab>
+    <Tab title="debounce">
+        ```ts
+        debounce<T extends (...args: any[]) => void>(func: T, timeout?: number): T & { cancel: () => void }
+        ```
+        ```ts
+        const onSearch = debounce((query: string) => fetchResults(query), 300);
+        onSearch.cancel(); // cancela a chamada pendente
+        ```
+    </Tab>
+    <Tab title="retryIfFail">
+        Reexecuta uma promise até `maxRetries` vezes, com callback opcional a cada tentativa.
+        ```ts
+        retryIfFail<T>(fn: () => Promise<T>, options: {
+            maxRetries?: number;
+            delayBetweenRetries?: number;
+            onRetry?: (error: unknown, retries: number) => void;
+        }): Promise<T>
+        ```
+        ```ts
+        const data = await retryIfFail(() => fetch('/api/status').then(r => r.json()), {
+            maxRetries: 5,
+            delayBetweenRetries: 1000,
+            onRetry: (error, attempt) => console.warn(`tentativa ${attempt}`, error),
+        });
+        ```
+    </Tab>
+    <Tab title="createFetchInstance">
+        Cliente fetch com base URL, headers padrão e hooks de request/response, útil para centralizar chamadas de API.
+        ```ts
+        createFetchInstance(props: {
+            baseUrl: string;
+            headers?: RequestInit['headers'];
+            onBeforeRequest?: (options: RequestInit) => Promise<Partial<RequestInit>> | RequestInit;
+            onResponse?: (response: Response, refetch: () => Promise<Response>) => Promise<Response> | Response;
+        })
+        ```
+        ```ts
+        const api = createFetchInstance({
+            baseUrl: 'https://api.example.com',
+            headers: { Authorization: `Bearer ${token}` },
+            onResponse: async (response, refetch) => {
+                if (response.status === 401) return refetch();
+                return response;
+            },
+        });
+
+        const users = await api.get('/users');
+        await api.post('/users', { name: 'Ana' });
+        await api.put('/users/1', { name: 'Ana Silva' });
+        await api.patch('/users/1', { active: false });
+        await api.del('/users/1');
+        ```
+    </Tab>
+</Tabs>

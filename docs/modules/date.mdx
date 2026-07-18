@@ -1,0 +1,69 @@
+---
+title: "date"
+description: "Criar, comparar, ajustar e gerar sequências de datas."
+icon: "calendar-days"
+---
+
+```ts
+import { date } from 'codekit';
+// ou
+import { create, diff, shift } from 'codekit/date';
+```
+
+<Tabs>
+    <Tab title="create">
+        Cria uma data preenchendo valores ausentes com base no momento atual, num fuso específico.
+        ```ts
+        create(values?: CreateDateInput): Date
+        ```
+        ```ts
+        create({ year: 2026, month: 3, day: 15 });
+        create({ timezone: 'America/Sao_Paulo' });
+        ```
+    </Tab>
+    <Tab title="diff">
+        Retorna a diferença entre duas datas já formatada como texto relativo.
+        ```ts
+        diff(start: Date, end: Date): {
+            formatted: string;
+            type: 'seconds' | 'minutes' | 'hours' | 'days' | 'months' | 'years';
+            value: number;
+        }
+        ```
+        ```ts
+        diff(new Date(), lastLogin);
+        // { formatted: '3 dias atrás', type: 'days', value: 3 }
+        ```
+    </Tab>
+    <Tab title="shift">
+        Desloca uma data por unidades (adiciona ou subtrai).
+        ```ts
+        shift(date: Date, values: ShiftDateValues): Date
+        ```
+        ```ts
+        shift(new Date(), { days: 7 });       // daqui a 7 dias
+        shift(new Date(), { months: -1 });    // 1 mês atrás
+        ```
+    </Tab>
+    <Tab title="timeline">
+        Gera um array de datas num intervalo, útil para gráficos e calendários.
+        ```ts
+        timeline(options: { days?: number; weeks?: number; months?: number }): Date[]
+        ```
+        ```ts
+        timeline({ days: -7 });   // últimos 7 dias
+        timeline({ weeks: 4 });   // próximas 4 semanas
+        ```
+    </Tab>
+    <Tab title="daysBetween / newest / oldest">
+        ```ts
+        daysBetween(date1: Date, date2: Date): number
+        newest(dates: Date[]): Date | undefined
+        oldest(dates: Date[]): Date | undefined
+        ```
+        ```ts
+        daysBetween(checkIn, checkOut);       // 5
+        newest([d1, d2, d3]);                 // a data mais recente
+        ```
+    </Tab>
+</Tabs>

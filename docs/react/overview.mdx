@@ -1,0 +1,34 @@
+---
+title: "Visão geral"
+description: "24 hooks client-side para estado, DOM e dados, isolados do core do pacote."
+icon: "atom"
+---
+
+```ts
+import { useDebounce, useBoolean, useControlledState } from 'codekit/react';
+```
+
+<Note>
+    Nenhum hook é exportado no root do pacote (`codekit`). Isso garante que
+    importar `format` ou `is` num projeto Node/backend nunca puxa React.
+</Note>
+
+## Organização
+
+Os hooks estão agrupados por natureza, não em ordem alfabética, para facilitar achar o que você precisa:
+
+<CardGroup cols={3}>
+    <Card title="Estado" icon="toggle-on" href="/react/state-hooks">
+        `useBoolean`, `useControlledState`, `useStep`, `useHistory`, `usePersistedState`, `useForm`
+    </Card>
+    <Card title="DOM e browser" icon="window" href="/react/dom-hooks">
+        `useEventListener`, `useOnScreen`, `useWindowSize`, `useMedia`, `useKey`, `usePortal`
+    </Card>
+    <Card title="Dados e efeitos" icon="server" href="/react/data-hooks">
+        `useFetch`, `useDebounce`, `useCopyToClipboard`, `useGeolocation`, `usePagination`
+    </Card>
+</CardGroup>
+
+<Card title="CodeKitConfig" icon="puzzle-piece" href="/advanced/extend">
+    Componente para ligar as extensões de prototype declarativamente.
+</Card>

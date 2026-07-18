@@ -1,0 +1,65 @@
+---
+title: "crypto"
+description: "AES, hash SHA-256 e avaliação de força de senha. Requer crypto-js."
+icon: "lock"
+---
+
+<Note>
+    `codekit/crypto` isola o node-crypto e o `crypto-js` do bundle principal.
+    Instale `crypto-js` como dependência do seu projeto para usar `aes`.
+</Note>
+
+```ts
+import { aes, hashify, Password } from 'codekit/crypto';
+```
+
+<Tabs>
+    <Tab title="aes">
+        Criptografia simétrica AES, incluindo um helper para criptografar campos específicos de um objeto.
+        ```ts
+        aes.encrypt(value: string, secret: string): string
+        aes.decrypt(value: string, secret: string): string
+        aes.cryptObject(action: 'encrypt' | 'decrypt', obj: T, secret: string, criteria?: keyof T | (keyof T)[]): T
+        ```
+        ```ts
+        const encrypted = aes.encrypt('dado sensível', process.env.SECRET);
+        const original = aes.decrypt(encrypted, process.env.SECRET);
+
+        aes.cryptObject('encrypt', user, secret, ['cpf', 'phone']);
+        ```
+    </Tab>
+    <Tab title="hashify">
+        Hash SHA-256, roda em Node (usa o módulo `crypto` nativo).
+        ```ts
+        hashify(value: string): string
+        ```
+        ```ts
+        hashify('senha123'); // '5e884898da28...'
+        ```
+    </Tab>
+    <Tab title="Password">
+        Avalia a força de uma senha com base em critérios de comprimento e composição, e gera senhas aleatórias.
+        ```ts
+        Password.calculateStrength(password: string): {
+            score: number;
+            strength: 'Weak' | 'Medium' | 'Strong';
+            minScore: number;
+            maxScore: number;
+        }
+
+        Password.generate(options: {
+            minLength: number;
+            includeUppercase?: boolean;
+            includeLowercase?: boolean;
+            includeNumbers?: boolean;
+            includeSymbols?: boolean;
+        }): string
+        ```
+        ```ts
+        Password.calculateStrength('Abc123!@#');
+        // { score: 5, strength: 'Strong', minScore: 0, maxScore: 6 }
+
+        Password.generate({ minLength: 12, includeSymbols: true });
+        ```
+    </Tab>
+</Tabs>

@@ -1,0 +1,78 @@
+---
+title: "Quickstart"
+description: "Instale o codekit e use o primeiro utilitário em menos de um minuto."
+icon: "rocket"
+---
+
+## Instalação
+
+<CodeGroup>
+
+```bash pnpm
+pnpm add codekit
+```
+
+```bash npm
+npm install codekit
+```
+
+```bash yarn
+yarn add codekit
+```
+
+</CodeGroup>
+
+<Note>
+    React, Next.js e crypto-js são **peer dependencies opcionais**, só instale
+    se for usar `codekit/react`, `codekit/next` ou `codekit/crypto`.
+</Note>
+
+## Primeiro uso
+
+```ts
+import { format, is, delay, uuid } from 'codekit';
+
+// Formatação com fallback automático para null/undefined
+format.cpf(user.cpf);                       // '123.456.789-09' ou 'N/A'
+format.currency(order.total);               // 'R$ 1.500,00'
+format.count(3, 'item', 'itens');           // '3 itens'
+
+// Validação null-safe
+if (is.email(input)) sendEmail(input);
+
+// Utilitários
+await delay(2);
+const id = uuid();
+```
+
+## Imports por módulo
+
+Cada módulo tem seu próprio subpath, ideal para bundles menores e para deixar a origem explícita:
+
+```ts
+import { format } from 'codekit/format';
+import { is } from 'codekit/is';
+import { slugify } from 'codekit/text';
+import { useDebounce } from 'codekit/react';
+import { useServerAction } from 'codekit/next';
+import { createSafeAction } from 'codekit/next/server';
+```
+
+## Instâncias customizadas
+
+Os namespaces `format` e `is` são instâncias default de factories, crie a sua com configuração própria:
+
+```ts
+import { createFormat, createIs } from 'codekit';
+
+const f = createFormat({ fallback: '-' });
+f.phone(null);                    // '-'
+
+const optional = createIs({ empty: true });
+optional.email('');               // true (campo vazio é válido)
+optional.email('inválido');       // false
+```
+
+<Card title="Próximo passo: Arquitetura" icon="folder-tree" href="/architecture">
+    Entenda como os módulos se organizam e quando usar cada subpath.
+</Card>

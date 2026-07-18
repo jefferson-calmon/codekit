@@ -1,0 +1,96 @@
+---
+title: "array"
+description: "Agrupamento, ordenação, busca, deduplicação e transformação de arrays de objetos."
+icon: "layer-group"
+---
+
+```ts
+import { array } from 'codekit';
+// ou
+import { group, order, uniqBy } from 'codekit/array';
+```
+
+<Tabs>
+    <Tab title="group / groupByDate">
+        Agrupa itens por chave, com soma opcional de outra propriedade.
+        ```ts
+        group<T>(data: T[], key: KeyOf<T>, options?: {
+            sum?: KeyOf<T>;
+            keyTransformer?: (key: string) => string;
+        }): GroupedData[]
+
+        groupByDate<T>(data: T[], key: KeyOf<T>, unit: DateUnit, options?: GroupOptions): GroupedData[]
+        ```
+        ```ts
+        array.group(orders, 'status', { sum: 'total' });
+        // [{ key: 'paid', count: 12, sum: 4500 }, ...]
+
+        array.groupByDate(orders, 'createdAt', 'month');
+        ```
+    </Tab>
+    <Tab title="order / query">
+        ```ts
+        order<T>(data: T[], key: KeyOf<T>, order?: 'asc' | 'desc'): T[]
+        query<T>(data: T[], query: Partial<Record<KeyOf<T>, string | string[]>>): T[]
+        ```
+        ```ts
+        array.order(users, 'name');
+        array.query(users, { role: 'admin', status: ['active', 'pending'] });
+        ```
+    </Tab>
+    <Tab title="uniq / uniqBy">
+        ```ts
+        uniq<T>(array: T[]): T[]
+        uniqBy<T>(array: T[], key: KeyOf<T>): T[]
+        ```
+        ```ts
+        array.uniq([1, 1, 2]);              // [1, 2]
+        array.uniqBy(users, 'email');       // remove duplicados por email
+        ```
+    </Tab>
+    <Tab title="search">
+        Busca por múltiplas chaves e valores.
+        ```ts
+        search<T>(data: T[], keys: KeyOf<T> | KeyOf<T>[], values: unknown): T[]
+        ```
+        ```ts
+        array.search(users, 'name', 'joão');
+        ```
+    </Tab>
+    <Tab title="toOptions / toFilters">
+        Transforma arrays de objetos em estruturas prontas para selects e filtros de UI.
+        ```ts
+        toOptions<T>(data: T[], key: KeyOf<T>, value: KeyOf<T>): NormalizedOption[]
+        toFilters<T>(data: T[], key: KeyOf<T>, options?: FiltersOptions): NormalizedFilters<T>
+        ```
+        ```ts
+        array.toOptions(cities, 'id', 'name');
+        // [{ value: '1', label: 'Salvador' }, ...]
+        ```
+    </Tab>
+    <Tab title="sum / reduction">
+        ```ts
+        sum<T>(array: T[], key: KeyOf<T>): number
+        reduction<T>(array: T[], key: KeyOf<T>, value: KeyOf<T>): ReductionObj
+        ```
+        ```ts
+        array.sum(orders, 'total'); // 15400
+        ```
+    </Tab>
+    <Tab title="last / random / shuffle / indexify / compact / fresh">
+        ```ts
+        last<T>(array: T[]): T
+        random<T>(array: T[]): T
+        shuffle<T>(array: T[]): T[]
+        indexify<T>(array: T[], key: keyof T): Record<string, T>
+        compact<T>(array: T[]): Exclude<T, null | undefined | false>[]
+        fresh(length: number): Array<{ id: string }>
+        ```
+        ```ts
+        array.last(items);
+        array.random(users);              // item aleatório
+        array.compact([1, null, 2, false]); // [1, 2]
+        array.fresh(5);                   // 5 objetos com id único
+        ```
+    </Tab>
+</Tabs>

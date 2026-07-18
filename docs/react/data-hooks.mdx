@@ -1,0 +1,99 @@
+---
+title: "Hooks de dados"
+description: "Fetch, debounce de valor, paginação, comparação com valor anterior e tratamento de erro."
+icon: "server"
+---
+
+<Tabs>
+    <Tab title="useFetch">
+        Executa uma chamada assíncrona e expõe estado de loading, dado e erro.
+        ```ts
+        useFetch<Response, Error = unknown>(props: { call: () => Promise<Response> }): {
+            data: Response | null;
+            loading: boolean;
+            error: Error | null;
+            isError: boolean;
+            refetch: () => void;
+        }
+        ```
+        ```tsx
+        function UserProfile({ id }: { id: string }) {
+            const { data, loading, refetch } = useFetch({ call: () => getUser(id) });
+
+            if (loading) return <Spinner />;
+            return <Card user={data} onRefresh={refetch} />;
+        }
+        ```
+        <Tip>
+            Para Server Actions do Next.js, prefira `useServerAction` do módulo
+            `codekit/next`, que já resolve race conditions e cleanup no unmount.
+        </Tip>
+    </Tab>
+    <Tab title="useDebounce">
+        Retorna uma versão debounced de um valor, ideal para inputs de busca.
+        ```ts
+        useDebounce<T>(value: T, delay: number): T
+        ```
+        ```tsx
+        const [query, setQuery] = useState('');
+        const debouncedQuery = useDebounce(query, 300);
+
+        useEffect(() => {
+            if (debouncedQuery) fetchResults(debouncedQuery);
+        }, [debouncedQuery]);
+        ```
+    </Tab>
+    <Tab title="usePagination">
+        Divide um array em páginas e controla a navegação entre elas.
+        ```ts
+        usePagination<T>(data: T[], pageSize?: number): {
+            page: T[];
+            pageIndex: number;
+            pagesCount: number;
+            nextPage: () => void;
+            prevPage: () => void;
+        }
+        ```
+        ```tsx
+        const { page, pageIndex, pagesCount, nextPage, prevPage } = usePagination(users, 10);
+        ```
+    </Tab>
+    <Tab title="usePrevious">
+        Retorna o valor de uma variável na render anterior.
+        ```ts
+        usePrevious<T>(value: T): T
+        ```
+        ```tsx
+        const previousCount = usePrevious(count);
+        const isIncreasing = count > (previousCount ?? count);
+        ```
+    </Tab>
+    <Tab title="useError">
+        Coleção de erros nomeados, útil para agregar falhas de validação de múltiplas fontes.
+        ```ts
+        useError(): {
+            errors: { id: string; message: string }[];
+            exists: boolean;
+            add: (error: string | { id: string; message: string }) => void;
+            clear: () => void;
+        }
+        ```
+        ```tsx
+        const { errors, exists, add, clear } = useError();
+
+        if (!isValid) add('Email inválido');
+        ```
+    </Tab>
+    <Tab title="useChange">
+        Gera um handler de mudança de campo com detecção automática de tipo (número, moeda), usado internamente por `useForm`.
+        ```ts
+        useChange<T extends object>(setter: Dispatch<SetStateAction<T>>): (key: KeyOf<T>, options?: ChangeOptions | 'currency') => (event: ChangeEvent) => void
+        ```
+        ```tsx
+        const [data, setData] = useState({ price: 0 });
+        const change = useChange(setData);
+
+        <input onChange={change('price', 'currency')} />
+        ```
+    </Tab>
+</Tabs>

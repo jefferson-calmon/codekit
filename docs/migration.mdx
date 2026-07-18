@@ -1,0 +1,71 @@
+---
+title: "Migração para v3"
+description: "Guia de migração da v2 para a v3.0.0, o que quebrou e como atualizar."
+icon: "arrow-up-right-dots"
+---
+
+A v3 reorganizou o pacote inteiro em módulos de domínio com subpath exports. As mudanças de API são mecânicas, nenhuma lógica de formatação/validação mudou.
+
+## Formatters
+
+```ts
+// v2
+format(value).as('cpf');
+formatCurrency(100, { currency: 'USD' });
+
+// v3, namespace unificado com null-safety
+format.cpf(value);
+format.currency(100, { currency: 'USD' });
+```
+
+## Validators
+
+```ts
+// v2
+validator.isEmail(email);
+validateCpf(cpf);
+
+// v3
+is.email(email);
+isCpf(cpf);
+```
+
+## Hooks
+
+```ts
+// v2, hooks vinham no root
+import { useDebounce } from 'codekit';
+
+// v3, subpath dedicado (root não depende mais de React)
+import { useDebounce } from 'codekit/react';
+```
+
+## Renames
+
+| v2 | v3 |
+| --- | --- |
+| `format(x).as('cpf')` | `format.cpf(x)` |
+| `validator.isX(v)` | `is.x(v)` |
+| `validateEmail`, `validateCpf`... | `isEmail`, `isCpf`... |
+| `validateByRegex` | `isMatch` |
+| `validateCpfOrCnpj` | `isDocument` |
+| `randomString(8)` | `text.random(8)` |
+| `randomNumber(1, 10)` | `number.random(1, 10)` |
+| `shuffleArray(arr)` | `array.shuffle(arr)` |
+| `string.slugify(v)` | `text.slugify(v)` |
+| `config()` | `extendPrototypes()`, em `codekit/extend` |
+| `<CodeKitConfig />` | em `codekit/react` |
+| `Password` | em `codekit/crypto` |
+| `firebaseErrors` | em `codekit/firebase` |
+| `Locale` (3 valores) | `SupportedLocale` |
+
+## Removidos
+
+- **Default export** (`import codekit from 'codekit'`), use named imports.
+- **Flat export das collections no root**, `get`, `merge`, `uniq` etc. agora vivem nos namespaces (`object.get`, `array.uniq`) ou nos subpaths (`codekit/object`).
+
+<Warning>
+    Se o seu projeto usava as extensões de prototype (`'abc'.slugify()`),
+    importe `extendPrototypes` de `codekit/extend` e chame uma única vez no
+    bootstrap da aplicação.
+</Warning>

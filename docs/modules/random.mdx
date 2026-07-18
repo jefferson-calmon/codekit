@@ -1,0 +1,63 @@
+---
+title: "random"
+description: "UUID v4, NanoID e geração de valores aleatórios."
+icon: "dice"
+---
+
+```ts
+import { uuid, nanoid, customNanoId, randomize } from 'codekit/random';
+```
+
+<Tabs>
+    <Tab title="uuid">
+        ```ts
+        uuid(): string
+        ```
+        ```ts
+        uuid(); // 'a1b2c3d4-e5f6-4789-a012-b3c4d5e6f789'
+        ```
+    </Tab>
+    <Tab title="nanoid">
+        Gera um ID curto e único, com seed opcional para reprodutibilidade em testes.
+        ```ts
+        nanoid(size?: number, seed?: string, charset?: string): string
+        ```
+        ```ts
+        nanoid();           // 'V1StGXR8_Z5jdHi6B-myT'
+        nanoid(10, 'seed');  // sempre o mesmo resultado para a mesma seed
+        ```
+    </Tab>
+    <Tab title="customNanoId">
+        Cria um gerador com prefixo, sufixo e charset customizados.
+        ```ts
+        customNanoId(props: {
+            prefix?: string;
+            suffix?: string;
+            size?: number;
+            charset?: string | {
+                numbers?: boolean;
+                lowercase?: boolean;
+                uppercase?: boolean;
+                underscore?: boolean;
+                hyphen?: boolean;
+                special?: boolean;
+            };
+        }): (seed?: string) => string
+        ```
+        ```ts
+        const orderId = customNanoId({ prefix: 'ord', size: 8, charset: { numbers: true } });
+        orderId(); // 'ord48293102'
+        ```
+    </Tab>
+    <Tab title="randomize">
+        Atalho para número ou string aleatórios num único objeto.
+        ```ts
+        randomize.number(min: number, max: number): number
+        randomize.string(length: number, options?: RandomStringOptions): string
+        ```
+        ```ts
+        randomize.number(1, 100);
+        randomize.string(12, { useNumbers: true, useSpecialCharacters: true });
+        ```
+    </Tab>
+</Tabs>

@@ -1,0 +1,53 @@
+---
+title: "Visão geral"
+description: "O namespace is: validators unificados, null-safe e com comportamento configurável para campos vazios."
+icon: "shield-check"
+---
+
+Os validators seguem a mesma anatomia dos formatters: um namespace único, guard automático para valores vazios e uma factory para customizar o comportamento.
+
+```ts
+import { is } from 'codekit';
+
+is.email('dev@example.com');    // true
+is.cpf('123.456.789-09');       // true
+is.url('https://example.com');  // true
+```
+
+## Comportamento para valores vazios
+
+Por padrão, `null`, `undefined` e string vazia retornam `false`, útil para campos obrigatórios:
+
+```ts
+is.email(null);   // false
+is.email('');     // false
+```
+
+Para campos opcionais (só valida se preenchido), crie uma instância com `empty: true`:
+
+```ts
+import { createIs } from 'codekit';
+
+const optional = createIs({ empty: true });
+
+optional.email(null);          // true, campo vazio é considerado válido
+optional.email('inválido');    // false, mas se preenchido, precisa ser válido
+```
+
+## Catálogo
+
+| Categoria | Validators |
+| --- | --- |
+| Documentos | `cpf` · `cnpj` · `cpfOrCnpj` · `rg` |
+| Contato | `email` · `phone` · `url` |
+| Outros | `currency` · `latLng` · `match` |
+| Tipos primitivos | `string` · `number` · `boolean` · `object` · `function` · `symbol` · `bigInt` · `undefined` · `typeOf` |
+
+<Card title="Referência completa" icon="book" href="/validation/reference">
+    Assinatura e exemplos de cada validator.
+</Card>
+
+<Tip>
+    Assim como os formatters, cada validator também existe como função
+    standalone (`isCpf`, `isEmail`...), sem guard, importável de `codekit/is`.
+</Tip>

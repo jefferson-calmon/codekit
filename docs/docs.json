@@ -1,0 +1,120 @@
+{
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "mint",
+    "name": "codekit",
+    "description": "Toolkit TypeScript com formatters, validators, hooks e utilitários focados em DX.",
+    "colors": {
+        "primary": "#0070F3",
+        "light": "#3B9EFF",
+        "dark": "#0070F3"
+    },
+    "appearance": {
+        "default": "dark"
+    },
+    "background": {
+        "color": {
+            "light": "#FAFAFA",
+            "dark": "#000000"
+        },
+        "decoration": "grid"
+    },
+    "styling": {
+        "codeblocks": "system"
+    },
+    "favicon": "/favicon.svg",
+    "logo": {
+        "light": "/logo/light.svg",
+        "dark": "/logo/dark.svg"
+    },
+    "navbar": {
+        "primary": {
+            "type": "github",
+            "href": "https://github.com/jefferson-calmon/codekit"
+        }
+    },
+    "navigation": {
+        "tabs": [
+            {
+                "tab": "Guia",
+                "groups": [
+                    {
+                        "group": "Começando",
+                        "pages": [
+                            "introduction",
+                            "quickstart",
+                            "architecture",
+                            "migration"
+                        ]
+                    }
+                ]
+            },
+            {
+                "tab": "Referência",
+                "groups": [
+                    {
+                        "group": "Formatação",
+                        "pages": ["format/overview", "format/reference"]
+                    },
+                    {
+                        "group": "Validação",
+                        "pages": ["validation/overview", "validation/reference"]
+                    },
+                    {
+                        "group": "Dados",
+                        "pages": [
+                            "modules/text",
+                            "modules/number",
+                            "modules/date",
+                            "modules/array",
+                            "modules/object",
+                            "modules/color",
+                            "modules/file"
+                        ]
+                    },
+                    {
+                        "group": "Utilidades",
+                        "pages": [
+                            "modules/async",
+                            "modules/random",
+                            "modules/crypto",
+                            "modules/browser"
+                        ]
+                    },
+                    {
+                        "group": "Avançado",
+                        "pages": ["advanced/extend", "advanced/firebase"]
+                    }
+                ]
+            },
+            {
+                "tab": "React & Next.js",
+                "groups": [
+                    {
+                        "group": "React",
+                        "pages": [
+                            "react/overview",
+                            "react/state-hooks",
+                            "react/dom-hooks",
+                            "react/data-hooks"
+                        ]
+                    },
+                    {
+                        "group": "Next.js",
+                        "pages": [
+                            "next/overview",
+                            "next/use-server-action",
+                            "next/create-safe-action",
+                            "next/navigation-hooks"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "footer": {
+        "socials": {
+            "github": "https://github.com/jefferson-calmon/codekit",
+            "website": "https://jeffersoncalmon.dev"
+        }
+    }
+}

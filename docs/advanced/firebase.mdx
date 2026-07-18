@@ -1,0 +1,33 @@
+---
+title: "firebase"
+description: "Mapa de mensagens de erro do Firebase Auth, traduzidas para pt-BR."
+icon: "fire"
+---
+
+```ts
+import { firebaseErrors } from 'codekit/firebase';
+```
+
+Um dicionário que traduz os códigos de erro do Firebase Authentication para mensagens legíveis em português:
+
+```ts
+try {
+    await signInWithEmailAndPassword(auth, email, password);
+} catch (error) {
+    const message = firebaseErrors[error.code] ?? 'Erro ao entrar. Tente novamente.';
+    toast.error(message);
+}
+```
+
+```ts
+firebaseErrors['auth/wrong-password'];
+// 'Sua senha está incorreta.'
+
+firebaseErrors['auth/user-not-found'];
+// 'O usuário não foi encontrado ou não existe.'
+```
+
+<Tip>
+    Como o dicionário é indexado pelo código exato do Firebase, use sempre um
+    fallback genérico para códigos não mapeados.
+</Tip>

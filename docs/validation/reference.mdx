@@ -1,0 +1,143 @@
+---
+title: "Referência"
+description: "Assinatura e exemplos de cada validator do namespace is."
+icon: "book"
+---
+
+## Documentos
+
+<AccordionGroup>
+    <Accordion title="cpf" icon="id-card">
+        Valida os dígitos verificadores reais, não apenas o formato.
+        ```ts
+        is.cpf(value: string): boolean
+        ```
+        ```ts
+        is.cpf('123.456.789-09');  // true
+        is.cpf('111.111.111-11');  // false, todos os dígitos iguais
+        ```
+    </Accordion>
+    <Accordion title="cnpj" icon="id-card">
+        <Note>
+            Valida apenas o formato mascarado por regex, não o dígito
+            verificador. Se precisar de validação forte, combine com uma checagem
+            adicional no seu domínio.
+        </Note>
+        ```ts
+        is.cnpj(value: string): boolean
+        ```
+        ```ts
+        is.cnpj('12.345.678/0001-95'); // true
+        ```
+    </Accordion>
+    <Accordion title="cpfOrCnpj" icon="id-card">
+        ```ts
+        is.cpfOrCnpj(value: string): boolean
+        ```
+        ```ts
+        is.cpfOrCnpj('123.456.789-09');       // true
+        is.cpfOrCnpj('12.345.678/0001-95');   // true
+        ```
+    </Accordion>
+    <Accordion title="rg" icon="id-card">
+        ```ts
+        is.rg(value: string): boolean
+        ```
+        ```ts
+        is.rg('12.345.678-9'); // true
+        ```
+    </Accordion>
+</AccordionGroup>
+
+## Contato
+
+<AccordionGroup>
+    <Accordion title="email" icon="envelope">
+        ```ts
+        is.email(value: string): boolean
+        ```
+        ```ts
+        is.email('dev@example.com'); // true
+        is.email('dev@');            // false
+        ```
+    </Accordion>
+    <Accordion title="phone" icon="phone">
+        Valida contra um conjunto de padrões por localidade.
+        ```ts
+        is.phone(value: string, locale?: PhoneLocale | PhoneLocale[] | 'any', options?: {
+            strictMode?: boolean;
+        }): boolean
+        ```
+        ```ts
+        is.phone('(71) 98765-4321');           // true, locale padrão pt-BR
+        is.phone('+1 555 0100', 'en-US');
+        is.phone('+55 71 98765-4321', 'any', { strictMode: true });
+        ```
+    </Accordion>
+    <Accordion title="url" icon="globe">
+        ```ts
+        is.url(value: string): boolean
+        ```
+        ```ts
+        is.url('https://example.com'); // true
+        ```
+    </Accordion>
+</AccordionGroup>
+
+## Outros
+
+<AccordionGroup>
+    <Accordion title="currency" icon="coins">
+        Aceita formato brasileiro (`R$ 1.500,00`) e americano (`$1,500.00`).
+        ```ts
+        is.currency(value: string): boolean
+        ```
+        ```ts
+        is.currency('R$ 1.500,00'); // true
+        ```
+    </Accordion>
+    <Accordion title="latLng" icon="map-pin">
+        ```ts
+        is.latLng(value: string): boolean
+        ```
+        ```ts
+        is.latLng('-12.9714, -38.5014'); // true
+        ```
+    </Accordion>
+    <Accordion title="match" icon="regex">
+        Testa um valor contra qualquer regex, útil para regras específicas do seu domínio.
+        ```ts
+        is.match(value: string, regex: RegExp): boolean
+        ```
+        ```ts
+        is.match('abc123', /^[a-z]+\d+$/); // true
+        ```
+    </Accordion>
+</AccordionGroup>
+
+## Tipos primitivos
+
+<AccordionGroup>
+    <Accordion title="typeOf e atalhos" icon="code">
+        ```ts
+        is.typeOf(value: unknown, expectedType: TypeOf): boolean
+
+        is.string(value: unknown): boolean
+        is.number(value: unknown): boolean
+        is.boolean(value: unknown): boolean
+        is.object(value: unknown): boolean
+        is.function(value: unknown): boolean
+        is.symbol(value: unknown): boolean
+        is.bigInt(value: unknown): boolean
+        is.undefined(value: unknown): boolean
+        ```
+        ```ts
+        is.string('abc');       // true
+        is.undefined(undefined); // true
+        ```
+        <Note>
+            Estes atalhos não passam pelo guard de vazio: `is.undefined(undefined)`
+            precisa retornar `true`, então o guard interceptaria o próprio caso de teste.
+        </Note>
+    </Accordion>
+</AccordionGroup>

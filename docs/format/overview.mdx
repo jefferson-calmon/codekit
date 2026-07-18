@@ -1,0 +1,60 @@
+---
+title: "Visão geral"
+description: "O namespace format: 23 formatters unificados, null-safe e com fallback configurável."
+icon: "wand-magic-sparkles"
+---
+
+Todos os formatters vivem num namespace único, digite `format.` e o autocomplete lista o catálogo inteiro com as assinaturas reais.
+
+```ts
+import { format } from 'codekit';
+
+format.cpf(user.cpf);              // '123.456.789-09'
+format.currency(order.total);      // 'R$ 1.500,00'
+format.relativeTime(post.date);    // 'há 3 minutos'
+format.initials(user.name);        // 'JC'
+```
+
+## Null-safety embutida
+
+Toda função do namespace aceita `null | undefined` e devolve o fallback (`'N/A'` por padrão) para valores vazios, sem ternário no call site:
+
+```ts
+format.cpf(null);          // 'N/A'
+format.phone(undefined);   // 'N/A'
+format.list([]);           // 'N/A' (array vazio também é vazio)
+format.currency(0);        // 'R$ 0,00', zero é valor legítimo, formata normal
+```
+
+## Fallback customizado
+
+`format` é a instância default de `createFormat`, crie a sua por app ou por tela:
+
+```ts
+import { createFormat } from 'codekit';
+
+const f = createFormat({ fallback: '-' });
+
+f.cpf(null);     // '-'
+f.cpf('123...'); // '123.456.789-09'
+```
+
+## Catálogo
+
+| Categoria | Formatters |
+| --- | --- |
+| Documentos | `cpf` · `cnpj` · `document` · `redact` |
+| Contato | `phone` · `cep` |
+| Números | `currency` · `number` · `percent` · `unit` · `ordinal` · `count` · `bytes` |
+| Data & tempo | `date` · `age` · `relativeTime` · `time` |
+| Texto | `list` · `truncate` · `slug` · `titleCase` · `initials` · `url` |
+
+<Card title="Referência completa" icon="book" href="/format/reference">
+    Assinatura, options e exemplos de cada um dos 23 formatters.
+</Card>
+
+<Tip>
+    Cada formatter também é exportado como função standalone (`formatCpf`,
+    `formatCurrency`...), sem guard de null-safety, para quando você quer o
+    comportamento cru.
+</Tip>

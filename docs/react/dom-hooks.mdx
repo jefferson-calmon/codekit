@@ -1,0 +1,121 @@
+---
+title: "Hooks de DOM e browser"
+description: "Listeners, interseção, tamanho de janela, media queries, teclado e portais."
+icon: "window"
+---
+
+<Tabs>
+    <Tab title="useEventListener">
+        Listener com o handler sempre atualizado, sem precisar re-registrar o evento a cada render.
+        ```ts
+        useEventListener<K extends keyof WindowEventMap>(
+            eventName: K,
+            handler: (event: WindowEventMap[K]) => void,
+            target?: Window | Document | Element,
+        ): void
+        ```
+        ```tsx
+        useEventListener('scroll', () => setIsScrolled(window.scrollY > 0));
+        ```
+    </Tab>
+    <Tab title="useOnScreen">
+        Detecta se um elemento está visível na viewport, via `IntersectionObserver`.
+        ```ts
+        useOnScreen<T extends Element>(ref: RefObject<T>, rootMargin?: string): boolean
+        ```
+        ```tsx
+        function LazySection() {
+            const ref = useRef<HTMLDivElement>(null);
+            const isVisible = useOnScreen(ref, '200px');
+
+            return <div ref={ref}>{isVisible && <HeavyChart />}</div>;
+        }
+        ```
+    </Tab>
+    <Tab title="useWindowSize">
+        Dimensões da tela com flags de breakpoint já calculadas.
+        ```ts
+        useWindowSize(): {
+            width: number;
+            height: number;
+            isLoading: boolean;
+            isMobile: boolean;
+            isTablet: boolean;
+            isDesktop: boolean;
+        }
+        ```
+        ```tsx
+        const { isMobile } = useWindowSize();
+        return isMobile ? <MobileNav /> : <DesktopNav />;
+        ```
+    </Tab>
+    <Tab title="useMedia">
+        Retorna o primeiro valor cuja media query corresponda, útil para escolher valores por breakpoint.
+        ```ts
+        useMedia<T>(queries: string[], values: T[], defaultValue: T): T
+        ```
+        ```tsx
+        const columns = useMedia(
+            ['(min-width: 1024px)', '(min-width: 768px)'],
+            [4, 2],
+            1,
+        );
+        ```
+    </Tab>
+    <Tab title="useKey">
+        Detecta se uma tecla está pressionada, com callback opcional.
+        ```ts
+        useKey(targetKey: TargetKey, onKeyPress?: (event: KeyboardEvent) => void): boolean
+        ```
+        ```tsx
+        useKey('Escape', () => closeModal());
+        ```
+    </Tab>
+    <Tab title="usePortal">
+        Renderiza conteúdo fora da árvore DOM atual, com fallback para `document.body`.
+        ```ts
+        usePortal(container: HTMLElement | (() => HTMLElement | null) | null, waitMount?: boolean)
+        ```
+        ```tsx
+        const { Portal } = usePortal(() => document.getElementById('modal-root'));
+
+        return <Portal><Dialog /></Portal>;
+        ```
+    </Tab>
+    <Tab title="useSystemTheme">
+        Detecta o tema preferido do sistema operacional e reage a mudanças em tempo real.
+        ```ts
+        useSystemTheme(): 'light' | 'dark'
+        ```
+        ```tsx
+        const systemTheme = useSystemTheme();
+        ```
+    </Tab>
+    <Tab title="useGeolocation">
+        Estado da geolocalização do navegador, já tratando loading e erro.
+        ```ts
+        useGeolocation(options?: PositionOptions): {
+            loading: boolean;
+            latitude: number | null;
+            longitude: number | null;
+            error?: Error | GeolocationPositionError;
+        }
+        ```
+        ```tsx
+        const { latitude, longitude, loading } = useGeolocation();
+        ```
+    </Tab>
+    <Tab title="useCopyToClipboard">
+        Copia texto para a área de transferência e limpa o estado após 3 segundos.
+        ```ts
+        useCopyToClipboard(): [string | null, (text: string) => Promise<boolean>]
+        ```
+        ```tsx
+        const [copiedText, copy] = useCopyToClipboard();
+
+        <button onClick={() => copy(shareUrl)}>
+            {copiedText === shareUrl ? 'Copiado!' : 'Copiar link'}
+        </button>
+        ```
+    </Tab>
+</Tabs>

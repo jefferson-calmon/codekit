@@ -1,0 +1,43 @@
+---
+title: "Visão geral"
+description: "Hooks e helpers para App Router, separados entre client e server."
+icon: "layer-group"
+---
+
+O módulo Next segue a mesma divisão de responsabilidades do próprio framework: hooks de cliente num subpath, helpers de servidor em outro.
+
+<CardGroup cols={2}>
+    <Card title="codekit/next" icon="monitor">
+        Hooks para Client Components. O bundle inclui `'use client'` automaticamente.
+    </Card>
+    <Card title="codekit/next/server" icon="server">
+        Helpers para Server Actions e RSC. Bundle sem diretivo de cliente.
+    </Card>
+</CardGroup>
+
+```ts
+// Client Components
+import { useServerAction, useHydrated, useIsActiveLink, useRouteChange } from 'codekit/next';
+
+// Server (actions, RSC)
+import { createSafeAction, SafeActionError } from 'codekit/next/server';
+```
+
+<Note>
+    `next` é peer dependency opcional (`>=14`). O módulo não é exportado no
+    root do pacote, apenas via subpath.
+</Note>
+
+## Páginas
+
+<CardGroup cols={3}>
+    <Card title="useServerAction" icon="bolt" href="/next/use-server-action">
+        Executa uma Server Action com estado de loading, dado e callbacks.
+    </Card>
+    <Card title="createSafeAction" icon="shield-check" href="/next/create-safe-action">
+        Valida input com qualquer lib de schema e trata erros de forma consistente.
+    </Card>
+    <Card title="Hooks de navegação" icon="route" href="/next/navigation-hooks">
+        Hidratação, link ativo e reação a troca de rota.
+    </Card>
+</CardGroup>
