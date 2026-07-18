@@ -7,7 +7,7 @@ export const tsup: Options = {
     entry: {
         index: 'lib/index.ts',
         format: 'lib/format/index.ts',
-        is: 'lib/is/index.ts',
+        is: 'lib/validations/index.ts',
         text: 'lib/text/index.ts',
         number: 'lib/number/index.ts',
         date: 'lib/date/index.ts',

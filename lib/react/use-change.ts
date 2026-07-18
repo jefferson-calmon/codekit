@@ -1,5 +1,5 @@
 import { KeyOf } from '../types';
-import { is } from '../is';
+import { is } from '../validations';
 import { set } from '../object/set';
 import { toNumber } from '../text/to-number';
 
