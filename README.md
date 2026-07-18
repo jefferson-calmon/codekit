@@ -1,91 +1,55 @@
-# CodeKit
+# codekit
 
-<a href="https://www.npmjs.com/package/codekit" target="_blank">
-<img src="https://img.shields.io/npm/v/codekit.svg">
-</a>
+[![npm](https://img.shields.io/npm/v/codekit.svg)](https://www.npmjs.com/package/codekit)
+[![bundle size](https://img.shields.io/bundlephobia/min/codekit)](https://bundlephobia.com/package/codekit)
+[![downloads](https://img.shields.io/npm/dm/codekit.svg)](https://www.npmjs.com/package/codekit)
+[![license](https://img.shields.io/github/license/jefferson-calmon/codekit.svg)](LICENSE)
 
-<a href="https://www.npmjs.com/package/codekit" target="_blank">
-<img src="https://img.shields.io/bundlephobia/min/codekit">
-</a>
+Toolkit TypeScript para o dia a dia: formatters, validators, hooks React e helpers para Next.js. Tipagem forte, tree-shakeable, defaults pt-BR.
 
-<a href="https://www.npmjs.com/package/codekit" target="_blank">
-<img src="https://img.shields.io/npm/dm/codekit.svg">
-</a>
-
-<a href="https://github.com/jefferson-calmon/codekit/blob/master/LICENSE" target="_blank">
-<img src="https://img.shields.io/github/license/jefferson-calmon/codekit.svg">
-</a>
-
-<a href="https://github.com/jefferson-calmon/codekit/stargazers" target="_blank">
-<img src="https://img.shields.io/github/stars/jefferson-calmon/codekit.svg?style=social">
-</a>
-
-<br>
-
-CodeKit é uma coleção de ferramentas, utilitários e serviços para desenvolvedores front-end que podem ser extremamente úteis durante o processo de codificação. Este pacote foi projetado para ser utilizado especificamente em aplicações NextJS com TypeScript, mas também pode ser utilizado em projetos como React com JavaScript.
+**[Documentação →](https://codekit-b671b654.mintlify.site/)**
 
 ## Instalação
 
-Para instalar o CodeKit, você precisa ter o [Node.js](https://nodejs.org) instalado em seu sistema. Em seguida, execute o seguinte comando:
-
 ```bash
-npm install codekit
-```
-
-ou se estiver utilizando o [Yarn](https://yarnpkg.com):
-
-```bash
-yarn add codekit
+pnpm add codekit
 ```
 
 ## Uso
 
-Para utilizar o CodeKit em seu projeto, siga as etapas abaixo:
+```ts
+import { format, is } from 'codekit';
 
-1. Importe o CodeKit em seu arquivo:
+format.cpf('12345678909');       // '123.456.789-09'
+format.currency(1500);           // 'R$ 1.500,00'
+format.relativeTime(date);       // 'há 3 minutos'
+format.cpf(null);                // 'N/A' (null-safe por padrão)
 
-```typescript
-import CodeKit from 'codekit';
+is.email('dev@example.com');     // true
+is.cpf('123.456.789-09');        // true
 ```
 
-2. Utilize as funcionalidades oferecidas pelo CodeKit de acordo com suas necessidades.
-
-```typescript
-// Exemplo de utilização do CodeKit
-CodeKit.exemploFuncionalidade();
+```tsx
+import { useDebounce, useControlledState } from 'codekit/react';
+import { useServerAction } from 'codekit/next';
+import { createSafeAction } from 'codekit/next/server';
 ```
 
-ou se preferir você pode importar a funcionalidade direto:
+## Módulos
 
-```typescript
-import { exemploFuncionalidade } from 'codekit';
+| Import | Conteúdo |
+| --- | --- |
+| `codekit` | `format`, `is`, `async`, `random`, `browser`, `file` + namespaces `array`, `date`, `number`, `object`, `text`, `color` |
+| `codekit/format` | 23 formatters (`cpf`, `currency`, `relativeTime`, `count`...) |
+| `codekit/is` | Validators (`email`, `cpf`, `phone`, `createIs`...) |
+| `codekit/react` | 24 hooks client-side |
+| `codekit/next` | Hooks para App Router (`useServerAction`, `useHydrated`...) |
+| `codekit/next/server` | `createSafeAction` com Standard Schema (zod, valibot, arktype) |
+| `codekit/crypto` | `aes`, `hashify`, `Password` |
+| `codekit/extend` | Extensões de prototype (opt-in) |
 
-exemploFuncionalidade();
-```
-
-## Funcionalidades
-
-O CodeKit oferece diversas funcionalidades para auxiliar no desenvolvimento front-end.
-
-Consulte a documentação completa para obter informações detalhadas sobre todas as funcionalidades disponíveis.
-
-## Documentação
-
-Para obter informações detalhadas sobre como utilizar todas as funcionalidades disponíveis no CodeKit, consulte a nossa [documentação oficial](https://codekit-docs.vercel.app). Lá você encontrará exemplos de uso, explicações detalhadas e guias passo a passo.
-
-Visite a [documentação oficial](https://codekit-docs.vercel.app) agora mesmo!
-
-## Contribuição
-
-Contribuições são bem-vindas! Sinta-se à vontade para abrir um problema (issue) ou enviar um pull request no repositório oficial do CodeKit no GitHub.
-
-Antes de contribuir, certifique-se de ler as diretrizes de contribuição. Clique [aqui](https://codekit-docs.vercel.app/contribute) e saiba mais.
+ESM + CJS, `sideEffects: false`. React, Next e crypto-js são peer dependencies opcionais: o core roda em Node, browser e edge sem nenhuma delas.
 
 ## Licença
 
-Este pacote está licenciado sob a [Licença MIT](https://github.com/jefferson-calmon/codekit/blob/main/LICENSE). Consulte o arquivo `LICENSE` para obter mais informações.
-
-## Links úteis
-
-- [Documentação oficial](https://codekit-docs.vercel.app)
-- [Repositório no GitHub](https://github.com/jefferson-calmon/codekit)
+[MIT](LICENSE) © [Jefferson Calmon](https://jeffersoncalmon.dev)
