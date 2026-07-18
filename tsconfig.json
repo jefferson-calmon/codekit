@@ -14,6 +14,7 @@
         "rootDir": "lib",
         "outDir": "dist",
         "strict": true,
+        "skipLibCheck": true,
         "alwaysStrict": true,
         "noImplicitThis": true,
         "noImplicitReturns": true,

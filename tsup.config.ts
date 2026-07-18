@@ -1,4 +1,24 @@
+import { readFile, writeFile } from 'fs/promises';
 import { Options } from 'tsup';
+
+const CLIENT_ENTRIES = ['next'];
+
+const preserveUseClientDirective = async () => {
+    const files = CLIENT_ENTRIES.flatMap((entry) => [
+        `dist/${entry}.js`,
+        `dist/${entry}.mjs`,
+    ]);
+
+    await Promise.all(
+        files.map(async (file) => {
+            const content = await readFile(file, 'utf8');
+
+            if (/^['"]use client['"]/.test(content)) return;
+
+            await writeFile(file, `'use client';\n${content}`);
+        }),
+    );
+};
 
 export const tsup: Options = {
     target: 'esnext',
@@ -20,6 +40,8 @@ export const tsup: Options = {
         browser: 'lib/browser/index.ts',
         crypto: 'lib/crypto/index.ts',
         react: 'lib/react/index.ts',
+        next: 'lib/next/index.ts',
+        'next-server': 'lib/next/server.ts',
         extend: 'lib/extend/index.ts',
         edge: 'lib/edge.ts',
     },
@@ -27,5 +49,6 @@ export const tsup: Options = {
     minify: true,
     sourcemap: true,
     format: ['esm', 'cjs'],
-    external: ['react', 'react-dom', 'crypto-js'],
+    external: ['react', 'react-dom', 'crypto-js', 'next'],
+    onSuccess: preserveUseClientDirective,
 };
