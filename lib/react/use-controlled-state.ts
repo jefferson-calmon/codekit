@@ -1,43 +1,58 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState, useCallback } from 'react';
+import { SetStateAction, useCallback, useRef, useState } from 'react';
 
-type UseControlledStateReturn<V, D> = [
-    V | D | null,
-    (value: React.SetStateAction<V | D | null>) => void,
+export interface UseControlledStateProps<T> {
+    value?: T;
+    defaultValue?: T;
+    onChange?: (value: T) => void;
+}
+
+export type UseControlledStateReturn<T> = [
+    T,
+    (next: SetStateAction<T>) => void,
     boolean,
 ];
 
-/**
- * A hook for controlled value management.
- * In the case of passing the controlled value, the controlled value is returned, otherwise the value in state is returned.
- * Generally used for a component including controlled and uncontrolled modes.
- * @param controlledValue
- * @param defaultValue
- * @param formatValue
- */
-export function useControlledState<V = any, D = V>(
-    controlledValue: V,
-    defaultValue: D,
-): UseControlledStateReturn<V, D> {
-    const controlledRef = useRef(false);
-    controlledRef.current = controlledValue !== undefined;
+export function useControlledState<T>(
+    props: UseControlledStateProps<T> & { defaultValue: T },
+): UseControlledStateReturn<T>;
+export function useControlledState<T>(
+    props: UseControlledStateProps<T>,
+): UseControlledStateReturn<T | undefined>;
+export function useControlledState<T>({
+    value: controlledValue,
+    defaultValue,
+    onChange,
+}: UseControlledStateProps<T>) {
+    const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
 
-    const [uncontrolledValue, setUncontrolledValue] = useState<D | V | null>(
-        defaultValue,
-    );
+    const isControlled = controlledValue !== undefined;
+    const value = isControlled ? controlledValue : uncontrolledValue;
 
-    // If it is controlled, this directly returns the attribute value.
-    const value = controlledRef.current ? controlledValue : uncontrolledValue;
+    const valueRef = useRef(value);
+    valueRef.current = value;
 
-    const setValue = useCallback(
-        (nextValue: React.SetStateAction<V | D | null>) => {
-            // Only update the value in state when it is not under control.
-            if (!controlledRef.current) {
-                setUncontrolledValue(nextValue);
-            }
-        },
-        [controlledRef],
-    );
+    const isControlledRef = useRef(isControlled);
+    isControlledRef.current = isControlled;
 
-    return [value, setValue, controlledRef.current];
+    const onChangeRef = useRef(onChange);
+    onChangeRef.current = onChange;
+
+    const setValue = useCallback((next: SetStateAction<T | undefined>) => {
+        const resolved =
+            typeof next === 'function'
+                ? (next as (prev: T | undefined) => T | undefined)(
+                      valueRef.current,
+                  )
+                : next;
+
+        if (Object.is(resolved, valueRef.current)) return;
+
+        if (!isControlledRef.current) {
+            setUncontrolledValue(resolved);
+        }
+
+        onChangeRef.current?.(resolved as T);
+    }, []);
+
+    return [value, setValue, isControlled];
 }
